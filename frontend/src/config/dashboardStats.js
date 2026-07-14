@@ -1,0 +1,51 @@
+export const dashboardStats = [
+  {
+    id: 1,
+    title: "Total Leads",
+    value: 120,
+    subtitle: "+12%",
+    type: "success",
+  },
+  {
+    id: 2,
+    title: "Active Leads",
+    value: 102,
+    subtitle: "In Pipeline",
+    type: "default",
+  },
+  {
+    id: 3,
+    title: "New Today",
+    value: 8,
+    subtitle: "Today's Leads",
+    type: "default",
+  },
+  {
+    id: 4,
+    title: "Pending Assign",
+    value: 24,
+    subtitle: "Requires Action",
+    type: "warning",
+  },
+  {
+    id: 5,
+    title: "Conversion Rate",
+    value: "8.3%",
+    subtitle: "+2.1%",
+    type: "success",
+  },
+  {
+    id: 6,
+    title: "Telecallers",
+    value: 4,
+    subtitle: "Active",
+    type: "default",
+  },
+  {
+    id: 7,
+    title: "Admissions",
+    value: 10,
+    subtitle: "+8%",
+    type: "success",
+  },
+];
