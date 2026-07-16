@@ -1,8 +1,8 @@
 "use client";
 
-import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import authService from "../services/authService";
 import userService from "../services/userService";
@@ -12,30 +12,35 @@ import useAuthStore from "@/store/authStore";
 export default function useLogin() {
   const router = useRouter();
 
-  const setUser = useAuthStore((state) => state.setUser);
+  const { setUser } = useAuthStore();
 
   return useMutation({
     mutationFn: authService.login,
 
     onSuccess: async () => {
       try {
+        // Fetch authenticated user's profile
         const response = await userService.getCurrentUser();
 
+        // Save user globally
         setUser(response.data);
 
         toast.success("Welcome back!");
 
-        router.push("/dashboard");
+        // Navigate to dashboard
+        router.replace("/dashboard");
       } catch (error) {
-        toast.error("Unable to load user profile.");
+        console.error("Failed to load authenticated user:", error);
 
-        console.error(error);
+        toast.error(
+          "Login succeeded, but failed to load your profile."
+        );
       }
     },
 
     onError: (error) => {
       toast.error(
-        error.response?.data?.message ||
+        error?.response?.data?.message ||
           "Invalid username or password."
       );
     },

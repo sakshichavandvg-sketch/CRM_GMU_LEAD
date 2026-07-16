@@ -1,22 +1,22 @@
 import axiosInstance from "@/lib/axios";
+import API_ENDPOINTS from "@/utils/apiEndpoints";
 
 const authService = {
-  /**
-   * Login User
-   * @param {Object} credentials
-   * @param {string} credentials.username
-   * @param {string} credentials.password
-   */
-  login: async (credentials) => {
-    console.log(credentials)
-    const response = await axiosInstance.post(
-      "/api/leads/auth/login",   // <-- updated path
-      credentials
+  async login(payload) {
+    const { data } = await axiosInstance.post(
+      API_ENDPOINTS.AUTH.LOGIN,
+      payload
     );
+    console.log("Login response:", data); //  Console display
+    return data;
+  },
 
-    console.log("Login Response:", response.data); // Log the response data
-
-    return response.data;
+  async logout() {
+    const { data } = await axiosInstance.post(
+      API_ENDPOINTS.AUTH.LOGOUT
+    );
+    console.log("Logout response:", data); //  Console display
+    return data;
   },
 };
 

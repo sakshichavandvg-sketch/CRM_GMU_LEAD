@@ -20,8 +20,8 @@ export default function LoginForm() {
     const formik = useFormik({
         initialValues: loginInitialValues,
         validationSchema: loginSchema,
-        onSubmit: (values) => {
-            loginMutation.mutate(values);
+        onSubmit: async (values) => {
+            await loginMutation.mutateAsync(values);
         },
     });
 

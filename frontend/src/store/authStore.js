@@ -1,28 +1,41 @@
 import { create } from "zustand";
 
 const useAuthStore = create((set) => ({
-  // Authentication State
-  user: null,
-  role: null,
-  userId: null,
+  // Authentication state
   isAuthenticated: false,
+  loading: true,
 
-  // Set authenticated user
+  // Logged in user
+  user: null,
+
+  // Login
+  login: (user) =>
+    set({
+      user,
+      isAuthenticated: true,
+      loading: false,
+    }),
+
+  // Update user after /me
   setUser: (user) =>
     set({
       user,
-      role: user.role,
-      userId: user.userId,
-      isAuthenticated: true,
+      isAuthenticated: !!user,
+      loading: false,
     }),
 
-  // Clear authentication
+  // Loading state
+  setLoading: (loading) =>
+    set({
+      loading,
+    }),
+
+  // Logout
   logout: () =>
     set({
       user: null,
-      role: null,
-      userId: null,
       isAuthenticated: false,
+      loading: false,
     }),
 }));
 

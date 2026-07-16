@@ -1,9 +1,14 @@
 import DashboardShell from "@/components/layout/DashboardShell";
+import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
 
-export default function DashboardLayout({ children }) {
+export default function DashboardLayout({
+  children,
+}) {
   return (
-    <DashboardShell>
-      {children}
-    </DashboardShell>
+    <ProtectedRoute>
+      <DashboardShell>
+        {children}
+      </DashboardShell>
+    </ProtectedRoute>
   );
 }
