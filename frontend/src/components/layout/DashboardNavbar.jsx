@@ -1,10 +1,31 @@
 "use client";
 
-import { Bell, Search, Moon, ChevronRight } from "lucide-react";
+import {
+  Bell,
+  Search,
+  Moon,
+  ChevronRight,
+} from "lucide-react";
+import { usePathname } from "next/navigation";
+
 import useAuthStore from "@/store/authStore";
 
 export default function DashboardNavbar() {
+  const pathname = usePathname();
+
   const user = useAuthStore((state) => state.user);
+
+  const breadcrumbMap = {
+    "/dashboard": "Overview",
+    "/dashboard/management": "Management",
+    "/dashboard/admissions": "Admissions",
+    "/dashboard/followups": "Follow Ups",
+    "/dashboard/reports": "Reports",
+    "/dashboard/settings": "Settings",
+  };
+
+  const currentPage =
+    breadcrumbMap[pathname] || "Dashboard";
 
   return (
     <header
@@ -22,7 +43,7 @@ export default function DashboardNavbar() {
         px-8
       "
     >
-      {/* Left */}
+      {/* ================= Breadcrumb ================= */}
 
       <div>
 
@@ -33,14 +54,14 @@ export default function DashboardNavbar() {
           <ChevronRight size={15} />
 
           <span className="font-medium text-gray-900">
-            Overview
+            {currentPage}
           </span>
 
         </div>
 
       </div>
 
-      {/* Right */}
+      {/* ================= Right ================= */}
 
       <div className="flex items-center gap-4">
 
@@ -82,36 +103,36 @@ export default function DashboardNavbar() {
 
         <button
           className="
+            flex
             h-10
             w-10
+            items-center
+            justify-center
             rounded-xl
             border
             border-gray-200
             hover:bg-gray-100
-            flex
-            items-center
-            justify-center
           "
         >
-          <Bell size={18}/>
+          <Bell size={18} />
         </button>
 
         {/* Theme */}
 
         <button
           className="
+            flex
             h-10
             w-10
+            items-center
+            justify-center
             rounded-xl
             border
             border-gray-200
             hover:bg-gray-100
-            flex
-            items-center
-            justify-center
           "
         >
-          <Moon size={18}/>
+          <Moon size={18} />
         </button>
 
         {/* User */}
@@ -119,15 +140,11 @@ export default function DashboardNavbar() {
         <div className="flex flex-col">
 
           <span className="text-sm font-semibold">
-
             {user?.username || "Administrator"}
-
           </span>
 
           <span className="text-xs text-gray-500">
-
             {user?.role || "ADMIN"}
-
           </span>
 
         </div>

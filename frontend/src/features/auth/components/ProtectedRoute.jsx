@@ -4,8 +4,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import useAuthStore from "@/store/authStore";
+import useInitializeAuth from "@/features/auth/hooks/useInitializeAuth";
 
 export default function ProtectedRoute({ children }) {
+   useInitializeAuth();
   const router = useRouter();
 
   const {
