@@ -1,32 +1,44 @@
 "use client";
 
-import StatusBadge from "./StatusBadge";
-import PriorityBadge from "./PriorityBadge";
-import TableAction from "./TableAction";
-
 export default function DataTable({
   columns = [],
   data = [],
   selectedRows = [],
   setSelectedRows,
+  rowKey = "id",
+  renderRowActions,
 }) {
-  // Helper functions
-  const allSelected =
-    data.length > 0 && selectedRows.length === data.length;
+  // Unique row id
+  const getRowId = (row, index) => row[rowKey] ?? index;
 
+  // Check if all rows are selected
+  const allSelected =
+    data.length > 0 &&
+    data.every((row, index) =>
+      selectedRows.includes(getRowId(row, index))
+    );
+
+  // Select/Deselect all rows
   const toggleAll = () => {
     if (allSelected) {
       setSelectedRows([]);
     } else {
-      setSelectedRows(data.map((_, index) => index));
+      setSelectedRows(
+        data.map((row, index) => getRowId(row, index))
+      );
     }
   };
 
-  const toggleRow = (index) => {
-    if (selectedRows.includes(index)) {
-      setSelectedRows(selectedRows.filter((item) => item !== index));
+  // Toggle one row
+  const toggleRow = (row, index) => {
+    const id = getRowId(row, index);
+
+    if (selectedRows.includes(id)) {
+      setSelectedRows(
+        selectedRows.filter((item) => item !== id)
+      );
     } else {
-      setSelectedRows([...selectedRows, index]);
+      setSelectedRows([...selectedRows, id]);
     }
   };
 
@@ -46,7 +58,6 @@ export default function DataTable({
           {/* Header */}
           <thead className="bg-gray-50">
             <tr>
-              {/* Step 3 — Header Checkbox */}
               <th className="w-12 px-5">
                 <input
                   type="checkbox"
@@ -74,7 +85,7 @@ export default function DataTable({
                 </th>
               ))}
 
-              <th className="w-16" />
+              <th className="w-20" />
             </tr>
           </thead>
 
@@ -84,60 +95,54 @@ export default function DataTable({
               <tr>
                 <td
                   colSpan={columns.length + 2}
-                  className="text-center py-6 text-slate-500"
+                  className="py-6 text-center text-slate-500"
                 >
                   No records found
                 </td>
               </tr>
             ) : (
-              data.map((row, index) => (
-                <tr
-                  key={index}
-                  className="border-t border-gray-100 hover:bg-gray-50 transition"
-                >
-                  {/* Step 4 — Row Checkbox */}
-                  <td className="px-5">
-                    <input
-                      type="checkbox"
-                      checked={selectedRows.includes(index)}
-                      onChange={() => toggleRow(index)}
-                    />
-                  </td>
+              data.map((row, index) => {
+                const id = getRowId(row, index);
 
-                  {columns.map((column) => {
-                    const value = row[column.key];
+                return (
+                  <tr
+                    key={id}
+                    className="border-t border-gray-100 transition hover:bg-gray-50"
+                  >
+                    {/* Checkbox */}
+                    <td className="px-5">
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(id)}
+                        onChange={() => toggleRow(row, index)}
+                      />
+                    </td>
 
-                    if (column.type === "status") {
+                    {/* Cells */}
+                    {columns.map((column) => {
+                      const value = row[column.key];
+
                       return (
-                        <td key={column.key} className="px-7 py-6">
-                          <StatusBadge status={value} />
+                        <td
+                          key={column.key}
+                          className="px-7 py-6 text-[15px] text-slate-700"
+                        >
+                          {column.render
+                            ? column.render(value, row)
+                            : value}
                         </td>
                       );
-                    }
+                    })}
 
-                    if (column.type === "priority") {
-                      return (
-                        <td key={column.key} className="px-7 py-6">
-                          <PriorityBadge priority={value} />
-                        </td>
-                      );
-                    }
-
-                    return (
-                      <td
-                        key={column.key}
-                        className="px-7 py-6 text-[15px] text-slate-700"
-                      >
-                        {value}
-                      </td>
-                    );
-                  })}
-
-                  <td className="px-7 py-6">
-                    <TableAction />
-                  </td>
-                </tr>
-              ))
+                    {/* Actions */}
+                    <td className="px-7 py-6">
+                      {renderRowActions
+                        ? renderRowActions(row)
+                        : null}
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

@@ -21,10 +21,8 @@ export default function useInitializeAuth() {
       try {
         setLoading(true);
 
-        const response =
+        const backendUser =
           await userService.getCurrentUser();
-
-        const backendUser = response.data;
 
         setUser({
           ...backendUser,
