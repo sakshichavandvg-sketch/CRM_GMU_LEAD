@@ -1,29 +1,32 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import useAuthStore from "@/store/authStore";
+import { ROLE_HOME_ROUTES } from "@/constants/roles";
 
 export default function RoleGuard({
   allowedRoles,
   children,
 }) {
-  const { user } = useAuthStore();
+  const router = useRouter();
+
+  const user = useAuthStore((state) => state.user);
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (!allowedRoles.includes(user.userGroup)) {
+      const redirectPath = ROLE_HOME_ROUTES[user.userGroup] || "/";
+      router.replace(redirectPath);
+    }
+  }, [user, allowedRoles, router]);
 
   if (!user) return null;
 
-  if (!allowedRoles.includes(user.role)) {
-    return (
-      <div className="flex h-full items-center justify-center py-24">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold">
-            Access Denied
-          </h2>
-
-          <p className="mt-3 text-gray-500">
-            You don't have permission to access this page.
-          </p>
-        </div>
-      </div>
-    );
+  if (!allowedRoles.includes(user.userGroup)) {
+    return null;
   }
 
   return children;

@@ -24,14 +24,23 @@ export default function useInitializeAuth() {
         const backendUser =
           await userService.getCurrentUser();
 
-        setUser({
-          ...backendUser,
-          role: backendUser.userGroup,
-        });
+        setUser(backendUser.data);
 
       } catch (error) {
 
-        logout();
+        const status = error.response?.status;
+
+        // Only logout when authentication has genuinely failed.
+        // A 401 here means the axios interceptor already attempted
+        // a token refresh and it failed — the user is truly unauthenticated.
+        if (status === 401) {
+          logout();
+        }
+
+        // 403, 500, network errors, timeouts — do NOT logout.
+        // Preserve whatever auth state currently exists.
+        // The user is still authenticated; the request just failed.
+        console.log("Auth initialization error:", status, error.message);
 
       } finally {
 

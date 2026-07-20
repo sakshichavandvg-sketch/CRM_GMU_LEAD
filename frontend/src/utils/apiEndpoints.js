@@ -1,68 +1,69 @@
 const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: "/leads/auth/login",
-    LOGOUT: "/leads/auth/logout",
-    REFRESH: "/leads/auth/refresh",
-    ME: "/leads/auth/me",
-    PROFILE: "/leads/auth/profile",
-    CHANGE_PASSWORD: "/leads/auth/change-password",
+    LOGIN: "/api/leads/auth/login",
+    LOGOUT: "/api/leads/auth/logout",
+    REFRESH: "/api/leads/auth/refresh",
+    ME: "/api/leads/auth/me",
+    PROFILE: "/api/leads/auth/profile",
+    CHANGE_PASSWORD: "/api/leads/auth/change-password",
   },
 
   USERS: {
-    LIST: "/leads/manager/users",
-    CREATE: "/leads/manager/users",
-    UPDATE: "/leads/manager/users",
+    LIST: "/api/leads/manager/users",
+    CREATE: "/api/leads/manager/users",
+    UPDATE: "/api/leads/manager/users",
 
     TOGGLE_STATUS: (slNo) =>
-      `/leads/manager/users/${slNo}/status`,
+      `/api/leads/manager/users/${slNo}/status`,
   },
 
   LEADS: {
-    LIST: "/leads/overview",
+    LIST: "/api/leads/overview",
 
-    CREATE: "/leads/manager/leads",
-    UPDATE: "/leads/manager/leads",
+    CREATE: "/api/leads/manager/leads",
+    UPDATE: "/api/leads/manager/leads",
 
     DETAIL: (enquiryNo) =>
-      `/leads/overview/${enquiryNo}`,
+      `/api/leads/overview/${enquiryNo}`,
 
-    ASSIGN: "/leads/manager/leads/assign",
+    ASSIGN: "/api/leads/manager/leads/assign",
 
-    TRANSFER: "/leads/manager/leads/transfer",
+    TRANSFER: "/api/leads/manager/leads/transfer",
 
-    IMPORT: "/leads/manager/leads/import",
+    IMPORT: "/api/leads/manager/leads/import",
 
-    EXPORT: "/leads/manager/export",
+    EXPORT: "/api/leads/manager/export",
 
     FILTER_OPTIONS:
-      "/leads/overview/filter-options",
+      "/api/leads/overview/filter-options",
 
     UPCOMING:
-      "/leads/overview/followups/upcoming",
+      "/api/leads/overview/followups/upcoming",
 
     OVERDUE:
-      "/leads/overview/followups/overdue",
+      "/api/leads/overview/followups/overdue",
   },
 
   DASHBOARD: {
-    STATS: "/leads/dashboard/stats",
+    STATS: "/api/leads/dashboard/stats",
   },
 
   REPORTS: {
-    USERS: "/leads/calls/users",
+    USERS: "/api/leads/calls/users",
 
     DATE_DETAILS:
-      "/leads/calls/date-details",
+      "/api/leads/calls/date-details",
 
     INDIVIDUAL:
-      "/leads/calls/individual",
+      "/api/leads/calls/individual",
 
     SOURCE_LEADS:
-      "/leads/calls/source-leads",
+      "/api/leads/calls/source-leads",
 
     DATEWISE_SUMMARY:
-      "/leads/calls/datewise-summary",
+      "/api/leads/calls/datewise-summary",
   },
 };
+ 
 
 export default API_ENDPOINTS;

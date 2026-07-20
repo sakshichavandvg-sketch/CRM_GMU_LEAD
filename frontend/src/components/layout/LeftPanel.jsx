@@ -9,9 +9,11 @@ export default function LeftPanel() {
         w-full
         h-full
         overflow-hidden
-        px-8
+        px-6
+        md:px-8
         lg:px-10
-        py-8
+        py-6
+        md:py-8
         text-white
         flex
         flex-col
@@ -25,7 +27,7 @@ export default function LeftPanel() {
         fill
         priority
         sizes="(max-width: 1024px) 100vw, 58vw"
-        className="object-cover object-center"
+        className="object-cover object-[center_35%]"
       />
 
       {/* ================= OVERLAYS ================= */}
@@ -55,16 +57,16 @@ export default function LeftPanel() {
         </div>
 
         {/* Footer unchanged */}
-        <div className="flex-1 min-h-0 flex flex-col justify-end pb-12 space-y-2">
+        <div className="flex-1 min-h-0 flex flex-col justify-end pb-6 md:pb-12 space-y-2">
           <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--gold)] font-inter">
             Official ERP Portal
           </p>
-          <h2 className="text-2xl sm:text-3xl font-bold leading-tight font-lora">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl 2xl:text-[40px] font-bold leading-tight font-lora max-w-lg lg:max-w-xl">
             Empowering Administration,
-            <br className="hidden sm:block" />
+            <br className="hidden md:block" />
             Shaping Futures.
           </h2>
-          <p className="max-w-md text-sm text-white/70 leading-relaxed font-inter">
+          <p className="hidden md:block max-w-md text-sm text-white/70 leading-relaxed font-inter">
             Official Lead Management Platform built for admissions,
             telecalling, and administrative workflows.
           </p>

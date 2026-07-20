@@ -9,6 +9,8 @@ export default function Select({
   required = false,
   disabled = false,
 }) {
+  const errorId = name ? `${name}-error` : undefined;
+
   return (
     <div className="space-y-1.5">
       {label && (
@@ -29,6 +31,9 @@ export default function Select({
         value={value}
         onChange={onChange}
         disabled={disabled}
+        aria-invalid={!!error}
+        aria-required={required}
+        aria-describedby={error ? errorId : undefined}
         className={`
           w-full
           rounded-xl
@@ -60,7 +65,7 @@ export default function Select({
       </select>
 
       <div className="min-h-[20px] text-[12px] text-red-500 font-inter">
-        {error && <p>{error}</p>}
+        {error && <p id={errorId}>{error}</p>}
       </div>
     </div>
   );

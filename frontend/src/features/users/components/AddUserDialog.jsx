@@ -57,7 +57,11 @@ export default function AddUserDialog({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    mutate(form);
+    mutate(form, {
+      onSuccess: () => {
+        setForm(initialForm);
+      },
+    });
   };
 
   const handleClose = () => {
@@ -162,7 +166,7 @@ export default function AddUserDialog({
       <form
         id="add-user-form"
         onSubmit={handleSubmit}
-        className="grid grid-cols-2 gap-4"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
       >
         <Input
           label="Name"

@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import usersService from "../usersService";
+import usersService from "./usersService";
 
 export default function useToggleUser(options = {}) {
   const queryClient = useQueryClient();

@@ -1,5 +1,7 @@
+import { ROLES } from "@/constants/roles";
+
 const permissions = {
-  ADMIN: {
+  [ROLES.ADMIN]: {
     dashboard: true,
 
     leads: {

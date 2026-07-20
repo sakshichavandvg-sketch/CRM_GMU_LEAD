@@ -7,10 +7,13 @@ export default function Textarea({
   placeholder,
   error,
 }) {
+  const errorId = name ? `${name}-error` : undefined;
+
   return (
     <div className="space-y-1.5">
       {label && (
         <label
+          htmlFor={name}
           className="block text-[14px] font-medium text-gray-700 font-inter"
         >
           {label}
@@ -18,11 +21,14 @@ export default function Textarea({
       )}
 
       <textarea
+        id={name}
         name={name}
         value={value}
         rows={rows}
         onChange={onChange}
         placeholder={placeholder}
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
         className={`
           w-full
           rounded-xl
@@ -41,7 +47,7 @@ export default function Textarea({
         `}
       />
 
-      <div className="min-h-[20px] text-[12px] text-red-500">
+      <div id={errorId} className="min-h-[20px] text-[12px] text-red-500">
         {error}
       </div>
     </div>

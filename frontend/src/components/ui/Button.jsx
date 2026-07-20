@@ -8,6 +8,7 @@ export default function Button({
   loading = false,
   loadingText = "Loading...",
   className = "",
+  ...props
 }) {
   const variants = {
     primary: `
@@ -37,7 +38,12 @@ export default function Button({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
+      aria-disabled={disabled || loading}
+      aria-busy={loading}
       className={`
+        inline-flex
+        items-center
+        justify-center
         rounded-xl
         px-4
         py-2.5
@@ -51,6 +57,7 @@ export default function Button({
         ${variants[variant]}
         ${className}
       `}
+      {...props}
     >
       {loading ? loadingText : children}
     </button>

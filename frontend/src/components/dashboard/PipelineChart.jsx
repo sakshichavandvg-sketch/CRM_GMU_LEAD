@@ -28,7 +28,7 @@ export default function PipelineChart() {
 
       </div>
 
-      <div className="h-[340px]">
+      <div className="h-[240px] sm:h-[340px]">
 
         <ResponsiveContainer>
 

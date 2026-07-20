@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://192.168.1.53:8080/api/:path*', // Forward to your Gateway
+        destination: 'http://192.168.1.42:8080/api/:path*', // Forward to your Gateway
       },
     ]
   },

@@ -1,42 +1,59 @@
 "use client";
 
+import { useState } from "react";
 import { Upload, Download, Plus } from "lucide-react";
 
+import CreateLeadDialog from "@/features/leads/components/CreateLeadDialog";
+import ImportLeadsDialog from "@/features/leads/components/ImportLeadsDialog";
+import { useExportLeads } from "@/features/leads/hooks/useExportLeads";
+
 export default function TableActions({ activeTab }) {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
+
+  const { mutate: exportLeads, isPending: isExporting } = useExportLeads();
 
   return (
-    <div className="flex gap-3">
+    <>
+      <div className="flex flex-wrap gap-2 sm:gap-3">
+        {activeTab === "leads" && (
+          <>
+            <button 
+              onClick={() => setIsImportOpen(true)}
+              className="h-11 rounded-xl border border-gray-200 px-5 flex items-center gap-2 hover:bg-gray-50 transition"
+            >
+              <Upload size={18} />
+              Import CSV
+            </button>
 
-      {activeTab === "leads" && (
-        <>
-          <button className="h-11 rounded-xl border border-gray-200 px-5 flex items-center gap-2 hover:bg-gray-50 transition">
+            <button 
+              onClick={() => exportLeads({})} // Can pass filters here if available from context
+              disabled={isExporting}
+              className="h-11 rounded-xl border border-gray-200 px-5 flex items-center gap-2 hover:bg-gray-50 transition disabled:opacity-50"
+            >
+              <Download size={18} />
+              {isExporting ? "Exporting..." : "Export"}
+            </button>
+          </>
+        )}
 
-            <Upload size={18} />
+        <button 
+          onClick={() => {
+            if (activeTab === "leads") {
+              setIsCreateOpen(true);
+            } else {
+              // Handle Add User (already implemented elsewhere or ignored for now)
+            }
+          }}
+          className="h-11 rounded-xl bg-[var(--primary)] px-6 text-white flex items-center gap-2 hover:opacity-95 transition"
+        >
+          <Plus size={18} />
+          {activeTab === "users" ? "Add User" : "Create Lead"}
+        </button>
+      </div>
 
-            Import CSV
-
-          </button>
-
-          <button className="h-11 rounded-xl border border-gray-200 px-5 flex items-center gap-2 hover:bg-gray-50 transition">
-
-            <Download size={18} />
-
-            Export
-
-          </button>
-        </>
-      )}
-
-      <button className="h-11 rounded-xl bg-[var(--primary)] px-6 text-white flex items-center gap-2 hover:opacity-95 transition">
-
-        <Plus size={18} />
-
-        {activeTab === "users"
-          ? "Add User"
-          : "Create Lead"}
-
-      </button>
-
-    </div>
+      <CreateLeadDialog open={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
+      <ImportLeadsDialog open={isImportOpen} onClose={() => setIsImportOpen(false)} />
+    </>
   );
 }

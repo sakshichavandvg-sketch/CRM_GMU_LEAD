@@ -3,18 +3,20 @@ import {
   BriefcaseBusiness,
 } from "lucide-react";
 
+import { ROLES } from "@/constants/roles";
+
 const navigation = [
   {
     title: "Overview",
     path: "/dashboard",
     icon: LayoutDashboard,
-    roles: ["ADMIN", "TELECALLER"],
+    roles: [ROLES.ADMIN, ROLES.TELE_CALLER],
   },
   {
     title: "Management",
     path: "/dashboard/management",
     icon: BriefcaseBusiness,
-    roles: ["ADMIN"],
+    roles: [ROLES.ADMIN],
   },
 ];
 

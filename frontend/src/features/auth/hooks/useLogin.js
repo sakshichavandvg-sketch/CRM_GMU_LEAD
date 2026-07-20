@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import authService from "../services/authService";
 import userService from "../services/userService";
 
+import { ROLE_HOME_ROUTES } from "@/constants/roles";
+
 import useAuthStore from "@/store/authStore";
 
 export default function useLogin() {
@@ -21,31 +23,46 @@ export default function useLogin() {
       try {
         const response = await userService.getCurrentUser();
 
-        const backendUser = response.data;
-
-        // Normalize backend response
-        const user = {
-          ...backendUser,
-          role: backendUser.userGroup,
-        };
+        const user = response.data;
 
         setUser(user);
 
         toast.success("Welcome back!");
 
-        router.replace("/dashboard");
+        router.replace(ROLE_HOME_ROUTES[user.userGroup] ?? "/");
+
       } catch (error) {
         toast.error("Unable to load user profile.");
-
         console.error(error);
       }
     },
 
     onError: (error) => {
-      toast.error(
-        error.response?.data?.message ??
-        "Invalid username or password."
-      );
+      if (!error.response) {
+        toast.error(
+          "Unable to connect to the server. Please check your internet connection or try again later."
+        );
+        return;
+      }
+
+      const status = error.response.status;
+
+      if (status === 401) {
+        toast.error("Invalid username or password.");
+      } else if (status === 403) {
+        toast.error("Access denied.");
+      } else if (status === 404) {
+        toast.error("Authentication service unavailable.");
+      } else if (status === 408) {
+        toast.error("Request timed out.");
+      } else if (status >= 500) {
+        toast.error("Server error.");
+      } else {
+        toast.error(
+          error.response?.data?.message ||
+            "An unexpected error occurred."
+        );
+      }
     },
   });
 }

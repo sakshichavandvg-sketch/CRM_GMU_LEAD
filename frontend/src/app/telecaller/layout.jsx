@@ -1,0 +1,18 @@
+import DashboardShell from "@/components/layout/DashboardShell";
+import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
+import RoleGuard from "@/features/auth/components/RoleGuard";
+import { ROLES } from "@/constants/roles";
+
+export default function TelecallerLayout({
+  children,
+}) {
+  return (
+    <ProtectedRoute>
+      <RoleGuard allowedRoles={[ROLES.TELE_CALLER]}>
+        <DashboardShell>
+          {children}
+        </DashboardShell>
+      </RoleGuard>
+    </ProtectedRoute>
+  );
+}

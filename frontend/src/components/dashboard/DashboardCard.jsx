@@ -27,7 +27,7 @@ export default function DashboardCard({
         {title}
       </p>
 
-      <h2 className="mt-4 text-4xl font-bold text-gray-900">
+      <h2 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
         {value}
       </h2>
 

@@ -1,33 +1,65 @@
 "use client";
 
+import { useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { X } from "lucide-react";
 
-import navigation from "@/config/navigation";
 import { IMAGES } from "@/constants/images";
+import { ROLES, ROLE_LABELS } from "@/constants/roles";
 import useAuthStore from "@/store/authStore";
 
-export default function DashboardSidebar() {
+export default function DashboardSidebar({
+  navigation,
+  isOpen = false,
+  onClose,
+}) {
   const pathname = usePathname();
 
   const user =
     useAuthStore((state) => state.user) || {
-      username: "Administrator",
-      role: "ADMIN",
+      username: ROLE_LABELS[ROLES.ADMIN],
+      userGroup: ROLES.ADMIN,
     };
 
-  const menu = navigation.filter((item) =>
-    item.roles.includes(user.role)
+ const menu = navigation.filter((item) =>
+  item.roles.includes(user.userGroup)
+);
+
+  // Close on Escape key
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Escape") {
+        onClose?.();
+      }
+    },
+    [onClose]
   );
-  console.log("User:", user);
-console.log("Role:", user.role);
-console.log("Navigation:", navigation);
-console.log("Menu:", menu);
 
-  return (
-    <aside className="w-[280px] h-screen border-r border-gray-200 bg-white flex flex-col">
+  // Prevent body scroll when drawer is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", handleKeyDown);
+    } else {
+      document.body.style.overflow = "";
+    }
 
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, handleKeyDown]);
+
+  // Close drawer on navigation (mobile UX)
+  const handleNavClick = () => {
+    onClose?.();
+  };
+
+  // Sidebar content — shared between desktop and mobile
+  const sidebarContent = (
+    <>
       <div className="border-b border-gray-100 px-6 py-6">
 
         <div className="flex items-center gap-3">
@@ -70,12 +102,12 @@ console.log("Menu:", menu);
               <Link
                 key={item.path}
                 href={item.path}
+                onClick={handleNavClick}
                 className={`flex items-center gap-3 rounded-xl px-4 py-3 transition
 
-                  ${
-                    active
-                      ? "bg-[#6F1D28] text-white"
-                      : "text-gray-600 hover:bg-gray-100"
+                  ${active
+                    ? "bg-[#6F1D28] text-white"
+                    : "text-gray-600 hover:bg-gray-100"
                   }
 
                 `}
@@ -103,11 +135,54 @@ console.log("Menu:", menu);
         </p>
 
         <p className="text-sm text-gray-500">
-          {user.role}
+          {user.userGroup}
         </p>
 
       </div>
+    </>
+  );
 
-    </aside>
+  return (
+    <>
+      {/* ===== Desktop Sidebar (≥lg) ===== */}
+      <aside className="hidden lg:flex w-[280px] h-screen border-r border-gray-200 bg-white flex-col">
+        {sidebarContent}
+      </aside>
+
+      {/* ===== Mobile Drawer (<lg) ===== */}
+      {/* Backdrop */}
+      <div
+        className={`
+          fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 lg:hidden
+          ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}
+        `}
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Drawer */}
+      <aside
+        id="mobile-sidebar"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+        className={`
+          fixed inset-y-0 left-0 z-50 w-[280px] bg-white flex flex-col shadow-2xl
+          transition-transform duration-300 ease-in-out lg:hidden
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+        `}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          aria-label="Close navigation menu"
+          className="absolute right-3 top-3 rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-black transition"
+        >
+          <X size={20} />
+        </button>
+
+        {sidebarContent}
+      </aside>
+    </>
   );
 }

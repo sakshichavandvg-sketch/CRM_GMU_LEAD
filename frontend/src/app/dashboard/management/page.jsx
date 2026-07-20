@@ -6,6 +6,7 @@ import ManagementHeader from "@/components/management/ManagementHeader";
 import ManagementTabs from "@/components/management/ManagementTabs";
 
 import UsersTable from "@/features/users/UsersTable";
+import LeadsOverviewTable from "@/features/leads/components/LeadsOverviewTable";
 
 export default function ManagementPage() {
   const [activeTab, setActiveTab] = useState("users");
@@ -21,11 +22,7 @@ export default function ManagementPage() {
 
       {activeTab === "users" && <UsersTable />}
 
-      {activeTab === "leads" && (
-        <p className="text-gray-500">
-          Leads module coming next...
-        </p>
-      )}
+      {activeTab === "leads" && <LeadsOverviewTable />}
 
       {activeTab === "reports" && (
         <p className="text-gray-500">

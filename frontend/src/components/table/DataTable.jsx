@@ -7,6 +7,7 @@ export default function DataTable({
   setSelectedRows,
   rowKey = "id",
   renderRowActions,
+  onRowClick,
 }) {
   // Unique row id
   const getRowId = (row, index) => row[rowKey] ?? index;
@@ -54,7 +55,7 @@ export default function DataTable({
       "
     >
       <div className="overflow-x-auto">
-        <table className="min-w-full">
+        <table className="min-w-[600px] w-full">
           {/* Header */}
           <thead className="bg-gray-50">
             <tr>
@@ -63,6 +64,7 @@ export default function DataTable({
                   type="checkbox"
                   checked={allSelected}
                   onChange={toggleAll}
+                  aria-label="Select all rows"
                 />
               </th>
 
@@ -71,8 +73,9 @@ export default function DataTable({
                   key={column.key}
                   scope="col"
                   className="
-                    px-7
-                    py-5
+                    px-3 py-3
+                    sm:px-5 sm:py-4
+                    lg:px-7 lg:py-5
                     text-left
                     text-xs
                     font-semibold
@@ -107,14 +110,16 @@ export default function DataTable({
                 return (
                   <tr
                     key={id}
-                    className="border-t border-gray-100 transition hover:bg-gray-50"
+                    className={`border-t border-gray-100 transition hover:bg-gray-50 ${onRowClick ? 'cursor-pointer' : ''}`}
+                    onClick={() => onRowClick && onRowClick(row)}
                   >
                     {/* Checkbox */}
-                    <td className="px-5">
+                    <td className="px-3 sm:px-5" onClick={(e) => e.stopPropagation()}>
                       <input
                         type="checkbox"
                         checked={selectedRows.includes(id)}
                         onChange={() => toggleRow(row, index)}
+                        aria-label={`Select row ${id}`}
                       />
                     </td>
 
@@ -125,7 +130,7 @@ export default function DataTable({
                       return (
                         <td
                           key={column.key}
-                          className="px-7 py-6 text-[15px] text-slate-700"
+                          className="px-3 py-3 sm:px-5 sm:py-4 lg:px-7 lg:py-6 text-[15px] text-slate-700"
                         >
                           {column.render
                             ? column.render(value, row)
@@ -135,7 +140,7 @@ export default function DataTable({
                     })}
 
                     {/* Actions */}
-                    <td className="px-7 py-6">
+                    <td className="px-3 py-3 sm:px-5 sm:py-4 lg:px-7 lg:py-6">
                       {renderRowActions
                         ? renderRowActions(row)
                         : null}

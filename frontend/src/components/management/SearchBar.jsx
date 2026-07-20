@@ -8,7 +8,7 @@ export default function SearchBar({
   placeholder,
 }) {
   return (
-    <div className="max-w-md">
+    <div className="w-full sm:max-w-md">
       <div className="relative">
 
         <Search

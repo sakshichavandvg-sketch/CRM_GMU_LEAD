@@ -15,9 +15,9 @@ export default function Pagination({
   );
 
   return (
-    <div className="mt-6 flex items-center justify-between border-t border-gray-200 pt-5">
+    <div className="mt-6 flex flex-col gap-4 border-t border-gray-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
 
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500 text-center sm:text-left">
         Showing{" "}
         <span className="font-medium text-gray-800">
           {start}-{end}
@@ -29,7 +29,7 @@ export default function Pagination({
         records
       </p>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-center gap-2">
 
         <button
           disabled={currentPage === 1}

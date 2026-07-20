@@ -30,7 +30,12 @@ export default function LoginForm() {
         <div
             className="
                 w-full
-                max-w-[430px]
+                max-w-full
+                sm:max-w-[400px]
+                md:max-w-[430px]
+                lg:max-w-[460px]
+                xl:max-w-[500px]
+                2xl:max-w-[520px]
                 rounded-[24px]
                 border
                 border-[#ECECEC]

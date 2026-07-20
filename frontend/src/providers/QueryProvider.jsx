@@ -9,11 +9,16 @@ export default function QueryProvider({ children }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            retry: false,
+            staleTime: 5 * 60 * 1000,      // 5 minutes
+            gcTime: 10 * 60 * 1000,         // 10 minutes
+            retry: 1,                        // retry once before failing
+            retryDelay: (attempt) =>
+              Math.min(1000 * 2 ** attempt, 30000), // exponential backoff
             refetchOnWindowFocus: false,
+            refetchOnReconnect: true,
           },
           mutations: {
-            retry: false,
+            retry: false,                    // never auto-retry mutations
           },
         },
       })

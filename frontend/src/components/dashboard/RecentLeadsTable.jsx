@@ -16,7 +16,8 @@ export default function RecentLeadsTable() {
 
       </div>
 
-      <table className="w-full">
+      <div className="overflow-x-auto">
+      <table className="min-w-[600px] w-full">
 
         <thead className="bg-gray-50">
 
@@ -82,6 +83,7 @@ export default function RecentLeadsTable() {
         </tbody>
 
       </table>
+      </div>
 
     </div>
   );

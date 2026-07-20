@@ -15,6 +15,8 @@ export default function PasswordInput({
 }) {
     const [showPassword, setShowPassword] = useState(false);
 
+    const errorId = name ? `${name}-error` : undefined;
+
     return (
         <div className="space-y-1.5">
             <label
@@ -34,6 +36,8 @@ export default function PasswordInput({
                     value={value}
                     onChange={onChange}
                     onBlur={onBlur}
+                    aria-invalid={!!error}
+                    aria-describedby={error ? errorId : undefined}
                     className={`
                         w-full
                         rounded-xl
@@ -57,6 +61,7 @@ export default function PasswordInput({
                 <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                     className="
                         absolute
                         right-4
@@ -75,7 +80,7 @@ export default function PasswordInput({
             </div>
 
             <div className="min-h-[20px] text-[12px] text-red-500 font-inter">
-                {error && <p>{error}</p>}
+                {error && <p id={errorId}>{error}</p>}
             </div>
         </div>
     );

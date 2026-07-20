@@ -3,11 +3,12 @@ export default function RightPanel({ children }) {
     <section
       className="
         w-full
-        h-screen
+        min-h-full
         bg-[#FCFCFC]
         flex
         items-center
         justify-center
+        py-10
         px-4
         sm:px-6
         lg:px-8

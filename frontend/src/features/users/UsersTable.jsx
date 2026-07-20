@@ -10,13 +10,14 @@ import BulkActionBar from "@/components/table/BulkActionBar";
 import DataTable from "@/components/table/DataTable";
 import Pagination from "@/components/table/Pagination";
 import StatusBadge from "@/components/table/StatusBadge";
+import { TableSkeleton } from "@/components/ui/Skeletons";
 
 import AddUserDialog from "./components/AddUserDialog";
 import EditUserDialog from "./components/EditUserDialog";
 import UserTableActions from "./components/UserTableActions";
 
 import useUsers from "./useUsers";
-import useToggleUser from "../useToggleUser";
+import useToggleUser from "./useToggleUser";
 
 const columns = [
   {
@@ -95,11 +96,7 @@ export default function UsersTable() {
   };
 
   if (isLoading) {
-    return (
-      <div className="py-10 text-center text-slate-500">
-        Loading users...
-      </div>
-    );
+    return <TableSkeleton rows={5} columns={5} />;
   }
 
   if (isError) {
