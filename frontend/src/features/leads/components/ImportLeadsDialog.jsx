@@ -4,6 +4,7 @@ import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { useImportLeads } from "../hooks/useImportLeads";
+import { useConfirm } from "@/hooks/useConfirm";
 
 export default function ImportLeadsDialog({ open, onClose }) {
   const [file, setFile] = useState(null);
@@ -38,24 +39,35 @@ export default function ImportLeadsDialog({ open, onClose }) {
     setFile(selected);
   };
 
-  const handleImport = () => {
+  const confirm = useConfirm();
+
+  const handleImport = async () => {
     if (!file) {
       setError("Please select a CSV file to upload.");
       return;
     }
 
-    const payload = new FormData();
-    payload.append("csv_file", file);
-
-    mutate({
-      payload,
-      onUploadProgress: (progressEvent) => {
-        const percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / (progressEvent.total || file.size)
-        );
-        setProgress(percentCompleted);
-      },
+    const isConfirmed = await confirm({
+      title: "Import Leads?",
+      description: `Are you sure you want to import ${file.name}?`,
+      confirmText: "Import",
+      variant: "primary",
     });
+
+    if (isConfirmed) {
+      const payload = new FormData();
+      payload.append("csv_file", file);
+
+      mutate({
+        payload,
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / (progressEvent.total || file.size)
+          );
+          setProgress(percentCompleted);
+        },
+      });
+    }
   };
 
   const handleClose = () => {

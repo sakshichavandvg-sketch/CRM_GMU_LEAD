@@ -7,6 +7,7 @@ import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
 import { transferLeadSchema } from "../schemas/transferLeadSchema";
 import { useTransferLead } from "../hooks/useTransferLead";
+import { useConfirm } from "@/hooks/useConfirm";
 
 // Assuming callers are passed as a prop from a shared hook or parent
 export default function TransferLeadDialog({ open, onClose, enquiryNo, callers = [] }) {
@@ -15,18 +16,29 @@ export default function TransferLeadDialog({ open, onClose, enquiryNo, callers =
     onClose();
   });
 
+  const confirm = useConfirm();
+
   const formik = useFormik({
     initialValues: {
       toEmpId: "",
       reason: "",
     },
     validationSchema: transferLeadSchema,
-    onSubmit: (values) => {
-      mutate({
-        enquiryNo,
-        toEmpId: values.toEmpId,
-        reason: values.reason,
+    onSubmit: async (values) => {
+      const isConfirmed = await confirm({
+        title: "Reassign Lead?",
+        description: "Are you sure you want to reassign this lead?",
+        confirmText: "Reassign",
+        variant: "warning",
       });
+
+      if (isConfirmed) {
+        mutate({
+          enquiryNo,
+          toEmpId: values.toEmpId,
+          reason: values.reason,
+        });
+      }
     },
   });
 

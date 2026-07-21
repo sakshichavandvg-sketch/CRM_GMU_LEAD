@@ -7,6 +7,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
 import useCreateUser from "../useCreateUser";
+import { useConfirm } from "@/hooks/useConfirm";
 
 const initialForm = {
   username: "",
@@ -18,7 +19,7 @@ const initialForm = {
   discipline: "",
 };
 
-export default function AddUserDialog({
+export default function AddTelecallerDialog({
   open,
   onClose,
 }) {
@@ -54,14 +55,25 @@ export default function AddUserDialog({
     }));
   };
 
-  const handleSubmit = (e) => {
+  const confirm = useConfirm();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    mutate(form, {
-      onSuccess: () => {
-        setForm(initialForm);
-      },
+    const isConfirmed = await confirm({
+      title: "Create Telecaller?",
+      description: "Are you sure you want to create this telecaller?",
+      confirmText: "Create",
+      variant: "primary",
     });
+
+    if (isConfirmed) {
+      mutate(form, {
+        onSuccess: () => {
+          setForm(initialForm);
+        },
+      });
+    }
   };
 
   const handleClose = () => {
@@ -75,7 +87,7 @@ export default function AddUserDialog({
       <Modal
         open={open}
         onClose={handleClose}
-        title="User Created Successfully"
+        title="Telecaller Created Successfully"
         footer={
           <Button
             fullWidth={false}
@@ -89,11 +101,11 @@ export default function AddUserDialog({
 
           <div className="rounded-xl border border-green-200 bg-green-50 p-4">
             <p className="text-green-700 font-medium">
-              The user has been created successfully.
+              The telecaller has been created successfully.
             </p>
 
             <p className="mt-2 text-sm text-green-600">
-              Please share the password with the user.
+              Please share the password with the telecaller.
               It will not be shown again.
             </p>
           </div>
@@ -140,7 +152,7 @@ export default function AddUserDialog({
     <Modal
       open={open}
       onClose={handleClose}
-      title="Add User"
+      title="Add Telecaller"
       footer={
         <>
           <Button
@@ -151,15 +163,14 @@ export default function AddUserDialog({
             Cancel
           </Button>
 
-          <Button
+          <button
             type="submit"
             form="add-user-form"
-            fullWidth={false}
-            loading={isPending}
-            loadingText="Creating..."
+            disabled={isPending}
+            className="h-[44px] rounded-xl bg-[#6F1D28] px-5 text-white hover:bg-[#5a1620] transition font-medium disabled:opacity-50"
           >
-            Create User
-          </Button>
+            {isPending ? "Creating..." : "Create Telecaller"}
+          </button>
         </>
       }
     >

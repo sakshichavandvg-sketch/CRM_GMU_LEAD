@@ -1,11 +1,11 @@
 "use client";
 
-import { Edit2, Power } from "lucide-react";
+import { Edit2 } from "lucide-react";
+import StatusToggle from "./StatusToggle";
 
 export default function UserTableActions({
   user,
   onEdit,
-  onToggleStatus,
 }) {
   return (
     <div className="flex items-center justify-center gap-2">
@@ -17,21 +17,7 @@ export default function UserTableActions({
         <Edit2 size={18} />
       </button>
 
-      <button
-        onClick={() => onToggleStatus(user)}
-        className={`rounded-lg p-2 transition ${
-          user.status === "ACTIVE"
-            ? "text-red-600 hover:bg-red-50"
-            : "text-green-600 hover:bg-green-50"
-        }`}
-        title={
-          user.status === "ACTIVE"
-            ? "Deactivate User"
-            : "Activate User"
-        }
-      >
-        <Power size={18} />
-      </button>
+      <StatusToggle user={user} />
     </div>
   );
 }

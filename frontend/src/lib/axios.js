@@ -1,8 +1,9 @@
 import axios from "axios";
 import API_ENDPOINTS from "@/utils/apiEndpoints";
+import { env } from "@/config/env";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: env.NEXT_PUBLIC_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -51,5 +52,11 @@ axiosInstance.interceptors.response.use(
     }
   }
 );
+
+// Initialize Frontend Development Mode mocks
+if (env.FRONTEND_ONLY) {
+  const { initializeMocks } = require("@/mocks/setup");
+  initializeMocks(axiosInstance);
+}
 
 export default axiosInstance;

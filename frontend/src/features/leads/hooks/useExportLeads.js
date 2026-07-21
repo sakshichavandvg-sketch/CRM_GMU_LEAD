@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useAppToast } from "@/hooks/useAppToast";
 import leadService from "../services/leadService";
 import { handleLeadError } from "../utils/errorHandler";
 
 export const useExportLeads = (onSuccessCallback) => {
+  const toast = useAppToast();
   return useMutation({
     mutationFn: leadService.exportLeads,
     onSuccess: (response) => {
@@ -31,11 +32,13 @@ export const useExportLeads = (onSuccessCallback) => {
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
       
-      toast.success("Export successful. Your download should begin shortly.");
+      toast.success("Export Started", "Your download has started.");
       if (onSuccessCallback) onSuccessCallback();
     },
     onError: (error) => {
       handleLeadError(error, "Failed to export leads.");
+      const msg = error?.response?.data?.message || "Something went wrong. Please try again.";
+      toast.error("Failed", msg);
     },
   });
 };

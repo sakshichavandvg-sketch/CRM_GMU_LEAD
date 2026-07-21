@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "message": "Filter options fetched successfully",
+  "data": {
+    "sources": ["Website", "Referral", "Cold Call", "Event"],
+    "statuses": ["NEW", "IN_PROGRESS", "FOLLOW_UP", "CONVERTED", "LOST"],
+    "temperatures": ["HOT", "WARM", "COLD"]
+  }
+}

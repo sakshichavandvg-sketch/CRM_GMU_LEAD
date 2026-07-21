@@ -7,6 +7,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
 import useUpdateUser from "../useUpdateUser";
+import { useConfirm } from "@/hooks/useConfirm";
 
 const initialForm = {
   slNo: null,
@@ -21,7 +22,7 @@ const initialForm = {
   discipline: "",
 };
 
-export default function EditUserDialog({
+export default function EditTelecallerDialog({
   open,
   onClose,
   user,
@@ -65,17 +66,28 @@ export default function EditUserDialog({
     }));
   };
 
-  const handleSubmit = (e) => {
+  const confirm = useConfirm();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    mutate(form);
+    const isConfirmed = await confirm({
+      title: "Save Changes?",
+      description: "Are you sure you want to save these changes to the telecaller?",
+      confirmText: "Save",
+      variant: "primary",
+    });
+
+    if (isConfirmed) {
+      mutate(form);
+    }
   };
 
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title="Edit User"
+      title="Edit Telecaller"
       footer={
         <>
           <Button
@@ -86,15 +98,14 @@ export default function EditUserDialog({
             Cancel
           </Button>
 
-          <Button
+          <button
             type="submit"
             form="edit-user-form"
-            fullWidth={false}
-            loading={isPending}
-            loadingText="Updating..."
+            disabled={isPending}
+            className="h-[44px] rounded-xl bg-[#6F1D28] px-5 text-white hover:bg-[#5a1620] transition font-medium disabled:opacity-50"
           >
-            Update User
-          </Button>
+            {isPending ? "Updating..." : "Save Telecaller"}
+          </button>
         </>
       }
     >

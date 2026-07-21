@@ -6,6 +6,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { createLeadSchema } from "../schemas/createLeadSchema";
 import { useCreateLead } from "../hooks/useCreateLead";
+import { useConfirm } from "@/hooks/useConfirm";
 
 const initialValues = {
   name: "",
@@ -27,11 +28,22 @@ export default function CreateLeadDialog({ open, onClose }) {
     onClose();
   });
 
+  const confirm = useConfirm();
+
   const formik = useFormik({
     initialValues,
     validationSchema: createLeadSchema,
-    onSubmit: (values) => {
-      mutate(values);
+    onSubmit: async (values) => {
+      const isConfirmed = await confirm({
+        title: "Create Lead?",
+        description: "Are you sure you want to create this lead?",
+        confirmText: "Create",
+        variant: "primary",
+      });
+
+      if (isConfirmed) {
+        mutate(values);
+      }
     },
   });
 

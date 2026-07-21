@@ -9,6 +9,7 @@ export default function ManagementHeader({
   search,
   setSearch,
   activeTab,
+  actions,
 }) {
   return (
     <div className="space-y-6">
@@ -27,21 +28,23 @@ export default function ManagementHeader({
 
         </div>
 
-        <TableActions activeTab={activeTab} />
+        {actions ? actions : <TableActions activeTab={activeTab} />}
 
       </div>
 
-      <SearchBar
-        value={search}
-        onChange={setSearch}
-        placeholder={
-          activeTab === "users"
-            ? "Search users..."
-            : activeTab === "calls"
-            ? "Search reports..."
-            : "Search leads..."
-        }
-      />
+      {setSearch && (
+        <SearchBar
+          value={search}
+          onChange={setSearch}
+          placeholder={
+            activeTab === "users"
+              ? "Search users..."
+              : activeTab === "calls"
+              ? "Search reports..."
+              : "Search leads..."
+          }
+        />
+      )}
 
     </div>
   );

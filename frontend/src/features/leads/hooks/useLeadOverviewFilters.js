@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import useGlobalSearchStore from "@/store/globalSearchStore";
 
 export const useLeadOverviewFilters = (initialType = "hot") => {
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
   const [type, setType] = useState(initialType);
-  const [search, setSearch] = useState("");
+  const { searchQuery } = useGlobalSearchStore();
   const [debouncedSearch, setDebouncedSearch] = useState("");
   
   // Detailed filters
@@ -20,11 +21,11 @@ export const useLeadOverviewFilters = (initialType = "hot") => {
   // Debounce search input
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedSearch(search);
+      setDebouncedSearch(searchQuery);
       setPage(0); // Reset page on new search
     }, 500);
     return () => clearTimeout(handler);
-  }, [search]);
+  }, [searchQuery]);
 
   // Reset page when other filters change
   useEffect(() => {
@@ -50,7 +51,6 @@ export const useLeadOverviewFilters = (initialType = "hot") => {
     setPage,
     setSize,
     setType,
-    setSearch,
     setSource,
     setStatus,
     setCallerName,
@@ -61,5 +61,5 @@ export const useLeadOverviewFilters = (initialType = "hot") => {
     setTaluk,
   };
 
-  return { search, filters, actions };
+  return { search: searchQuery, filters, actions };
 };

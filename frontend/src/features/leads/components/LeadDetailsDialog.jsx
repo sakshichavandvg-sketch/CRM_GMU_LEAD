@@ -1,73 +1,107 @@
 "use client";
 
+import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import ErrorState from "@/components/ui/ErrorState";
 import { FormSkeleton } from "@/components/ui/Skeletons";
-import ActivityTimeline from "@/components/dashboard/ActivityTimeline";
+
 import { useLeadDetails } from "../hooks/useLeadDetails";
+import { useDeleteLead } from "../hooks/useDeleteLead";
+import { mapLeadToViewModel } from "../utils/leadViewModelMapper";
+import { TABS_CONFIG } from "../constants/detailsConfig";
+
+import LeadHeader from "./details/LeadHeader";
+import LeadStatusBar from "./details/LeadStatusBar";
+import LeadTabs from "./details/LeadTabs";
+import Button from "@/components/ui/Button";
+import { useConfirm } from "@/hooks/useConfirm";
 
 export default function LeadDetailsDialog({ open, onClose, enquiryNo }) {
-  const { data, isLoading, isError, error } = useLeadDetails(
+  const [activeTab, setActiveTab] = useState(TABS_CONFIG[0].id);
+  const confirm = useConfirm();
+
+  const { data: rawData, isLoading, isError, error } = useLeadDetails(
     open ? enquiryNo : null
   );
 
+  const { mutate: deleteLead, isPending: isDeleting } = useDeleteLead(() => {
+    onClose();
+  });
+
+  // Map raw backend data to our normalized view model
+  const viewModel = mapLeadToViewModel(rawData);
+
+  // Find the active tab configuration
+  const activeTabConfig = TABS_CONFIG.find((tab) => tab.id === activeTab) || TABS_CONFIG[0];
+  const ActiveTabComponent = activeTabConfig.component;
+
+  // Determine what data to pass to the active tab component
+  const getTabProps = () => {
+    if (activeTab === "info") return viewModel;
+    if (activeTab === "timeline") return viewModel?.timeline;
+    if (activeTab === "notes") return viewModel?.notes;
+    return null;
+  };
+
   return (
-    <Modal open={open} onClose={onClose} title="Lead Details" size="lg">
+    <Modal 
+      open={open} 
+      onClose={onClose} 
+      title={viewModel ? <LeadHeader header={viewModel.header} /> : "Lead Details"} 
+      size="xl"
+      footer={
+        viewModel && (
+          <div className="flex justify-between w-full">
+            <Button
+              variant="danger"
+              fullWidth={false}
+              loading={isDeleting}
+              loadingText="Deleting..."
+              onClick={async () => {
+                const confirmed = await confirm({
+                  title: "Delete Lead?",
+                  description: "This action cannot be undone.",
+                  variant: "danger",
+                  confirmText: "Delete",
+                });
+                if (confirmed) {
+                  deleteLead(enquiryNo);
+                }
+              }}
+            >
+              Delete Lead
+            </Button>
+            <Button variant="secondary" fullWidth={false} onClick={onClose} disabled={isDeleting}>
+              Close
+            </Button>
+          </div>
+        )
+      }
+    >
       {isLoading && <FormSkeleton />}
       
       {isError && (
         <ErrorState
           title="Error Loading Lead Details"
           message={error?.response?.data?.message || "Failed to load lead details."}
-          onRetry={() => {}} // Could wire a refetch here
+          onRetry={() => {}} 
         />
       )}
       
-      {data && !isLoading && !isError && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg border bg-gray-50">
-              <h3 className="font-semibold text-gray-700 mb-2">Profile Info</h3>
-              <p><span className="text-gray-500">Name:</span> {data.name}</p>
-              <p><span className="text-gray-500">Mobile:</span> {data.mobileNo}</p>
-              {data.email && <p><span className="text-gray-500">Email:</span> {data.email}</p>}
-            </div>
-
-            <div className="p-4 rounded-lg border bg-gray-50">
-              <h3 className="font-semibold text-gray-700 mb-2">Location</h3>
-              <p><span className="text-gray-500">State:</span> {data.state}</p>
-              <p><span className="text-gray-500">District:</span> {data.district}</p>
-              <p><span className="text-gray-500">Taluk:</span> {data.taluk}</p>
-            </div>
+      {viewModel && !isLoading && !isError && (
+        <div className="flex flex-col gap-6">
+          <LeadStatusBar status={viewModel.status} />
+          
+          <div className="flex flex-col gap-5">
+            <LeadTabs activeTab={activeTab} onTabChange={setActiveTab} />
             
-            <div className="p-4 rounded-lg border bg-gray-50 md:col-span-2">
-              <h3 className="font-semibold text-gray-700 mb-2">Academic & Source Info</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {data.collegeStudied && <p><span className="text-gray-500">College:</span> {data.collegeStudied}</p>}
-                {data.programme && <p><span className="text-gray-500">Programme:</span> {data.programme}</p>}
-                {data.course && <p><span className="text-gray-500">Course:</span> {data.course}</p>}
-                {data.discipline && <p><span className="text-gray-500">Discipline:</span> {data.discipline}</p>}
-                {data.source && <p><span className="text-gray-500">Source:</span> {data.source}</p>}
-              </div>
+            <div className="min-h-[400px]">
+              <ActiveTabComponent data={getTabProps()} />
             </div>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-3">Status & Remarks</h3>
-            <div className="p-4 rounded-lg border bg-white shadow-sm space-y-2">
-              <p><span className="font-medium text-gray-600">Status:</span> {data.status || 'N/A'}</p>
-              <p><span className="font-medium text-gray-600">Opinion:</span> {data.opinion || 'N/A'}</p>
-              <p><span className="font-medium text-gray-600">Remarks:</span> {data.remarks || 'No remarks available.'}</p>
-            </div>
-          </div>
-          
-          <div>
-             <h3 className="text-lg font-semibold text-gray-800 mb-3">Activity & Timeline</h3>
-             {/* The existing ActivityTimeline might not accept props or might need adjustments based on actual data. Assuming it takes some timeline data. */}
-             <ActivityTimeline activities={data.activities || []} />
           </div>
         </div>
       )}
+
     </Modal>
   );
 }

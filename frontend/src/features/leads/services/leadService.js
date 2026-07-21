@@ -12,6 +12,11 @@ const leadService = {
     return data;
   },
 
+  deleteLead: async (enquiryNo) => {
+    const { data } = await axiosInstance.delete(API_ENDPOINTS.LEADS.DELETE(enquiryNo));
+    return data;
+  },
+
   getLeadDetails: async (enquiryNo) => {
     const { data } = await axiosInstance.get(API_ENDPOINTS.LEADS.DETAIL(enquiryNo));
     return data;

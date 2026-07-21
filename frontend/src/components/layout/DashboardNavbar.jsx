@@ -10,6 +10,7 @@ import {
 import { usePathname } from "next/navigation";
 
 import useAuthStore from "@/store/authStore";
+import useGlobalSearchStore from "@/store/globalSearchStore";
 import { ROLES, ROLE_LABELS } from "@/constants/roles";
 
 export default function DashboardNavbar({
@@ -21,6 +22,7 @@ export default function DashboardNavbar({
   const pathname = usePathname();
 
   const user = useAuthStore((state) => state.user);
+  const { searchQuery, setSearchQuery } = useGlobalSearchStore();
 
   const currentPage =
     breadcrumbs[pathname] || "Dashboard";
@@ -113,6 +115,8 @@ export default function DashboardNavbar({
           <input
             type="text"
             placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="
               w-full
               bg-transparent

@@ -22,6 +22,8 @@ const API_ENDPOINTS = {
 
     CREATE: "/api/leads/manager/leads",
     UPDATE: "/api/leads/manager/leads",
+    DELETE: (enquiryNo) =>
+      `/api/leads/manager/leads/${enquiryNo}`,
 
     DETAIL: (enquiryNo) =>
       `/api/leads/overview/${enquiryNo}`,

@@ -42,7 +42,7 @@ export default function DashboardShell({ children }) {
   }, []);
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC]">
+    <div className="flex h-screen bg-white">
       <DashboardSidebar
         navigation={currentNavigation}
         isOpen={sidebarOpen}

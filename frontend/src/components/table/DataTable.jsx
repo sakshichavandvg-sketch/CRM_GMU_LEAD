@@ -8,6 +8,7 @@ export default function DataTable({
   rowKey = "id",
   renderRowActions,
   onRowClick,
+  density = "standard",
 }) {
   // Unique row id
   const getRowId = (row, index) => row[rowKey] ?? index;
@@ -52,37 +53,42 @@ export default function DataTable({
         border-gray-200
         bg-white
         shadow-sm
+        relative
       "
     >
       <div className="overflow-x-auto">
-        <table className="min-w-[600px] w-full">
+        <table className="min-w-[600px] w-full relative">
           {/* Header */}
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50 sticky top-0 z-20 shadow-sm border-b border-gray-200">
             <tr>
-              <th className="w-12 px-5">
-                <input
+              <th className="w-12 px-5 text-left align-middle">
+                <div className="flex items-center h-full pt-1">
+                  <input
                   type="checkbox"
                   checked={allSelected}
                   onChange={toggleAll}
                   aria-label="Select all rows"
+                  className="w-4 h-4 text-[#6F1D28] bg-white border-gray-300 rounded focus:ring-[#6F1D28] focus:ring-2 accent-[#6F1D28] cursor-pointer"
                 />
+                </div>
               </th>
 
               {columns.map((column) => (
                 <th
                   key={column.key}
                   scope="col"
-                  className="
-                    px-3 py-3
-                    sm:px-5 sm:py-4
-                    lg:px-7 lg:py-5
+                  className={`
                     text-left
                     text-xs
                     font-semibold
                     uppercase
                     tracking-wide
                     text-slate-500
-                  "
+                    ${density === "compact" 
+                      ? "px-3 py-2 sm:px-4 sm:py-3 lg:px-5 lg:py-3" 
+                      : "px-3 py-3 sm:px-5 sm:py-4 lg:px-7 lg:py-5"
+                    }
+                  `}
                 >
                   {column.label}
                 </th>
@@ -110,17 +116,20 @@ export default function DataTable({
                 return (
                   <tr
                     key={id}
-                    className={`border-t border-gray-100 transition hover:bg-gray-50 ${onRowClick ? 'cursor-pointer' : ''}`}
+                    className={`border-t border-gray-100 transition ${onRowClick ? 'cursor-pointer' : ''} ${selectedRows.includes(id) ? 'bg-[#fdf8f8]' : 'hover:bg-[#fdf8f8]'}`}
                     onClick={() => onRowClick && onRowClick(row)}
                   >
                     {/* Checkbox */}
-                    <td className="px-3 sm:px-5" onClick={(e) => e.stopPropagation()}>
-                      <input
+                    <td className="w-12 px-5 align-middle" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center h-full">
+                        <input
                         type="checkbox"
                         checked={selectedRows.includes(id)}
                         onChange={() => toggleRow(row, index)}
                         aria-label={`Select row ${id}`}
+                        className="w-4 h-4 text-[#6F1D28] bg-white border-gray-300 rounded focus:ring-[#6F1D28] focus:ring-2 accent-[#6F1D28] cursor-pointer"
                       />
+                      </div>
                     </td>
 
                     {/* Cells */}
@@ -130,7 +139,11 @@ export default function DataTable({
                       return (
                         <td
                           key={column.key}
-                          className="px-3 py-3 sm:px-5 sm:py-4 lg:px-7 lg:py-6 text-[15px] text-slate-700"
+                          className={`text-[15px] text-slate-700 ${
+                            density === "compact"
+                              ? "px-3 py-2 sm:px-4 sm:py-3 lg:px-5 lg:py-4"
+                              : "px-3 py-3 sm:px-5 sm:py-4 lg:px-7 lg:py-6"
+                          }`}
                         >
                           {column.render
                             ? column.render(value, row)
@@ -140,7 +153,11 @@ export default function DataTable({
                     })}
 
                     {/* Actions */}
-                    <td className="px-3 py-3 sm:px-5 sm:py-4 lg:px-7 lg:py-6">
+                    <td className={`${
+                      density === "compact"
+                        ? "px-3 py-2 sm:px-4 sm:py-3 lg:px-5 lg:py-4"
+                        : "px-3 py-3 sm:px-5 sm:py-4 lg:px-7 lg:py-6"
+                    }`}>
                       {renderRowActions
                         ? renderRowActions(row)
                         : null}

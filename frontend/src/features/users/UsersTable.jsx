@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import Button from "@/components/ui/Button";
 
@@ -8,16 +8,14 @@ import SearchBar from "@/components/management/SearchBar";
 
 import BulkActionBar from "@/components/table/BulkActionBar";
 import DataTable from "@/components/table/DataTable";
-import Pagination from "@/components/table/Pagination";
 import StatusBadge from "@/components/table/StatusBadge";
 import { TableSkeleton } from "@/components/ui/Skeletons";
 
-import AddUserDialog from "./components/AddUserDialog";
 import EditUserDialog from "./components/EditUserDialog";
 import UserTableActions from "./components/UserTableActions";
 
-import useUsers from "./useUsers";
-import useToggleUser from "./useToggleUser";
+import useInfiniteUsers from "./useInfiniteUsers";
+import { useInfiniteScrollObserver } from "@/hooks/useInfiniteScrollObserver";
 
 const columns = [
   {
@@ -48,13 +46,8 @@ const columns = [
 export default function UsersTable() {
   const [search, setSearch] = useState("");
 
-  const [page, setPage] = useState(0);
-
   const [selectedRows, setSelectedRows] =
     useState([]);
-
-  const [isAddOpen, setIsAddOpen] =
-    useState(false);
 
   const [isEditOpen, setIsEditOpen] =
     useState(false);
@@ -67,19 +60,26 @@ export default function UsersTable() {
     isLoading,
     isError,
     error,
-  } = useUsers({
-    page,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteUsers({
     size: 10,
     search,
   });
 
-  const {
-    mutate: toggleStatus,
-  } = useToggleUser({
-    onSuccess: () => {
-      console.log("User status updated.");
-    },
+  const loadMoreRef = useInfiniteScrollObserver({
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
   });
+
+  const usersData = useMemo(() => {
+    return data?.pages?.flatMap(page => page?.users ?? page?.content ?? []) ?? [];
+  }, [data]);
+
+  const totalResults = data?.pages?.[0]?.totalItems ?? data?.pages?.[0]?.page?.totalElements ?? 0;
 
   const handleEdit = (user) => {
     console.log("Edit:", user);
@@ -87,12 +87,6 @@ export default function UsersTable() {
     setSelectedUser(user);
 
     setIsEditOpen(true);
-  };
-
-  const handleToggleStatus = (user) => {
-    console.log("Toggle:", user);
-
-    toggleStatus(user.slNo);
   };
 
   if (isLoading) {
@@ -117,16 +111,9 @@ export default function UsersTable() {
             <SearchBar
               value={search}
               onChange={setSearch}
-              placeholder="Search users..."
+              placeholder="Search telecallers..."
             />
           </div>
-
-          <Button
-            fullWidth={false}
-            onClick={() => setIsAddOpen(true)}
-          >
-            Add User
-          </Button>
 
         </div>
 
@@ -138,8 +125,9 @@ export default function UsersTable() {
         />
 
         <DataTable
+          density="compact"
           columns={columns}
-          data={data?.users ?? []}
+          data={usersData}
           rowKey="slNo"
           selectedRows={selectedRows}
           setSelectedRows={setSelectedRows}
@@ -147,39 +135,36 @@ export default function UsersTable() {
             <UserTableActions
               user={user}
               onEdit={handleEdit}
-              onToggleStatus={
-                handleToggleStatus
-              }
             />
           )}
         />
 
-        <Pagination
-          currentPage={
-            (data?.currentPage ?? 0) + 1
-          }
-          totalPages={
-            data?.totalPages ?? 1
-          }
-          totalItems={
-            data?.totalItems ?? 0
-          }
-          pageSize={
-            data?.pageSize ?? 10
-          }
-          onPageChange={(page) =>
-            setPage(page - 1)
-          }
-        />
+        {!isLoading && !isError && totalResults === 0 && (
+          <div className="py-16 text-center text-gray-500 bg-white rounded-xl shadow-sm border border-gray-200">
+            <p className="text-lg font-medium">No Telecallers Found</p>
+          </div>
+        )}
+
+        {!isLoading && !isError && totalResults > 0 && (
+          <div className="py-6 text-center text-sm text-gray-500 font-medium">
+            {hasNextPage ? (
+              <div ref={loadMoreRef} className="flex items-center justify-center gap-2">
+                {isFetchingNextPage ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+                    <span>Loading more telecallers...</span>
+                  </>
+                ) : (
+                  "Scroll for more"
+                )}
+              </div>
+            ) : (
+              "End of Results"
+            )}
+          </div>
+        )}
 
       </div>
-
-      <AddUserDialog
-        open={isAddOpen}
-        onClose={() =>
-          setIsAddOpen(false)
-        }
-      />
 
       <EditUserDialog
         open={isEditOpen}

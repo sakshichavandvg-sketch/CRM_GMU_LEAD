@@ -6,12 +6,14 @@ import { Upload, Download, Plus } from "lucide-react";
 import CreateLeadDialog from "@/features/leads/components/CreateLeadDialog";
 import ImportLeadsDialog from "@/features/leads/components/ImportLeadsDialog";
 import { useExportLeads } from "@/features/leads/hooks/useExportLeads";
+import { useConfirm } from "@/hooks/useConfirm";
 
 export default function TableActions({ activeTab }) {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
 
   const { mutate: exportLeads, isPending: isExporting } = useExportLeads();
+  const confirm = useConfirm();
 
   return (
     <>
@@ -27,7 +29,18 @@ export default function TableActions({ activeTab }) {
             </button>
 
             <button 
-              onClick={() => exportLeads({})} // Can pass filters here if available from context
+              onClick={async () => {
+                const isConfirmed = await confirm({
+                  title: "Export Leads?",
+                  description: "Are you sure you want to export all matching leads to a CSV?",
+                  confirmText: "Export",
+                  variant: "primary"
+                });
+                
+                if (isConfirmed) {
+                  exportLeads({}); // Can pass filters here if available from context
+                }
+              }}
               disabled={isExporting}
               className="h-11 rounded-xl border border-gray-200 px-5 flex items-center gap-2 hover:bg-gray-50 transition disabled:opacity-50"
             >
