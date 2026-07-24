@@ -1,4 +1,7 @@
+import React from 'react';
 import { LucideIcon } from "lucide-react";
+import CRMGlassOverlay from '../crm/CRMGlassOverlay';
+import { kpiTheme } from '../../styles/theme/kpi';
 
 export default function TemperatureCard({
   value,
@@ -13,15 +16,18 @@ export default function TemperatureCard({
   
   return (
     <div
-      className={`
-        relative overflow-hidden rounded-2xl bg-white p-6
-        border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.02)]
-      `}
+      className="group relative overflow-hidden rounded-2xl p-6 transition-all duration-250 ease-out hover:-translate-y-[3px] [box-shadow:var(--shadow-base)] hover:[box-shadow:var(--shadow-hover)]"
+      style={{
+        background: isOrange ? kpiTheme.gradients.hotOrange : kpiTheme.gradients.coldBlue,
+        borderLeft: isOrange ? kpiTheme.borders.hotLeft : kpiTheme.borders.coldLeft,
+        borderTop: kpiTheme.borders.glass,
+        borderRight: kpiTheme.borders.glass,
+        borderBottom: kpiTheme.borders.glass,
+        '--shadow-base': isOrange ? kpiTheme.shadows.hotBase : kpiTheme.shadows.coldBase,
+        '--shadow-hover': isOrange ? kpiTheme.shadows.hotHover : kpiTheme.shadows.coldHover,
+      }}
     >
-      {/* Subtle Tint Background */}
-      <div 
-        className={`absolute inset-0 opacity-30 ${isOrange ? "bg-orange-50" : "bg-blue-50"}`} 
-      />
+      <CRMGlassOverlay className={isOrange ? "opacity-30 mix-blend-overlay" : "opacity-30 mix-blend-overlay"} />
 
       <div className="relative z-10">
         <div className="flex items-start justify-between">
@@ -44,7 +50,8 @@ export default function TemperatureCard({
             className={`
               flex h-14 w-14 items-center justify-center rounded-full
               backdrop-blur-md bg-white/50 border border-white/40
-              shadow-sm
+              transition-all duration-250 ease-out
+              group-hover:scale-110 group-hover:brightness-110
               ${isOrange ? "shadow-[0_0_15px_rgba(249,115,22,0.15)] text-orange-500" : "shadow-[0_0_15px_rgba(59,130,246,0.15)] text-blue-500"}
             `}
           >

@@ -1,6 +1,8 @@
 "use client";
 
 import ManagementHeader from "@/components/management/ManagementHeader";
+
+import { breadcrumbs } from "@/config/breadcrumbs";
 import { Filter, PhoneOff } from "lucide-react";
 
 export default function CallReportsPage() {
@@ -8,8 +10,9 @@ export default function CallReportsPage() {
     <>
       <ManagementHeader 
         title="Call Reports" 
-        description="Analytics and history of telecaller activities" 
+        description="Monitor daily telecaller activity" 
         activeTab="calls" 
+        breadcrumbs={breadcrumbs.callReports}
       />
       
       <div className="flex items-center justify-between gap-4">

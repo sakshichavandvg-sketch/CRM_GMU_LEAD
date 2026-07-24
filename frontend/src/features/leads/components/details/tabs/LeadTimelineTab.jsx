@@ -1,11 +1,29 @@
 import React from 'react';
 import TimelineItem from "../timeline/TimelineItem";
+import { useLeadTimeline } from "../../../hooks/useLeadTimeline";
+import { FormSkeleton } from "@/components/ui/Skeletons";
 
 const MemoizedTimelineItem = React.memo(TimelineItem);
 
-export default function LeadTimelineTab({ data }) {
-  // data here represents the normalized timeline array from the view model
-  // If this tab later owns its own hook, we would fetch here and use its data
+export default function LeadTimelineTab({ leadId }) {
+  const { data, isLoading, isError, error } = useLeadTimeline(leadId);
+
+  if (isLoading) {
+    return (
+      <div className="p-5">
+        <FormSkeleton />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-8 text-center text-sm text-red-500 border border-red-100 rounded-xl bg-red-50">
+        {error?.response?.data?.message || "Failed to load timeline."}
+      </div>
+    );
+  }
+
   const timelineEvents = Array.isArray(data) ? data : [];
 
   if (timelineEvents.length === 0) {

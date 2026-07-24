@@ -1,13 +1,52 @@
-const adminBreadcrumbs = {
-  "/dashboard": "Overview",
-  "/dashboard/management": "Management",
-  "/dashboard/management/leads": "Management / Leads",
-  "/dashboard/management/user-directory": "Management / User Directory",
-  "/dashboard/management/call-reports": "Management / Call Reports",
-  "/dashboard/admissions": "Admissions",
-  "/dashboard/followups": "Follow Ups",
-  "/dashboard/reports": "Reports",
-  "/dashboard/settings": "Settings",
+export const breadcrumbs = {
+  dashboard: [
+    { label: "Dashboard" } // Current page, no href
+  ],
+  management: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Management" }
+  ],
+  leads: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Management", href: "/dashboard/management" },
+    { label: "Leads" }
+  ],
+  leadsDetail: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Management", href: "/dashboard/management" },
+    { label: "Leads", href: "/dashboard/management/leads" },
+    { label: "Lead Details" }
+  ],
+  userDirectory: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Management", href: "/dashboard/management" },
+    { label: "User Directory" }
+  ],
+  callReports: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Management", href: "/dashboard/management" },
+    { label: "Call Reports" }
+  ],
+  admissions: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Admissions" }
+  ],
+  followups: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Follow Ups" }
+  ],
+  reports: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Reports" }
+  ],
+  settings: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Settings" }
+  ],
+  telecallerDetails: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Management", href: "/dashboard/management" },
+    { label: "User Directory", href: "/dashboard/management/user-directory" },
+    { label: "Telecaller Details" }
+  ],
 };
-
-export default adminBreadcrumbs;

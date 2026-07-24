@@ -11,8 +11,7 @@ import DataTable from "@/components/table/DataTable";
 import StatusBadge from "@/components/table/StatusBadge";
 import { TableSkeleton } from "@/components/ui/Skeletons";
 
-import EditUserDialog from "./components/EditUserDialog";
-import UserTableActions from "./components/UserTableActions";
+import { useRouter } from "next/navigation";
 
 import useInfiniteUsers from "./useInfiniteUsers";
 import { useInfiniteScrollObserver } from "@/hooks/useInfiniteScrollObserver";
@@ -44,16 +43,13 @@ const columns = [
 ];
 
 export default function UsersTable() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
 
   const [selectedRows, setSelectedRows] =
     useState([]);
 
-  const [isEditOpen, setIsEditOpen] =
-    useState(false);
 
-  const [selectedUser, setSelectedUser] =
-    useState(null);
 
   const {
     data,
@@ -81,13 +77,7 @@ export default function UsersTable() {
 
   const totalResults = data?.pages?.[0]?.totalItems ?? data?.pages?.[0]?.page?.totalElements ?? 0;
 
-  const handleEdit = (user) => {
-    console.log("Edit:", user);
 
-    setSelectedUser(user);
-
-    setIsEditOpen(true);
-  };
 
   if (isLoading) {
     return <TableSkeleton rows={5} columns={5} />;
@@ -131,12 +121,7 @@ export default function UsersTable() {
           rowKey="slNo"
           selectedRows={selectedRows}
           setSelectedRows={setSelectedRows}
-          renderRowActions={(user) => (
-            <UserTableActions
-              user={user}
-              onEdit={handleEdit}
-            />
-          )}
+          onRowClick={(user) => router.push(`/dashboard/management/user-directory/${user.empId}`)}
         />
 
         {!isLoading && !isError && totalResults === 0 && (
@@ -165,15 +150,6 @@ export default function UsersTable() {
         )}
 
       </div>
-
-      <EditUserDialog
-        open={isEditOpen}
-        user={selectedUser}
-        onClose={() => {
-          setIsEditOpen(false);
-          setSelectedUser(null);
-        }}
-      />
     </>
   );
 }

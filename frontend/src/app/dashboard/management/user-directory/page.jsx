@@ -5,6 +5,7 @@ import ManagementHeader from "@/components/management/ManagementHeader";
 import UsersTable from "@/features/users/UsersTable";
 import AddUserDialog from "@/features/users/components/AddUserDialog";
 import { Plus } from "lucide-react";
+import { breadcrumbs } from "@/config/breadcrumbs";
 
 export default function UserDirectoryPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -26,6 +27,7 @@ export default function UserDirectoryPage() {
         description="Manage telecallers, assignments and account access." 
         activeTab="users" 
         actions={customActions}
+        breadcrumbs={breadcrumbs.userDirectory}
       />
       <UsersTable />
       

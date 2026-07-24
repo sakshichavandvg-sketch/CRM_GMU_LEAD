@@ -65,7 +65,7 @@ export default function Modal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b px-4 py-3 sm:px-6 sm:py-4">
+        <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 sm:px-6 sm:py-4">
           <h2
             id="modal-title"
             className="text-xl font-semibold text-[var(--primary)]"
@@ -89,7 +89,7 @@ export default function Modal({
 
         {/* Footer */}
         {footer && (
-          <div className="flex flex-col gap-3 border-t px-4 py-3 sm:flex-row sm:justify-end sm:gap-3 sm:px-6 sm:py-4">
+          <div className="flex flex-col gap-3 border-t border-gray-200 px-4 py-3 sm:flex-row sm:justify-end sm:gap-3 sm:px-6 sm:py-4">
             {footer}
           </div>
         )}

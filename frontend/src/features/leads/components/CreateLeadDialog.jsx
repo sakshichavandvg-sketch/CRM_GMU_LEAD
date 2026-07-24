@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import GeoSelectors from "./GeoSelectors";
 import { createLeadSchema } from "../schemas/createLeadSchema";
 import { useCreateLead } from "../hooks/useCreateLead";
 import { useConfirm } from "@/hooks/useConfirm";
@@ -113,33 +114,9 @@ export default function CreateLeadDialog({ open, onClose }) {
           onBlur={formik.handleBlur}
           error={formik.touched.source && formik.errors.source}
         />
-        <Input
-          label="State"
-          name="state"
-          value={formik.values.state}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.state && formik.errors.state}
-          required
-        />
-        <Input
-          label="District"
-          name="district"
-          value={formik.values.district}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.district && formik.errors.district}
-          required
-        />
-        <Input
-          label="Taluk"
-          name="taluk"
-          value={formik.values.taluk}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.taluk && formik.errors.taluk}
-          required
-        />
+
+        <GeoSelectors formik={formik} required />
+
         <Input
           label="College Studied"
           name="collegeStudied"

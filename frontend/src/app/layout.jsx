@@ -4,6 +4,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import AppToast from "@/components/ui/AppToast";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import AuthBootstrap from "@/features/auth/components/AuthBootstrap";
 
 const lora = Lora({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.variable} ${lora.variable} ${outfit.variable} antialiased`}>
         <QueryProvider>
+          <AuthBootstrap />
           {children}
           <AppToast />
           <ConfirmDialog />

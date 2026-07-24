@@ -10,44 +10,79 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+let refreshPromise = null;
+
+const logAuth = (message, ...args) => {
+  if (process.env.NODE_ENV === "development") {
+    console.log(message, ...args);
+  }
+};
+
+axiosInstance.interceptors.request.use((config) => {
+  return config;
+});
+
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log(" Response success:", response.config.url, response.status);
     return response;
   },
 
   async (error) => {
     const originalRequest = error.config;
-    console.log(" Response error caught:", error.response?.status, originalRequest?.url);
 
     // Ignore non-authentication errors
     if (error.response?.status !== 401) {
-      console.log(" Non-401 error, passing through");
+      return Promise.reject(error);
+    }
+
+    // Infinite Retry Protection
+    const url = originalRequest.url || "";
+    if (
+      url === API_ENDPOINTS.AUTH.LOGIN ||
+      url === API_ENDPOINTS.AUTH.REFRESH ||
+      url === API_ENDPOINTS.AUTH.LOGOUT
+    ) {
+      logAuth(" [Auth] Infinite retry protected URL, rejecting:", url);
       return Promise.reject(error);
     }
 
     // Don't retry the same request twice
     if (originalRequest._retry) {
-      console.log(" Already retried once, rejecting");
-      return Promise.reject(error);
-    }
-
-    // Don't try to refresh if the refresh request itself failed
-    if (originalRequest.url === API_ENDPOINTS.AUTH.REFRESH) {
-      console.log(" Refresh request itself failed, rejecting");
+      logAuth(" [Auth] Already retried once, rejecting");
       return Promise.reject(error);
     }
 
     originalRequest._retry = true;
-    console.log(" Attempting token refresh...");
+
+    if (!refreshPromise) {
+      logAuth(" [Auth] Refresh started");
+      
+      // Use a clean axios instance to avoid interceptor recursion
+      refreshPromise = axios
+        .post(
+          `${env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.AUTH.REFRESH}`,
+          {},
+          { withCredentials: true }
+        )
+        .then(() => {
+          logAuth(" [Auth] Refresh succeeded");
+        })
+        .catch((refreshError) => {
+          logAuth(" [Auth] Refresh failed:", refreshError.response?.status);
+          return Promise.reject(refreshError);
+        })
+        .finally(() => {
+          refreshPromise = null;
+        });
+    } else {
+      logAuth(" [Auth] Reusing existing refresh request");
+    }
 
     try {
-      await axiosInstance.post(API_ENDPOINTS.AUTH.REFRESH);
-      console.log(" Refresh successful, retrying original request:", originalRequest.url);
-
+      await refreshPromise;
+      logAuth(" [Auth] Retrying original request:", originalRequest.url);
       return axiosInstance(originalRequest);
     } catch (refreshError) {
-      console.log(" Refresh failed:", refreshError.response?.status);
       return Promise.reject(refreshError);
     }
   }

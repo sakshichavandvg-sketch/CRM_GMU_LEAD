@@ -1,33 +1,37 @@
 "use client";
 
+import React from "react";
+import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { usePathname } from "next/navigation";
 
-export default function DashboardHeader() {
-  const pathname = usePathname();
-
-  const page =
-    pathname.includes("/management")
-      ? "Management"
-      : pathname.includes("/admissions")
-      ? "Admissions"
-      : pathname.includes("/reports")
-      ? "Reports"
-      : pathname.includes("/settings")
-      ? "Settings"
-      : "Overview";
+export default function DashboardHeader({ breadcrumbs = [] }) {
+  if (!breadcrumbs || breadcrumbs.length === 0) return null;
 
   return (
-    <div className="flex items-center gap-2 text-sm text-gray-500">
+    <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-gray-500">
+      {breadcrumbs.map((item, index) => {
+        const isLast = index === breadcrumbs.length - 1;
 
-      <span>Dashboard</span>
-
-      <ChevronRight size={15} />
-
-      <span className="font-medium text-slate-900">
-        {page}
-      </span>
-
-    </div>
+        return (
+          <React.Fragment key={index}>
+            {isLast ? (
+              <span className="font-semibold text-slate-900" aria-current="page">
+                {item.label}
+              </span>
+            ) : (
+              <>
+                <Link
+                  href={item.href}
+                  className="transition-colors hover:text-[#6F1D28] hover:underline focus:outline-none focus:ring-2 focus:ring-[#6F1D28] focus:ring-offset-2 rounded"
+                >
+                  {item.label}
+                </Link>
+                <ChevronRight size={15} className="text-gray-400 mx-1" />
+              </>
+            )}
+          </React.Fragment>
+        );
+      })}
+    </nav>
   );
 }

@@ -6,7 +6,7 @@ import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
-import useUpdateUser from "../useUpdateUser";
+import useUpdateTelecaller from "@/features/users/hooks/useUpdateTelecaller";
 import { useConfirm } from "@/hooks/useConfirm";
 
 const initialForm = {
@@ -16,10 +16,10 @@ const initialForm = {
   password: "",
   name: "",
   phoneNo: "",
-  college: "",
-  programme: "",
-  course: "",
-  discipline: "",
+  email: "",
+  department: "",
+  role: "",
+  reportingManager: "",
 };
 
 export default function EditTelecallerDialog({
@@ -32,7 +32,7 @@ export default function EditTelecallerDialog({
   const {
     mutate,
     isPending,
-  } = useUpdateUser({
+  } = useUpdateTelecaller(user?.empId, {
     onSuccess: () => {
       onClose();
     },
@@ -46,11 +46,11 @@ export default function EditTelecallerDialog({
         username: user.username ?? "",
         password: "",
         name: user.name ?? "",
-        phoneNo: user.phoneNo ?? "",
-        college: user.college ?? "",
-        programme: user.programme ?? "",
-        course: user.course ?? "",
-        discipline: user.discipline ?? "",
+        phoneNo: user.phone ?? "",
+        email: user.email ?? "",
+        department: user.department ?? "",
+        role: user.role ?? "",
+        reportingManager: user.reportingManager ?? "",
       });
     } else {
       setForm(initialForm);
@@ -155,30 +155,32 @@ export default function EditTelecallerDialog({
         />
 
         <Input
-          label="College"
-          name="college"
-          value={form.college}
+          label="Email"
+          name="email"
+          type="email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+
+        <Input
+          label="Department"
+          name="department"
+          value={form.department}
           onChange={handleChange}
         />
 
         <Input
-          label="Programme"
-          name="programme"
-          value={form.programme}
+          label="Role"
+          name="role"
+          value={form.role}
           onChange={handleChange}
         />
 
         <Input
-          label="Course"
-          name="course"
-          value={form.course}
-          onChange={handleChange}
-        />
-
-        <Input
-          label="Discipline"
-          name="discipline"
-          value={form.discipline}
+          label="Reporting Manager"
+          name="reportingManager"
+          value={form.reportingManager}
           onChange={handleChange}
         />
       </form>

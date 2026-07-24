@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useGlobalSearchStore from "@/store/globalSearchStore";
 
-export const useLeadOverviewFilters = (initialType = "hot") => {
+export const useLeadOverviewFilters = (initialType = "") => {
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
   const [type, setType] = useState(initialType);

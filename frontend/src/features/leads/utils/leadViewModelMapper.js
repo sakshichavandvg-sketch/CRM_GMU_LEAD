@@ -1,45 +1,43 @@
 export const mapLeadToViewModel = (rawLead) => {
+  console.log("🧩 [MAPPER] Received raw data:", rawLead);
   if (!rawLead) return null;
 
   return {
     header: {
-      name: rawLead.name || "Unknown",
-      course: rawLead.course || "Not specified",
-      priority: rawLead.priority || null, 
+      name: rawLead?.student?.name || rawLead?.name || "Unknown",
+      course: rawLead?.education?.course || rawLead?.course || "Not specified",
+      priority: rawLead?.lead?.temperature || rawLead?.priority || null, 
     },
     status: {
-      currentStatus: rawLead.status || "N/A",
-      stage: rawLead.stage || "N/A", 
-      readOnly: rawLead.readOnly || false, 
-      score: rawLead.score || null, 
+      currentStatus: rawLead?.lead?.status || rawLead?.status || "N/A",
+      stage: rawLead?.lead?.stage || rawLead?.stage || "N/A", 
+      readOnly: rawLead?.readOnly || false, 
+      score: rawLead?.score || null, 
     },
     contact: {
-      mobile: rawLead.mobileNo || "N/A",
-      email: rawLead.email || "N/A",
-      locationStr: [rawLead.taluk, rawLead.district, rawLead.state].filter(Boolean).join(", ") || "N/A",
-      state: rawLead.state || "N/A",
-      district: rawLead.district || "N/A",
-      taluk: rawLead.taluk || "N/A",
+      mobile: rawLead?.student?.mobile || rawLead?.mobileNo || "N/A",
+      email: rawLead?.student?.email || rawLead?.email || "N/A",
+      locationStr: [rawLead?.location?.city, rawLead?.location?.district, rawLead?.location?.state].filter(Boolean).join(", ") || "N/A",
+      state: rawLead?.location?.state || rawLead?.state || "N/A",
+      district: rawLead?.location?.district || rawLead?.district || "N/A",
+      taluk: rawLead?.location?.city || rawLead?.taluk || "N/A", // API uses city instead of taluk
     },
     lead: {
-      source: rawLead.source || "N/A",
-      opinion: rawLead.opinion || "N/A",
-      programme: rawLead.programme || "N/A",
-      discipline: rawLead.discipline || "N/A",
-      college: rawLead.collegeStudied || "N/A",
+      source: rawLead?.lead?.source || rawLead?.source || "N/A",
+      opinion: rawLead?.lead?.temperature || rawLead?.opinion || "N/A",
+      programme: rawLead?.education?.programme || rawLead?.programme || "N/A",
+      discipline: rawLead?.education?.discipline || rawLead?.discipline || "N/A",
+      college: rawLead?.education?.college || rawLead?.collegeStudied || "N/A",
     },
     assignment: {
-      telecaller: rawLead.telecallerName || "Unassigned", 
-      assignee: rawLead.assignee || "Unassigned", 
+      telecaller: rawLead?.lead?.assignedTo?.name || rawLead?.telecallerName || "Unassigned", 
+      assignee: rawLead?.assignee || "Unassigned", 
     },
     admin: {
-      remarks: rawLead.remarks || "No remarks available.",
-      createdBy: rawLead.createdBy || "System", 
+      remarks: rawLead?.remarks || "No remarks available.",
+      createdBy: rawLead?.createdBy || "System", 
     },
-    timeline: rawLead.activities || [],
-    notes: rawLead.notes || [
-      { id: 1, author: "Alice Smith", createdAt: new Date().toISOString(), content: "Called the lead, asked to call back tomorrow." },
-      { id: 2, author: "Alice Smith", createdAt: new Date(Date.now() - 86400000).toISOString(), content: "Initial consultation completed." },
-    ],
+    timeline: [],
+    notes: [],
   };
 };

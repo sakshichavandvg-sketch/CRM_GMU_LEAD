@@ -1,5 +1,6 @@
 import Select from "@/components/ui/Select";
 import { FILTER_CONFIG } from "../constants/filterConfig";
+import GeoSelectors from "./GeoSelectors";
 
 export default function LeadFilters({ values, options, onChange }) {
   if (!options) return null;
@@ -7,6 +8,14 @@ export default function LeadFilters({ values, options, onChange }) {
   const createOptions = (arr) => {
     if (!arr) return [{ label: "All", value: "" }];
     return [{ label: "All", value: "" }, ...arr.map((item) => ({ label: item, value: item }))];
+  };
+
+  const filterFormik = {
+    values,
+    setFieldValue: onChange,
+    touched: {},
+    errors: {},
+    handleBlur: () => {},
   };
 
   return (
@@ -21,6 +30,7 @@ export default function LeadFilters({ values, options, onChange }) {
           options={createOptions(options[config.optionsKey])}
         />
       ))}
+      <GeoSelectors formik={filterFormik} layout="compact" />
     </div>
   );
 }

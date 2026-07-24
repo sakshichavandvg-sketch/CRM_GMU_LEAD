@@ -17,9 +17,20 @@ const leadService = {
     return data;
   },
 
-  getLeadDetails: async (enquiryNo) => {
-    const { data } = await axiosInstance.get(API_ENDPOINTS.LEADS.DETAIL(enquiryNo));
-    return data;
+  getLeadDetails: async (leadId) => {
+    const { data } = await axiosInstance.get(API_ENDPOINTS.LEADS.DETAIL(leadId));
+    console.log("📡 [SERVICE] getLeadDetails raw envelope:", data);
+    return data.data; // Return the nested data object
+  },
+
+  getLeadTimeline: async (leadId) => {
+    const { data } = await axiosInstance.get(API_ENDPOINTS.LEADS.TIMELINE(leadId));
+    return data.data;
+  },
+
+  getLeadNotes: async (leadId) => {
+    const { data } = await axiosInstance.get(API_ENDPOINTS.LEADS.NOTES(leadId));
+    return data.data;
   },
 
   assignLeads: async (payload) => {
@@ -58,6 +69,35 @@ const leadService = {
   getFilterOptions: async () => {
     const { data } = await axiosInstance.get(API_ENDPOINTS.LEADS.FILTER_OPTIONS);
     return data.data;
+  },
+
+  getGeoStates: async () => {
+    const { data } = await axiosInstance.get(API_ENDPOINTS.LEADS.GEO.STATES);
+    const list = data?.data || data || [];
+    return Array.isArray(list) ? list.map(item => ({
+      label: item?.name || item?.label || item,
+      value: item?.id || item?.value || item?.name || item
+    })) : [];
+  },
+
+  getGeoDistricts: async (state) => {
+    if (!state) return [];
+    const { data } = await axiosInstance.get(API_ENDPOINTS.LEADS.GEO.DISTRICTS(state));
+    const list = data?.data || data || [];
+    return Array.isArray(list) ? list.map(item => ({
+      label: item?.name || item?.label || item,
+      value: item?.id || item?.value || item?.name || item
+    })) : [];
+  },
+
+  getGeoTaluks: async (district) => {
+    if (!district) return [];
+    const { data } = await axiosInstance.get(API_ENDPOINTS.LEADS.GEO.TALUKS(district));
+    const list = data?.data || data || [];
+    return Array.isArray(list) ? list.map(item => ({
+      label: item?.name || item?.label || item,
+      value: item?.id || item?.value || item?.name || item
+    })) : [];
   },
 };
 

@@ -14,11 +14,11 @@ import { pipelineData } from "@/config/dashboardCharts";
 
 export default function PipelineChart() {
   return (
-    <div className="rounded-2xl border bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-200">
 
-      <div className="mb-6">
+      <div className="mb-5">
 
-        <h2 className="text-xl font-semibold">
+        <h2 className="mb-1 text-xl font-semibold">
           Lead Pipeline
         </h2>
 

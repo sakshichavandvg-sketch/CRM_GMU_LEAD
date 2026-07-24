@@ -25,8 +25,9 @@ const API_ENDPOINTS = {
     DELETE: (enquiryNo) =>
       `/api/leads/manager/leads/${enquiryNo}`,
 
-    DETAIL: (enquiryNo) =>
-      `/api/leads/overview/${enquiryNo}`,
+    DETAIL: (leadId) => `/api/leads/${leadId}`,
+    TIMELINE: (leadId) => `/api/leads/${leadId}/timeline`,
+    NOTES: (leadId) => `/api/leads/${leadId}/notes`,
 
     ASSIGN: "/api/leads/manager/leads/assign",
 
@@ -44,10 +45,17 @@ const API_ENDPOINTS = {
 
     OVERDUE:
       "/api/leads/overview/followups/overdue",
+
+    GEO: {
+      STATES: "/api/leads/geo/states",
+      DISTRICTS: (state) => `/api/leads/geo/districts?state=${encodeURIComponent(state)}`,
+      TALUKS: (district) => `/api/leads/geo/taluks?district=${encodeURIComponent(district)}`,
+    },
   },
 
   DASHBOARD: {
     STATS: "/api/leads/dashboard/stats",
+    ACTIVITY: "/api/leads/dashboard/activity",
   },
 
   REPORTS: {

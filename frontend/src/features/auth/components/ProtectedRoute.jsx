@@ -4,10 +4,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import useAuthStore from "@/store/authStore";
-import useInitializeAuth from "@/features/auth/hooks/useInitializeAuth";
 
 export default function ProtectedRoute({ children }) {
-   useInitializeAuth();
   const router = useRouter();
 
   const {
@@ -22,16 +20,12 @@ export default function ProtectedRoute({ children }) {
   }, [loading, isAuthenticated, router]);
 
   if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="h-10 w-10 mx-auto rounded-full border-4 border-gray-200 border-t-[var(--primary)] animate-spin" />
-        </div>
-      </div>
-    );
+    return null;
   }
 
-  if (!isAuthenticated) return null;
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return children;
 }

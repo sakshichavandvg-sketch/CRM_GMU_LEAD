@@ -1,11 +1,14 @@
 import TemperatureCard from "./TemperatureCard";
 import { Flame, Snowflake } from "lucide-react";
 
-export default function LeadTemperature() {
+export default function LeadTemperature({ temperature }) {
+  const hot = temperature?.hot || 0;
+  const cold = temperature?.cold || 0;
+
   return (
-    <div className="mt-6 grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2">
       <TemperatureCard
-        value={46}
+        value={hot}
         title="Hot Leads"
         subtitle="Score ≥ 75"
         trend={12}
@@ -14,7 +17,7 @@ export default function LeadTemperature() {
         variant="orange"
       />
       <TemperatureCard
-        value={66}
+        value={cold}
         title="Cold Leads"
         subtitle="Score < 75"
         trend={-5}

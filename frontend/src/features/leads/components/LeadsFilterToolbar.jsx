@@ -3,6 +3,7 @@ import QuickFilterBar from "./QuickFilterBar";
 import ActiveFilterChips from "./ActiveFilterChips";
 import { SlidersHorizontal } from "lucide-react";
 import { LEAD_BUCKETS } from "../constants/leadConstants";
+import { useTableScroll } from "@/providers/TableScrollProvider";
 
 export default function LeadsFilterToolbar({ 
   activeFilter, 
@@ -14,15 +15,20 @@ export default function LeadsFilterToolbar({
   onOpenDrawer, 
   refineButtonRef 
 }) {
+  const { isScrolled } = useTableScroll();
+
   return (
-    <div className="flex items-center justify-between gap-4 py-3 bg-white border-b border-gray-200 sticky top-0 z-20 px-4">
-      <div className="flex items-center gap-4 flex-1 overflow-x-auto scrollbar-hide">
-        <QuickFilterBar 
-          filters={LEAD_BUCKETS} 
-          activeFilter={activeFilter} 
-          onSelect={onSelect} 
-          counts={counts}
-        />
+    <div className={`bg-white flex flex-col transition-all duration-300 ease-in-out ${isScrolled ? "pt-3" : "pt-6"}`}>
+      {/* Row 1: Quick Filters & Refine */}
+      <div className={`flex flex-wrap md:flex-nowrap items-center justify-between gap-4 border-b border-gray-100 transition-all duration-300 ease-in-out ${isScrolled ? "pb-3" : "pb-4"}`}>
+        <div className="flex-1 overflow-x-auto scrollbar-hide">
+          <QuickFilterBar 
+            filters={LEAD_BUCKETS} 
+            activeFilter={activeFilter} 
+            onSelect={onSelect} 
+            counts={counts}
+          />
+        </div>
         <button
           ref={refineButtonRef}
           onClick={onOpenDrawer}
@@ -33,13 +39,12 @@ export default function LeadsFilterToolbar({
         </button>
       </div>
       
-      <div className="flex-shrink-0">
-        <ActiveFilterChips 
-          filters={filters} 
-          onRemove={onRemove} 
-          onClearAll={onClearAll}
-        />
-      </div>
+      {/* Row 2: Applied Filters (Padding/margin handled inside component if active) */}
+      <ActiveFilterChips 
+        filters={filters} 
+        onRemove={onRemove} 
+        onClearAll={onClearAll}
+      />
     </div>
   );
 }
