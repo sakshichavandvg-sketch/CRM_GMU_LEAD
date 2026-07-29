@@ -9,6 +9,8 @@ export default function LeadsFilterToolbar({
   activeFilter, 
   onSelect, 
   counts, 
+  isCountsLoading,
+  isCountsError,
   filters, 
   onRemove, 
   onClearAll, 
@@ -21,12 +23,14 @@ export default function LeadsFilterToolbar({
     <div className={`bg-white flex flex-col transition-all duration-300 ease-in-out ${isScrolled ? "pt-3" : "pt-6"}`}>
       {/* Row 1: Quick Filters & Refine */}
       <div className={`flex flex-wrap md:flex-nowrap items-center justify-between gap-4 border-b border-gray-100 transition-all duration-300 ease-in-out ${isScrolled ? "pb-3" : "pb-4"}`}>
-        <div className="flex-1 overflow-x-auto scrollbar-hide">
+        <div className="flex-1 min-w-0">
           <QuickFilterBar 
             filters={LEAD_BUCKETS} 
             activeFilter={activeFilter} 
             onSelect={onSelect} 
             counts={counts}
+            isLoading={isCountsLoading}
+            isError={isCountsError}
           />
         </div>
         <button

@@ -19,6 +19,7 @@ const API_ENDPOINTS = {
 
   LEADS: {
     LIST: "/api/leads/overview",
+    COUNTS: "/api/leads/manager/leads/counts",
 
     CREATE: "/api/leads/manager/leads",
     UPDATE: "/api/leads/manager/leads",
@@ -73,6 +74,25 @@ const API_ENDPOINTS = {
     DATEWISE_SUMMARY:
       "/api/leads/calls/datewise-summary",
   },
+
+  TELECALLER: {
+    DASHBOARD: "/api/leads/telecaller/dashboard",
+    INTERACTIONS: "/api/leads/telecaller/interactions",
+    LEADS: "/api/leads/telecaller/leads",
+    LEAD_DETAILS: (enquiryNo) => `/api/leads/telecaller/leads/${enquiryNo}`,
+    LEAD_TIMELINE: (enquiryNo) => `/api/leads/telecaller/leads/${enquiryNo}/timeline`,
+    LEAD_NOTES: (enquiryNo) => `/api/leads/telecaller/leads/${enquiryNo}/notes`,
+    LEAD_FILTER_OPTIONS: "/api/leads/telecaller/leads/filter-options",
+    CALLS: "/api/leads/telecaller/calls",
+    CALL_DETAILS: (callId) => `/api/leads/telecaller/calls/${callId}`,
+    CALL_RECORDING_AUDIO: (callId) => `/api/leads/telecaller/calls/${callId}/recording`,
+    FOLLOWUPS: "/api/leads/telecaller/followups",
+    FOLLOWUP_DETAILS: (id) => `/api/leads/telecaller/followups/${id}`,
+    AVATAR: "/api/leads/telecaller/profile/avatar",
+    VOICE: {
+      TOKEN: "/api/leads/telecaller/voice/token",
+    }
+  }
 };
  
 

@@ -21,6 +21,9 @@ export default function useLogin() {
 
     onSuccess: async () => {
       try {
+        // Delay slightly to prevent race condition where /auth/me fires before Set-Cookie is fully processed
+        await new Promise((resolve) => setTimeout(resolve, 150));
+        
         const response = await userService.getCurrentUser();
 
         const user = response.data;

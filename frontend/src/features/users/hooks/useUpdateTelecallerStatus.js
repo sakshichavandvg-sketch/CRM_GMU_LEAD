@@ -5,12 +5,12 @@ import { useAppToast } from "@/hooks/useAppToast";
 import telecallerService from "@/features/users/services/telecallerService";
 import { USER_QUERY_KEYS } from "@/features/users/constants/queryKeys";
 
-export default function useUpdateTelecallerStatus(empId, slNo, options = {}) {
+export default function useUpdateTelecallerStatus(empId, options = {}) {
   const queryClient = useQueryClient();
   const toast = useAppToast();
 
   return useMutation({
-    mutationFn: (status) => telecallerService.updateTelecallerStatus(slNo, status),
+    mutationFn: (status) => telecallerService.updateTelecallerStatus(empId, status),
 
     onMutate: async (newStatus) => {
       // Cancel any outgoing refetches to avoid overwriting optimistic update

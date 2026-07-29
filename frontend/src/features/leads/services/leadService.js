@@ -63,7 +63,12 @@ const leadService = {
 
   getOverviewLeads: async (params) => {
     const { data } = await axiosInstance.get(API_ENDPOINTS.LEADS.LIST, { params });
-    return data.data;
+    return data?.data ?? data;
+  },
+
+  getLeadCounts: async () => {
+    const { data } = await axiosInstance.get(API_ENDPOINTS.DASHBOARD.STATS);
+    return data?.data ?? data;
   },
 
   getFilterOptions: async () => {

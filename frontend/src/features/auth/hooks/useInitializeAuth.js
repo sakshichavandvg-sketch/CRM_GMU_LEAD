@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import userService from "../services/userService";
 
@@ -14,7 +14,12 @@ export default function useInitializeAuth() {
     setLoading,
   } = useAuthStore();
 
+  const initializedRef = useRef(false);
+
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
     if (user) return;
 
     async function initialize() {

@@ -6,7 +6,7 @@ export default function DashboardCharts({ charts }) {
     <div className="grid gap-6 xl:grid-cols-3">
 
       <div className="xl:col-span-2">
-        <PipelineChart />
+        <PipelineChart pipeline={charts?.pipeline} />
       </div>
 
       <SourceAnalytics sourceAnalytics={charts?.sourceAnalytics} />

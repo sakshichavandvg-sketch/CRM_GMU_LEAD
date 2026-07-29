@@ -13,6 +13,8 @@ export const useUpdateLead = (onSuccessCallback) => {
     onSuccess: () => {
       toast.success("Lead Updated", "Changes have been saved successfully.");
       queryClient.invalidateQueries({ queryKey: LEAD_KEYS.overviewLists() });
+      queryClient.invalidateQueries({ queryKey: LEAD_KEYS.counts() });
+      queryClient.invalidateQueries({ queryKey: LEAD_KEYS.details() }); // Update the detail view
       if (onSuccessCallback) onSuccessCallback();
     },
     onError: (error) => {

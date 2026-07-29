@@ -3,12 +3,13 @@
 import { useEffect, useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { X, LogOut, User, Settings } from "lucide-react";
 
 import { IMAGES } from "@/constants/images";
 import { ROLES, ROLE_LABELS } from "@/constants/roles";
 import useAuthStore from "@/store/authStore";
+import authService from "@/features/auth/services/authService";
 
 export default function DashboardSidebar({
   navigation,
@@ -16,12 +17,15 @@ export default function DashboardSidebar({
   onClose,
 }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const user =
     useAuthStore((state) => state.user) || {
       username: ROLE_LABELS[ROLES.ADMIN],
       userGroup: ROLES.ADMIN,
     };
+  
+  const logoutState = useAuthStore((state) => state.logout);
 
  const menu = navigation.filter((item) =>
   item.roles.includes(user.userGroup)
@@ -66,6 +70,25 @@ export default function DashboardSidebar({
     setExpandedMenu(expandedMenu === path ? null : path);
   };
 
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      logoutState();
+      
+      // Clear all accessible client-side cookies just in case
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+      
+      router.push("/");
+    }
+  };
+
   // Sidebar content — shared between desktop and mobile
   const sidebarContent = (
     <>
@@ -79,8 +102,8 @@ export default function DashboardSidebar({
             className="rounded-full"
           />
           <div>
-            <h2 className="font-semibold text-lg text-gray-900">GMU Leads</h2>
-            <p className="text-sm text-gray-500">Admission CRM</p>
+            <h2 className="font-bold text-lg text-gray-900">GMU Leads</h2>
+            <p className="text-[10px] uppercase font-bold tracking-wider text-gray-500">ADMISSION CRM</p>
           </div>
         </div>
       </div>
@@ -126,7 +149,7 @@ export default function DashboardSidebar({
                   }}
                   className={`flex items-center justify-between rounded-xl px-4 py-3 transition font-medium
                     ${active
-                      ? "bg-[#6F1D28]/10 text-[#6F1D28]" // Subtle Maroon active state
+                      ? "bg-red-50 text-red-600"
                       : "text-gray-600 hover:bg-gray-50"
                     }
                   `}
@@ -176,16 +199,32 @@ export default function DashboardSidebar({
         </div>
       </nav>
 
-      <div className="border-t border-gray-100 p-5">
-
-        <p className="font-medium">
-          {user.username}
-        </p>
-
-        <p className="text-sm text-gray-500">
-          {user.userGroup}
-        </p>
-
+      <div className="p-4 space-y-2 mt-auto shrink-0">
+        <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sm overflow-hidden">
+             {/* Replace User icon with an image later if available */}
+            <User size={20} className="text-gray-500" />
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <p className="truncate font-semibold text-sm text-gray-900">
+              {user.username}
+            </p>
+            <p className="truncate text-[10px] text-gray-500 uppercase tracking-wider font-medium mt-0.5">
+              {user.userGroup.replace('_', '-')}
+            </p>
+          </div>
+          <button className="text-gray-400 hover:text-gray-600 pr-1 transition-colors">
+            <Settings size={16} />
+          </button>
+        </div>
+        
+        <button 
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-gray-900 w-full font-medium transition-colors rounded-xl hover:bg-gray-50"
+        >
+          <LogOut size={18} />
+          <span>Logout</span>
+        </button>
       </div>
     </>
   );

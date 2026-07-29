@@ -13,6 +13,7 @@ export const useTransferLead = (onSuccessCallback) => {
     onSuccess: () => {
       toast.success("Lead Reassigned", "The lead was successfully reassigned.");
       queryClient.invalidateQueries({ queryKey: LEAD_KEYS.overviewLists() });
+      queryClient.invalidateQueries({ queryKey: LEAD_KEYS.counts() });
       if (onSuccessCallback) onSuccessCallback();
     },
     onError: (error) => {

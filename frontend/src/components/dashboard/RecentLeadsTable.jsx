@@ -1,123 +1,93 @@
-import { AlertCircle, Book, Headset, MoreHorizontal } from "lucide-react";
+import { Book, Headset, MoreHorizontal, Users } from "lucide-react";
+import { DashboardSection } from "../dashboard-ui/DashboardSection";
+import { EmptyState } from "../dashboard-ui/EmptyState";
+import StatusBadge from "@/components/table/StatusBadge";
 
 export default function RecentLeadsTable({ recentLeads }) {
   if (recentLeads?.error) {
     return (
-      <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-        <AlertCircle className="mb-2 text-red-500" size={24} />
-        <p className="text-sm text-gray-500">Failed to load recent leads</p>
+      <div className="h-full min-h-[300px]">
+        <EmptyState title="Failed to load leads" description="An error occurred while fetching recent leads." />
       </div>
     );
   }
 
   const data = recentLeads?.data || [];
 
+  const action = (
+    <div className="flex items-center gap-3">
+      <select className="rounded-lg border border-[#ECECEC] bg-white px-3 py-1.5 text-sm font-[500] text-gray-700 outline-none hover:border-gray-300 focus:ring-2 focus:ring-[#7A1F2B] transition-colors">
+        <option>All Statuses</option>
+        <option>Enquiry</option>
+        <option>Interested</option>
+      </select>
+      <select className="hidden sm:block rounded-lg border border-[#ECECEC] bg-white px-3 py-1.5 text-sm font-[500] text-gray-700 outline-none hover:border-gray-300 focus:ring-2 focus:ring-[#7A1F2B] transition-colors">
+        <option>Newest First</option>
+        <option>Oldest First</option>
+      </select>
+    </div>
+  );
+
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-200">
-      
-      {/* Header */}
-      <div className="border-b border-gray-200 p-6">
-        <h2 className="mb-1 font-outfit text-2xl font-semibold">
-          Recent Leads
-        </h2>
-        <p className="text-sm text-gray-500">
-          Latest lead activities
-        </p>
-      </div>
-
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 bg-gray-50/50 px-6 py-3">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-500">Filter By Status:</span>
-          <select className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 outline-none hover:border-gray-300">
-            <option>All</option>
-          </select>
-        </div>
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">Sort By:</span>
-            <select className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 outline-none hover:border-gray-300">
-              <option>Status</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">Sort By:</span>
-            <select className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 outline-none hover:border-gray-300">
-              <option>Newest</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {/* List */}
-      <div className="flex flex-col gap-3 p-6 bg-gray-50/30">
-        {data.length === 0 ? (
-          <p className="py-8 text-center text-sm text-gray-500">No recent leads found.</p>
-        ) : (
-          data.map((lead) => (
-            <div 
-              key={lead.id} 
-              className="group flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white p-[18px] shadow-sm transition-all hover:border-[#8B2332] hover:shadow-md"
-            >
-              {/* Section 1: Avatar + Name */}
-              <div className="flex w-full items-center gap-3 md:w-[220px]">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#8B2332]/10 font-semibold text-[#8B2332]">
-                  {lead.student ? lead.student.charAt(0).toUpperCase() : "?"}
-                </div>
-                <span className="font-medium text-gray-900 truncate" title={lead.student}>{lead.student || "Unknown"}</span>
-              </div>
-
-              {/* Section 2: Course */}
-              <div className="flex w-full items-center gap-3 md:w-[160px]">
-                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gray-50 text-gray-500 transition-colors group-hover:bg-[#8B2332]/5 group-hover:text-[#8B2332]">
-                  <Book size={16} />
-                </div>
-                <div className="flex flex-col overflow-hidden">
-                  <span className="text-[11px] font-medium uppercase tracking-wider text-gray-400">Course</span>
-                  <span className="truncate text-sm font-medium text-gray-700" title={lead.course}>{lead.course || "Not Assigned"}</span>
-                </div>
-              </div>
-
-              {/* Section 3: Assigned */}
-              <div className="flex w-full items-center gap-3 md:w-[160px]">
-                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gray-50 text-gray-500 transition-colors group-hover:bg-[#8B2332]/5 group-hover:text-[#8B2332]">
-                  <Headset size={16} />
-                </div>
-                <div className="flex flex-col overflow-hidden">
-                  <span className="text-[11px] font-medium uppercase tracking-wider text-gray-400">Assigned</span>
-                  <span className="truncate text-sm font-medium text-gray-700" title={lead.assignedTo}>{lead.assignedTo || "Auto Test"}</span>
-                </div>
-              </div>
-
-              {/* Section 4: Badges */}
-              <div className="flex w-full items-center gap-2 md:w-auto">
-                <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${
-                  (lead.status || "").toLowerCase().includes("enquiry") || lead.status === "New"
-                    ? "bg-blue-50 text-blue-700"
-                    : "bg-gray-100 text-gray-600"
-                }`}>
-                  {lead.status || "UNKNOWN"}
-                </span>
-                <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${
-                  lead.priority === "Hot"
-                    ? "bg-red-50 text-red-600"
-                    : "bg-gray-100 text-gray-600"
-                }`}>
-                  {lead.priority || "NORMAL"}
-                </span>
-              </div>
-
-              {/* Section 5: Actions */}
-              <div className="flex items-center justify-end">
-                <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700">
-                  <MoreHorizontal size={18} />
-                </button>
-              </div>
+    <div className="bg-white border border-[#ECECEC] rounded-[20px] p-6 shadow-sm h-full flex flex-col hover:shadow-md transition-shadow">
+      <DashboardSection title="Recent Leads" action={action} className="mb-2">
+        <div className="flex flex-col gap-3 mt-4">
+          {data.length === 0 ? (
+            <div className="py-8">
+              <EmptyState title="No recent leads" description="There are no recent leads in your pipeline." icon={Users} />
             </div>
-          ))
-        )}
-      </div>
+          ) : (
+            data.map((lead) => (
+              <div 
+                key={lead.id} 
+                className="group flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-[16px] border border-[#ECECEC] bg-white p-4 transition-all duration-300 hover:border-gray-300 hover:shadow-md hover:bg-gray-50/50 cursor-pointer"
+              >
+                {/* Section 1: Avatar + Name */}
+                <div className="flex w-full items-center gap-3 md:w-[220px]">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-50 font-bold text-blue-600 ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all">
+                    {lead.student ? lead.student.charAt(0).toUpperCase() : "?"}
+                  </div>
+                  <span className="font-[600] text-gray-900 truncate tracking-tight text-[15px]" title={lead.student}>{lead.student || "Unknown"}</span>
+                </div>
 
+                {/* Section 2: Course */}
+                <div className="flex w-full items-center gap-3 md:w-[160px]">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500 transition-colors group-hover:bg-blue-50 group-hover:text-blue-600">
+                    <Book size={16} />
+                  </div>
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="text-[11px] font-[600] uppercase tracking-wider text-slate-400">Course</span>
+                    <span className="truncate text-sm font-[500] text-gray-700" title={lead.course}>{lead.course || "Not Assigned"}</span>
+                  </div>
+                </div>
+
+                {/* Section 3: Assigned */}
+                <div className="flex w-full items-center gap-3 md:w-[160px]">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500 transition-colors group-hover:bg-blue-50 group-hover:text-blue-600">
+                    <Headset size={16} />
+                  </div>
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="text-[11px] font-[600] uppercase tracking-wider text-slate-400">Assigned</span>
+                    <span className="truncate text-sm font-[500] text-gray-700" title={lead.assignedTo}>{lead.assignedTo || "Unassigned"}</span>
+                  </div>
+                </div>
+
+                {/* Section 4: Badges */}
+                <div className="flex w-full items-center gap-2 md:w-[140px]">
+                  <StatusBadge status={lead.status} />
+                </div>
+
+                {/* Section 5: Actions */}
+                <div className="flex items-center justify-end">
+                  <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white hover:text-gray-900 hover:shadow-sm border border-transparent hover:border-gray-200">
+                    <MoreHorizontal size={18} />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </DashboardSection>
     </div>
   );
 }

@@ -28,9 +28,9 @@ const telecallerService = {
     return response.data.data;
   },
 
-  updateTelecallerStatus: async (slNo, status) => {
-    // PATCH /api/leads/manager/users/{slNo}/active-status
-    const response = await axiosInstance.patch(`/api/leads/manager/users/${slNo}/active-status`, { status });
+  updateTelecallerStatus: async (empId, status) => {
+    // PATCH /api/leads/manager/users/{empId}/active-status
+    const response = await axiosInstance.patch(`/api/leads/manager/users/${empId}/active-status`, { status });
     return response.data.data;
   },
 
@@ -39,8 +39,13 @@ const telecallerService = {
     const formData = new FormData();
     formData.append("file", file);
     
-    // Let Axios handle the Content-Type boundary for multipart/form-data
-    const response = await axiosInstance.post(`/api/leads/manager/users/${empId}/avatar`, formData);
+    // Pass undefined to Content-Type so Axios removes the default application/json
+    // and lets the browser natively append multipart/form-data; boundary=...
+    const response = await axiosInstance.post(`/api/leads/manager/users/${empId}/avatar`, formData, {
+      headers: {
+        "Content-Type": undefined,
+      }
+    });
     return response.data.data;
   }
 };

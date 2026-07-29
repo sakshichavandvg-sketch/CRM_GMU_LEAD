@@ -14,6 +14,7 @@ export const useImportLeads = (onSuccessCallback) => {
     onSuccess: (data) => {
       toast.success("Import Successful", "CSV imported successfully.");
       queryClient.invalidateQueries({ queryKey: LEAD_KEYS.overviewLists() });
+      queryClient.invalidateQueries({ queryKey: LEAD_KEYS.counts() });
       if (onSuccessCallback) onSuccessCallback();
     },
     onError: (error) => {

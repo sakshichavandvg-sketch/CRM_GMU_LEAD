@@ -14,6 +14,8 @@ export const useAssignLeads = (onSuccessCallback) => {
       toast.success("Leads Assigned", "Selected leads were assigned successfully.");
       queryClient.invalidateQueries({ queryKey: LEAD_KEYS.overviewLists() });
       queryClient.invalidateQueries({ queryKey: ["dashboardStats"] });
+      queryClient.invalidateQueries({ queryKey: LEAD_KEYS.counts() });
+      queryClient.invalidateQueries({ queryKey: LEAD_KEYS.details() }); // Also update the detail view
       if (onSuccessCallback) onSuccessCallback();
     },
     onError: (error) => {

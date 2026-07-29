@@ -13,7 +13,27 @@ export default function useUploadTelecallerAvatar(empId, options = {}) {
     mutationFn: (file) => telecallerService.uploadTelecallerAvatar(empId, file),
 
     onSuccess: (data, variables, context) => {
-      // Invalidate the cache to fetch the new avatar URL
+      // Determine the URL from the response
+      const newAvatarUrl = typeof data === 'string' ? data : (data?.avatar || data?.avatarUrl || data?.url);
+      
+      if (newAvatarUrl) {
+        const cacheBustedUrl = newAvatarUrl.includes('?') 
+          ? `${newAvatarUrl}&cb=${Date.now()}` 
+          : `${newAvatarUrl}?cb=${Date.now()}`;
+          
+        queryClient.setQueryData(USER_QUERY_KEYS.telecallerDashboard(empId), (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            profile: {
+              ...oldData.profile,
+              avatar: cacheBustedUrl
+            }
+          };
+        });
+      }
+
+      // Invalidate the cache to fetch the new avatar URL and keep synchronized
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });
 
       toast.success("Avatar Uploaded", "Profile picture updated successfully.");

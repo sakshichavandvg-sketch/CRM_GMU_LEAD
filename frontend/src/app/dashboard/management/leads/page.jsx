@@ -3,8 +3,11 @@
 import ManagementHeader from "@/components/management/ManagementHeader";
 import LeadsOverviewTable from "@/features/leads/components/LeadsOverviewTable";
 import { breadcrumbs } from "@/config/breadcrumbs";
+import { useLeadOverviewFilters } from "@/features/leads/hooks/useLeadOverviewFilters";
 
 export default function LeadsPage() {
+  const { search, filters, actions } = useLeadOverviewFilters();
+
   return (
     <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
       <ManagementHeader
@@ -13,7 +16,7 @@ export default function LeadsPage() {
         activeTab="leads"
         breadcrumbs={breadcrumbs.leads}
       />
-      <LeadsOverviewTable />
+      <LeadsOverviewTable filters={filters} actions={actions} search={search} />
     </div>
   );
 }

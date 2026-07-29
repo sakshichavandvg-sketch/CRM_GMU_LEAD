@@ -2,13 +2,11 @@
 
 import SearchBar from "./SearchBar";
 import TableActions from "./TableActions";
-import DashboardHeader from "../dashboard/DashboardHeader";
 import { useTableScroll } from "@/providers/TableScrollProvider";
 
 export default function ManagementHeader({
   title,
   description,
-  breadcrumbs,
   search,
   setSearch,
   activeTab,
@@ -18,8 +16,6 @@ export default function ManagementHeader({
 
   return (
     <div className={`transition-all duration-300 ease-in-out ${isScrolled ? "space-y-3" : "space-y-6"}`}>
-      {breadcrumbs && <DashboardHeader breadcrumbs={breadcrumbs} />}
-
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 
         <div>

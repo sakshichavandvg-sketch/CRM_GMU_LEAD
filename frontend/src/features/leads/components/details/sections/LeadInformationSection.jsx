@@ -1,31 +1,37 @@
 export default function LeadInformationSection({ data }) {
   if (!data?.lead) return null;
-  const { source, opinion, programme, discipline, college } = data.lead;
+  const { source, opinion, programme, course, discipline, college } = data.lead;
 
   return (
-    <>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1">
-          <span className="text-xs text-gray-500 font-medium">Source</span>
-          <span className="font-medium text-gray-900">{source}</span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-xs text-gray-500 font-medium">Opinion</span>
-          <span className="font-medium text-gray-900">{opinion}</span>
-        </div>
+    <dl className="flex flex-col gap-5">
+      <div className="flex items-center justify-between">
+        <dt className="text-xs text-slate-500 font-medium w-1/3">Source</dt>
+        <dd className="text-sm font-semibold text-slate-900 flex-1 text-right">{source || "—"}</dd>
       </div>
-      <div className="flex flex-col gap-1">
-        <span className="text-xs text-gray-500 font-medium">Programme</span>
-        <span className="font-medium text-gray-900">{programme}</span>
+      <div className="flex items-center justify-between">
+        <dt className="text-xs text-slate-500 font-medium w-1/3">Opinion</dt>
+        <dd className="text-sm font-semibold flex-1 flex justify-end">
+          <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-orange-50 text-orange-600 border border-orange-200">
+            {opinion || "WARM"}
+          </span>
+        </dd>
       </div>
-      <div className="flex flex-col gap-1">
-        <span className="text-xs text-gray-500 font-medium">Discipline</span>
-        <span className="font-medium text-gray-900">{discipline}</span>
+      <div className="flex items-center justify-between">
+        <dt className="text-xs text-slate-500 font-medium w-1/3">Programme</dt>
+        <dd className="text-sm font-semibold text-slate-900 flex-1 text-right">{programme || "—"}</dd>
       </div>
-      <div className="flex flex-col gap-1">
-        <span className="text-xs text-gray-500 font-medium">College</span>
-        <span className="font-medium text-gray-900">{college}</span>
+      <div className="flex items-center justify-between">
+        <dt className="text-xs text-slate-500 font-medium w-1/3">Course</dt>
+        <dd className="text-sm font-semibold text-slate-900 flex-1 text-right">{course || "—"}</dd>
       </div>
-    </>
+      <div className="flex items-center justify-between">
+        <dt className="text-xs text-slate-500 font-medium w-1/3">Discipline</dt>
+        <dd className="text-sm font-semibold text-slate-900 flex-1 text-right">{discipline || "—"}</dd>
+      </div>
+      <div className="flex items-center justify-between">
+        <dt className="text-xs text-slate-500 font-medium w-1/3">College</dt>
+        <dd className="text-sm font-semibold text-slate-900 flex-1 text-right">{college || "—"}</dd>
+      </div>
+    </dl>
   );
 }

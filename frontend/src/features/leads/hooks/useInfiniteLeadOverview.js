@@ -2,6 +2,10 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import leadService from "../services/leadService";
 import { LEAD_KEYS } from "../constants/queryKeys";
 
+/**
+ * @deprecated This hook is being phased out for table views in favor of server-side pagination 
+ * via `useLeadOverview.js`. It should be retained for future Board Views or mobile infinite scrolling if needed.
+ */
 export const useInfiniteLeadOverview = (filters, options = {}) => {
   // Strip empty filters to keep URL clean and cache keys predictable
   const activeFilters = Object.fromEntries(

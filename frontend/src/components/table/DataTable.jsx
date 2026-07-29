@@ -1,5 +1,7 @@
 "use client";
+import React, { useRef, useEffect } from "react";
 import { useTableScroll } from "@/providers/TableScrollProvider";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function DataTable({
   columns = [],
@@ -10,12 +12,18 @@ export default function DataTable({
   renderRowActions,
   onRowClick,
   density = "standard",
-  loadMoreRef,
-  hasNextPage,
-  isFetchingNextPage,
   selectable = true,
+  pagination, // { currentPage, pageSize, totalPages, totalItems, onPageChange, onPageSizeChange }
 }) {
   const { setScrolled } = useTableScroll();
+  const scrollRef = useRef(null);
+
+  // Scroll restoration on page change
+  useEffect(() => {
+    if (scrollRef.current && pagination?.currentPage !== undefined) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [pagination?.currentPage]);
 
   // Unique row id
   const getRowId = (row, index) => row[rowKey] ?? index;
@@ -51,6 +59,100 @@ export default function DataTable({
     }
   };
 
+  const renderPagination = () => {
+    if (!pagination || pagination.totalPages <= 1) return null;
+
+    const { currentPage, pageSize, totalPages, totalItems, onPageChange, onPageSizeChange } = pagination;
+    const startItem = currentPage * pageSize + 1;
+    const endItem = Math.min((currentPage + 1) * pageSize, totalItems);
+
+    const getPageNumbers = () => {
+      const pages = [];
+      const maxVisible = 5;
+      
+      if (totalPages <= maxVisible) {
+        for (let i = 0; i < totalPages; i++) pages.push(i);
+      } else {
+        if (currentPage <= 2) {
+          pages.push(0, 1, 2, '...', totalPages - 1);
+        } else if (currentPage >= totalPages - 3) {
+          pages.push(0, '...', totalPages - 3, totalPages - 2, totalPages - 1);
+        } else {
+          pages.push(0, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages - 1);
+        }
+      }
+      return pages;
+    };
+
+    return (
+      <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50/50 gap-4">
+        <div className="flex items-center gap-4 text-sm text-gray-600 w-full sm:w-auto justify-between sm:justify-start">
+          <span className="hidden sm:inline">
+            Showing <span className="font-medium text-gray-900">{startItem}</span> to <span className="font-medium text-gray-900">{endItem}</span> of <span className="font-medium text-gray-900">{totalItems}</span> results
+          </span>
+          <span className="sm:hidden font-medium">
+            Page {currentPage + 1} of {totalPages}
+          </span>
+          
+          <div className="flex items-center gap-2 hidden md:flex">
+            <span className="text-gray-500">Rows per page:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => onPageSizeChange(Number(e.target.value))}
+              className="border-gray-300 rounded-md text-sm focus:ring-[#6F1D28] focus:border-[#6F1D28] text-gray-700 bg-white shadow-sm"
+            >
+              {[10, 25, 50, 100].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 0}
+            className="p-1 sm:px-3 sm:py-1.5 border border-gray-200 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 bg-white"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Previous</span>
+          </button>
+          
+          <div className="hidden sm:flex items-center gap-1 px-2">
+            {getPageNumbers().map((page, idx) => (
+              page === '...' ? (
+                <span key={`ellipsis-${idx}`} className="px-2 text-gray-400">...</span>
+              ) : (
+                <button
+                  key={page}
+                  onClick={() => onPageChange(page)}
+                  className={`w-8 h-8 rounded-md text-sm font-medium transition-colors flex items-center justify-center ${
+                    currentPage === page
+                      ? "bg-[#6F1D28] text-white"
+                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  }`}
+                >
+                  {page + 1}
+                </button>
+              )
+            ))}
+          </div>
+
+          <button
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages - 1}
+            className="p-1 sm:px-3 sm:py-1.5 border border-gray-200 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 bg-white"
+          >
+            <span className="hidden sm:inline">Next</span>
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     // Outer card: flex column, takes all available height from parent, clips corners
     <div
@@ -65,6 +167,7 @@ export default function DataTable({
     >
       {/* THE single scroll owner — overflow-auto here, children grow naturally */}
       <div 
+        ref={scrollRef}
         className="overflow-auto flex-1 min-h-0"
         onScroll={(e) => {
           if (setScrolled) {
@@ -185,34 +288,12 @@ export default function DataTable({
                 );
               })
             )}
-
-            {/* Infinite scroll sentinel — lives inside the scroll container */}
-            {hasNextPage !== undefined && (
-              <tr>
-                <td colSpan={columns.length + (selectable ? 1 : 0) + 1}>
-                  <div
-                    ref={loadMoreRef}
-                    className="flex items-center justify-center gap-2 py-4 text-sm text-gray-500 font-medium"
-                  >
-                    {hasNextPage ? (
-                      isFetchingNextPage ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
-                          <span>Loading more leads...</span>
-                        </>
-                      ) : (
-                        "Scroll for more"
-                      )
-                    ) : (
-                      "End of Results"
-                    )}
-                  </div>
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
+      
+      {/* Pagination Footer */}
+      {renderPagination()}
     </div>
   );
 }

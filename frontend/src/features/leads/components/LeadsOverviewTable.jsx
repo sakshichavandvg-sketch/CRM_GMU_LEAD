@@ -7,13 +7,12 @@ import StatusBadge from "@/components/table/StatusBadge";
 import { Users, TrendingUp, Target } from "lucide-react";
 
 import { useLeadOverviewFilters } from "../hooks/useLeadOverviewFilters";
-import { useInfiniteLeadOverview } from "../hooks/useInfiniteLeadOverview";
+import { useLeadOverview } from "../hooks/useLeadOverview";
 import { useLeadFilterOptions } from "../hooks/useLeadFilterOptions";
-import { useDashboardStats } from "../hooks/useDashboardStats";
+import { useLeadCounts } from "../hooks/useLeadCounts";
 import { useTelecallers } from "../hooks/useTelecallers";
 import { useAssignLeads } from "../hooks/useAssignLeads";
 import { FILTER_CONFIG } from "../constants/filterConfig";
-import { useInfiniteScrollObserver } from "@/hooks/useInfiniteScrollObserver";
 
 
 import LeadFilterDrawer from "./LeadFilterDrawer";
@@ -42,8 +41,7 @@ const columns = [
   },
 ];
 
-export default function LeadsOverviewTable() {
-  const { filters, actions } = useLeadOverviewFilters();
+export default function LeadsOverviewTable({ filters, actions, search }) {
   const { isScrolled } = useTableScroll();
 
   const [selectedRows, setSelectedRows] = useState([]);
@@ -54,8 +52,12 @@ export default function LeadsOverviewTable() {
   const [draftFilters, setDraftFilters] = useState({});
   const refineButtonRef = useRef(null);
 
+  // Clear selection on page change
+  React.useEffect(() => {
+    setSelectedRows([]);
+  }, [filters.page]);
+
   const { data: filterOptions } = useLeadFilterOptions();
-  const { data: statsData } = useDashboardStats();
   const { data: telecallers = [] } = useTelecallers();
 
   const { mutate: assignLeads, isPending: isAssigningLeads } = useAssignLeads(() => {
@@ -63,45 +65,20 @@ export default function LeadsOverviewTable() {
     setIsAssignModalOpen(false);
   });
 
-  const infiniteQuery = useInfiniteLeadOverview(filters);
-  const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } = infiniteQuery;
+  const query = useLeadOverview(filters);
+  const { data, isLoading, isError, error, isFetching } = query;
 
-  const loadMoreRef = useInfiniteScrollObserver({
-    isLoading,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  });
+  const leadsData = data?.leads || [];
+  const totalResults = data?.totalItems || 0;
+  const currentPage = data?.currentPage || 0;
+  const totalPages = data?.totalPages || 1;
+  const pageSize = data?.pageSize || 10;
 
-  const extractLeads = useCallback((pageData) => {
-    if (!pageData) return [];
-    if (Array.isArray(pageData.leads)) return pageData.leads;
-    if (Array.isArray(pageData.content)) return pageData.content;
-    return [];
-  }, []);
-
-  const leadsData = useMemo(() => {
-    return data?.pages?.flatMap(extractLeads) ?? [];
-  }, [data, extractLeads]);
-
-  const totalResults = data?.pages?.[0]?.totalItems ?? data?.pages?.[0]?.page?.totalElements ?? 0;
-
-  const bucketCounts = useMemo(() => {
-    if (!statsData?.overall) return {};
-    return {
-      all: statsData.overall.total || 0,
-      hot: statsData.overall.hot || 0,
-      cold: statsData.overall.cold || 0,
-      alloted: statsData.overall.alloted || 0,
-      "not-alloted": statsData.overall.notAlloted || 0,
-      "not-consulted": statsData.overall.notConsulted || 0,
-      "opinion-reassign": statsData.overall.opinionReassign || 0,
-    };
-  }, [statsData]);
+  const { data: bucketCounts = {}, isLoading: isCountsLoading, isError: isCountsError } = useLeadCounts();
 
   // Drawer Handlers
   const handleOpenDrawer = useCallback(() => {
-    setDraftFilters({ ...filters }); // Clone global filters to draft
+    setDraftFilters({ ...filters });
     setIsDrawerOpen(true);
   }, [filters]);
 
@@ -177,6 +154,8 @@ export default function LeadsOverviewTable() {
             activeFilter={filters.type}
             onSelect={actions.setType}
             counts={bucketCounts}
+            isCountsLoading={isCountsLoading}
+            isCountsError={isCountsError}
             filters={filters}
             onRemove={handleRemoveActiveFilter}
             onClearAll={handleClearAllActiveFilters}
@@ -207,7 +186,7 @@ export default function LeadsOverviewTable() {
             )}
           </div>
 
-          <div className="flex-1 min-h-0 flex flex-col">
+          <div className="flex-1 min-h-0 flex flex-col relative">
             <LeadTableSection
               columns={columns}
               data={leadsData}
@@ -217,10 +196,16 @@ export default function LeadsOverviewTable() {
               isLoading={isLoading}
               isError={isError}
               error={error}
-              hasNextPage={hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-              loadMoreRef={loadMoreRef}
-              totalResults={totalResults}
+              isFetching={isFetching}
+              pagination={{
+                currentPage,
+                pageSize,
+                totalPages,
+                totalItems: totalResults,
+                onPageChange: actions.setPage,
+                onPageSizeChange: actions.setSize,
+              }}
+              onRetry={() => query.refetch()}
             />
           </div>
         </div>

@@ -1,4 +1,4 @@
-import TemperatureCard from "./TemperatureCard";
+import { MetricCard } from "../dashboard-ui/MetricCard";
 import { Flame, Snowflake } from "lucide-react";
 
 export default function LeadTemperature({ temperature }) {
@@ -7,7 +7,7 @@ export default function LeadTemperature({ temperature }) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <TemperatureCard
+      <MetricCard
         value={hot}
         title="Hot Leads"
         subtitle="Score ≥ 75"
@@ -16,7 +16,7 @@ export default function LeadTemperature({ temperature }) {
         icon={Flame}
         variant="orange"
       />
-      <TemperatureCard
+      <MetricCard
         value={cold}
         title="Cold Leads"
         subtitle="Score < 75"

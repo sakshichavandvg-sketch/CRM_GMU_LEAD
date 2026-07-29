@@ -22,5 +22,5 @@ export const LEAD_KEYS = {
   geoStates: () => [...LEAD_KEYS.all, "geo-states"],
   geoDistricts: (state) => [...LEAD_KEYS.all, "geo-districts", state],
   geoTaluks: (district) => [...LEAD_KEYS.all, "geo-taluks", district],
+  counts: () => [...LEAD_KEYS.all, "counts"],
 };
-

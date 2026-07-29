@@ -30,8 +30,13 @@ export const mapLeadToViewModel = (rawLead) => {
       college: rawLead?.education?.college || rawLead?.collegeStudied || "N/A",
     },
     assignment: {
-      telecaller: rawLead?.lead?.assignedTo?.name || rawLead?.telecallerName || "Unassigned", 
-      assignee: rawLead?.assignee || "Unassigned", 
+      telecaller: rawLead?.lead?.assignedTo?.name || rawLead?.telecallerName || rawLead?.assignee || "Unassigned", 
+      assignee: rawLead?.lead?.assignedTo?.name || rawLead?.assignee || rawLead?.telecallerName || "Unassigned", 
+      phone: rawLead?.lead?.assignedTo?.mobile || rawLead?.lead?.assignedTo?.phone || rawLead?.telecallerPhone || "",
+      email: rawLead?.lead?.assignedTo?.email || rawLead?.telecallerEmail || "",
+      assignedDate: rawLead?.lead?.assignedAt || rawLead?.assignedDate || "N/A",
+      assignedBy: rawLead?.lead?.assignedBy?.name || rawLead?.assignedBy || "System",
+      status: "ACTIVE"
     },
     admin: {
       remarks: rawLead?.remarks || "No remarks available.",

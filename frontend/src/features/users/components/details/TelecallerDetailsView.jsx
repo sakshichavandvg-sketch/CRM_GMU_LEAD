@@ -1,7 +1,8 @@
 "use client";
 
 import ErrorState from "@/components/ui/ErrorState";
-import { FormSkeleton } from "@/components/ui/Skeletons";
+import { DashboardSkeleton } from "@/components/dashboard-ui/DashboardSkeleton";
+import { SummaryStrip } from "@/components/dashboard-ui/SummaryStrip";
 import TelecallerHeader from "./TelecallerHeader";
 import PerformanceSnapshot from "./PerformanceSnapshot";
 import ProfileSection from "./ProfileSection";
@@ -20,8 +21,8 @@ export default function TelecallerDetailsView({
 }) {
   if (isLoading) {
     return (
-      <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm mt-6">
-        <FormSkeleton />
+      <div className="mt-6">
+        <DashboardSkeleton />
       </div>
     );
   }
@@ -38,6 +39,14 @@ export default function TelecallerDetailsView({
     );
   }
 
+  const summaryItems = [
+    { label: "Assigned", value: telecaller.kpi.assignedLeads, color: "text-blue-600" },
+    { label: "Calls", value: telecaller.kpi.callsToday, color: "text-amber-600" },
+    { label: "Conversions", value: telecaller.kpi.convertedLeads, color: "text-emerald-600" },
+    { label: "Pending", value: telecaller.kpi.pendingFollowUps, color: "text-rose-600" },
+    { label: "Performance", value: `${telecaller.kpi.conversionRate}%`, color: "text-[#7A1F2B]" },
+  ];
+
   return (
     <>
       <ManagementHeader
@@ -47,13 +56,17 @@ export default function TelecallerDetailsView({
         actions={<div />}
       />
       
-      <div className="flex flex-col gap-6 mt-6">
+      <div className="flex flex-col gap-6 mt-6 pb-10">
         <TelecallerHeader profile={telecaller.profile} kpi={telecaller.kpi} />
+
+        <div className="flex w-full">
+          <SummaryStrip title="Performance Summary" items={summaryItems} />
+        </div>
 
         <PerformanceSnapshot kpi={telecaller.kpi} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ProfileSection profile={telecaller.profile} />
+          <ProfileSection profile={telecaller.profile} kpi={telecaller.kpi} />
           <CallsTrendChart data={telecaller.callsPerformance} />
         </div>
 

@@ -13,6 +13,7 @@ export const useCreateLead = (onSuccessCallback) => {
     onSuccess: () => {
       toast.success("Lead Created", "The lead has been created successfully.");
       queryClient.invalidateQueries({ queryKey: LEAD_KEYS.overviewLists() });
+      queryClient.invalidateQueries({ queryKey: LEAD_KEYS.counts() });
       if (onSuccessCallback) onSuccessCallback();
     },
     onError: (error) => {
