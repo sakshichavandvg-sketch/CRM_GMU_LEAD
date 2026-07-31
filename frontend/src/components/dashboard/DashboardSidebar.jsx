@@ -92,24 +92,22 @@ export default function DashboardSidebar({
   // Sidebar content — shared between desktop and mobile
   const sidebarContent = (
     <>
-      <div className="border-b border-gray-100 px-6 py-6">
-        <div className="flex items-center gap-3">
-          <Image
-            src={IMAGES.LOGO}
-            alt="GM University"
-            width={46}
-            height={46}
-            className="rounded-full"
-          />
-          <div>
-            <h2 className="font-bold text-lg text-gray-900">GMU Leads</h2>
-            <p className="text-[10px] uppercase font-bold tracking-wider text-gray-500">ADMISSION CRM</p>
-          </div>
+      <div className="border-b border-[#E5E7EB] px-4 py-6 flex items-center gap-3">
+        <Image
+          src={IMAGES.LOGO}
+          alt="GM University"
+          width={46}
+          height={46}
+          className="rounded-full shadow-sm"
+        />
+        <div>
+          <h2 className="font-semibold text-lg text-[#111827] tracking-tight whitespace-nowrap">GMU Leads</h2>
+          <p className="text-[10px] uppercase font-bold tracking-wider text-[#6B7280]">ADMISSION CRM</p>
         </div>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="space-y-1.5">
+      <nav className="flex-1 overflow-y-auto px-4 py-6 custom-scrollbar">
+        <div className="space-y-1">
           {menu.map((item) => {
             const Icon = item.icon;
             
@@ -123,13 +121,13 @@ export default function DashboardSidebar({
               return (
                 <div
                   key={item.title}
-                  className="flex items-center justify-between rounded-xl px-4 py-3 text-gray-400 opacity-60 cursor-not-allowed"
+                  className="flex items-center justify-between rounded-xl px-4 py-3 text-[#6B7280] opacity-50 cursor-not-allowed"
                 >
                   <div className="flex items-center gap-3">
-                    <Icon size={18} />
-                    <span className="font-medium">{item.title}</span>
+                    <Icon size={20} />
+                    <span className="font-semibold text-sm tracking-wide">{item.title}</span>
                   </div>
-                  <span className="text-[10px] uppercase font-bold tracking-wider bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] uppercase font-bold tracking-wider bg-[#F8FAFC] text-[#6B7280] px-2 py-0.5 rounded-full border border-[#E5E7EB]">
                     Soon
                   </span>
                 </div>
@@ -147,20 +145,20 @@ export default function DashboardSidebar({
                       handleNavClick(item.path);
                     }
                   }}
-                  className={`flex items-center justify-between rounded-xl px-4 py-3 transition font-medium
+                  className={`flex items-center justify-between rounded-xl px-4 py-3 transition-all duration-300 font-medium group
                     ${active
-                      ? "bg-red-50 text-red-600"
-                      : "text-gray-600 hover:bg-gray-50"
+                      ? "bg-[#8B1538]/10 text-[#8B1538]"
+                      : "text-[#6B7280] hover:bg-[#F8FAFC] hover:text-[#111827]"
                     }
                   `}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon size={18} />
-                    <span>{item.title}</span>
+                    <Icon size={20} className={`transition-colors duration-300 ${active ? "text-[#8B1538]" : "text-[#6B7280] group-hover:text-[#111827]"}`} />
+                    <span className="font-semibold text-sm tracking-wide">{item.title}</span>
                   </div>
                   {item.subItems && (
                     <svg
-                      className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                      className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? "rotate-180" : "text-[#6B7280] group-hover:text-[#111827]"}`}
                       fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -170,7 +168,7 @@ export default function DashboardSidebar({
 
                 {/* SubItems rendering */}
                 {item.subItems && isExpanded && (
-                  <div className="mt-1 ml-4 border-l border-gray-100 pl-4 space-y-1">
+                  <div className="mt-1 ml-[22px] border-l-2 border-[#E5E7EB] pl-4 space-y-1 py-1">
                     {item.subItems.map((subItem) => {
                       // Note: We use pathname match here if subitems have unique paths
                       const subActive = pathname === subItem.path;
@@ -180,10 +178,10 @@ export default function DashboardSidebar({
                           key={subItem.title}
                           href={subItem.path}
                           onClick={() => handleNavClick(subItem.path)}
-                          className={`block rounded-lg px-3 py-2 text-sm transition
+                          className={`block rounded-lg px-3 py-2 text-sm transition-all duration-300 font-medium
                             ${subActive
-                              ? "text-[#6F1D28] font-semibold bg-[#6F1D28]/5"
-                              : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                              ? "text-[#8B1538] font-semibold bg-[#8B1538]/5"
+                              : "text-[#6B7280] hover:text-[#111827] hover:bg-[#F8FAFC]"
                             }
                           `}
                         >
@@ -199,30 +197,29 @@ export default function DashboardSidebar({
         </div>
       </nav>
 
-      <div className="p-4 space-y-2 mt-auto shrink-0">
-        <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sm overflow-hidden">
-             {/* Replace User icon with an image later if available */}
-            <User size={20} className="text-gray-500" />
+      <div className="p-3 border-t border-[#E5E7EB] mt-auto shrink-0 bg-[#FFFFFF]">
+        <div className="flex items-center gap-2.5 p-2 bg-[#F8FAFC] rounded-xl border border-[#E5E7EB] transition-all hover:shadow-sm">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white border border-[#E5E7EB] shadow-sm overflow-hidden text-[#6B7280]">
+            <User size={16} />
           </div>
           <div className="flex-1 overflow-hidden">
-            <p className="truncate font-semibold text-sm text-gray-900">
+            <p className="truncate font-semibold text-[13px] leading-tight text-[#111827]">
               {user.username}
             </p>
-            <p className="truncate text-[10px] text-gray-500 uppercase tracking-wider font-medium mt-0.5">
+            <p className="truncate text-[9px] text-[#6B7280] uppercase tracking-wider font-bold mt-0.5">
               {user.userGroup.replace('_', '-')}
             </p>
           </div>
-          <button className="text-gray-400 hover:text-gray-600 pr-1 transition-colors">
+          <button className="text-[#6B7280] hover:text-[#111827] pr-1 transition-colors hover:rotate-90 duration-300">
             <Settings size={16} />
           </button>
         </div>
         
         <button 
           onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-gray-900 w-full font-medium transition-colors rounded-xl hover:bg-gray-50"
+          className="flex items-center justify-center gap-2 mt-2 px-4 py-2 text-[#6B7280] hover:text-[#8B1538] w-full font-semibold text-[13px] transition-colors rounded-lg hover:bg-[#8B1538]/5"
         >
-          <LogOut size={18} />
+          <LogOut size={16} />
           <span>Logout</span>
         </button>
       </div>
@@ -232,7 +229,7 @@ export default function DashboardSidebar({
   return (
     <>
       {/* ===== Desktop Sidebar (≥lg) ===== */}
-      <aside className="hidden lg:flex w-[280px] h-screen border-r border-gray-200 bg-white flex-col">
+      <aside className="hidden lg:flex w-[260px] h-screen border-r border-[#E5E7EB] bg-[#FFFFFF] flex-col shadow-[1px_0_10px_rgba(0,0,0,0.02)]">
         {sidebarContent}
       </aside>
 
@@ -240,7 +237,7 @@ export default function DashboardSidebar({
       {/* Backdrop */}
       <div
         className={`
-          fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 lg:hidden
+          fixed inset-0 z-40 bg-gray-900/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden
           ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}
         `}
         onClick={onClose}
@@ -254,7 +251,7 @@ export default function DashboardSidebar({
         aria-modal="true"
         aria-label="Navigation menu"
         className={`
-          fixed inset-y-0 left-0 z-50 w-[280px] bg-white flex flex-col shadow-2xl
+          fixed inset-y-0 left-0 z-50 w-[260px] bg-[#FFFFFF] flex flex-col shadow-2xl
           transition-transform duration-300 ease-in-out lg:hidden
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
@@ -263,9 +260,9 @@ export default function DashboardSidebar({
         <button
           onClick={onClose}
           aria-label="Close navigation menu"
-          className="absolute right-3 top-3 rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-black transition"
+          className="absolute right-4 top-4 rounded-full p-2 text-[#6B7280] bg-[#F8FAFC] hover:bg-[#E5E7EB] hover:text-[#111827] transition-all duration-300"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
 
         {sidebarContent}

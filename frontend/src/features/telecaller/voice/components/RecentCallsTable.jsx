@@ -2,9 +2,8 @@ import React from "react";
 import { Play, PhoneIncoming, PhoneOutgoing, PhoneOff } from "lucide-react";
 import { useCallHistory } from "../hooks/useCallHistory";
 import { formatDuration, formatCallDate, getOutcomeStyle, getCallDirection, getInitials } from "../utils/callMapper";
-import { useVoice } from "../context/VoiceProvider";
-import CallDetailDrawer from "./CallDetailDrawer";
-
+import { useVoice } from "@/features/telecaller/voice/context/VoiceProvider";
+import CallDetailsModal from "./details/CallDetailsModal";
 const TableSkeleton = () => (
   <div className="space-y-3">
     {[...Array(5)].map((_, i) => (
@@ -79,20 +78,23 @@ export default function RecentCallsTable() {
         {/* Rows */}
         <div className="divide-y divide-[#F5F5F5] flex-1 overflow-y-auto custom-scrollbar -mx-2 px-2">
           {recentCalls.map((call, idx) => {
-            const callId = call.id || call.interactionId;
+            const callId = call.callId || call.id || call.interactionId;
             const name = call.leadName || call.name || "Unknown";
             const phone = call.phone || call.leadPhone || "--";
-            const outcome = call.callOutcome || call.outcome || "Unknown";
+            const outcome = call.outcome || call.callOutcome || "Unknown";
             const outcomeStyle = getOutcomeStyle(outcome);
             const direction = getCallDirection(call);
-            const duration = call.callDuration || call.duration || 0;
+            const duration = call.callDurationSeconds || call.callDuration || call.duration || 0;
             const hasRecording = call.recordingUrl && call.recordingUrl.trim() !== "";
             const date = formatCallDate(call.callDateTime || call.createdAt || call.date);
 
             return (
               <div
                 key={callId || idx}
-                onClick={() => setSelectedCallId(callId)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedCallId(callId);
+                }}
                 className="grid grid-cols-1 md:grid-cols-[2fr_1fr_80px_90px_80px_70px_90px] gap-3 px-3 py-3 items-center hover:bg-gray-50 cursor-pointer transition-colors rounded-xl"
               >
                 {/* Lead */}
@@ -147,8 +149,10 @@ export default function RecentCallsTable() {
       </div>
 
       {selectedCallId && (
-        <CallDetailDrawer 
-          callId={selectedCallId} 
+        <CallDetailsModal 
+          callId={selectedCallId}
+          open={!!selectedCallId} 
+          defaultTab="summary"
           onClose={() => setSelectedCallId(null)} 
         />
       )}

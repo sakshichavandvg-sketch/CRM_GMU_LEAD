@@ -91,6 +91,7 @@ const API_ENDPOINTS = {
     AVATAR: "/api/leads/telecaller/profile/avatar",
     VOICE: {
       TOKEN: "/api/leads/telecaller/voice/token",
+      RECORDING: (interactionId) => `/api/leads/telecaller/voice/recordings/${interactionId}`,
     }
   }
 };

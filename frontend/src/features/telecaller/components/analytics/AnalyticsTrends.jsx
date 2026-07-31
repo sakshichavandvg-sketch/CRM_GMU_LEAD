@@ -1,24 +1,26 @@
 import { useMemo } from "react";
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import { ChevronDown } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { Clock } from "lucide-react";
 
 const AnalyticsSkeleton = () => (
-  <div className="flex-1 w-full h-[250px] bg-slate-50 animate-pulse rounded-lg mt-4 border border-[#ECECEC]"></div>
+  <div className="flex-1 w-full h-[200px] bg-gray-50 animate-pulse rounded-lg mt-4 border border-gray-100"></div>
 );
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white px-4 py-3 rounded-xl shadow-lg border border-[#ECECEC]">
-        <p className="font-[600] text-gray-900 mb-2">{label}</p>
-        <p className="flex items-center justify-between gap-4 text-sm font-bold text-[#7A1F2B]">
-          <span>Calls</span>
-          <span>{payload[0].value}</span>
+      <div className="bg-gray-900 px-4 py-3 rounded-xl shadow-xl border border-gray-800 text-white">
+        <p className="font-semibold text-gray-100 mb-2">{label}</p>
+        <p className="flex items-center justify-between gap-6 text-sm font-semibold">
+          <span className="text-gray-400 font-medium">Calls</span>
+          <span className="text-[#8B1538]">{payload[0]?.value || 0}</span>
         </p>
-        <p className="flex items-center justify-between gap-4 text-sm font-bold text-[#F97316] mt-1">
-          <span>Interested</span>
-          <span>{payload[1].value}</span>
-        </p>
+        {payload[1] && (
+          <p className="flex items-center justify-between gap-6 text-sm font-semibold mt-1">
+            <span className="text-gray-400 font-medium">Interested</span>
+            <span className="text-[#F97316]">{payload[1].value}</span>
+          </p>
+        )}
       </div>
     );
   }
@@ -30,7 +32,6 @@ export default function AnalyticsTrends({ isLoading, analytics }) {
   const chartData = useMemo(() => {
     if (!Array.isArray(analytics)) return [];
     return analytics.map(item => {
-      // Create a short day format from "YYYY-MM-DD" e.g., "Mon"
       const dateObj = new Date(item.date);
       const dayStr = isNaN(dateObj.getTime()) 
         ? item.date 
@@ -46,9 +47,15 @@ export default function AnalyticsTrends({ isLoading, analytics }) {
 
   if (isLoading) {
     return (
-      <div className="bg-white border border-[#ECECEC] rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] p-6 flex flex-col h-full">
-        <div className="flex justify-between items-center mb-2">
-          <h2 className="text-[20px] font-[600] text-gray-900">Daily Analytics</h2>
+      <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_2px_12px_rgba(15,23,42,0.06)] p-5 flex flex-col h-full min-h-[250px]">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
+            <Clock size={20} />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 leading-tight">Best Time to Call</h2>
+            <p className="text-xs text-gray-500 font-medium">Based on recent connection rates</p>
+          </div>
         </div>
         <AnalyticsSkeleton />
       </div>
@@ -56,65 +63,63 @@ export default function AnalyticsTrends({ isLoading, analytics }) {
   }
 
   return (
-    <div className="bg-white border border-[#ECECEC] rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] p-6 flex flex-col h-[400px]">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-[20px] font-[600] text-gray-900">Daily Analytics</h2>
-        <button className="flex items-center gap-1.5 text-xs font-[600] text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors px-3 py-1.5 rounded-lg outline-none focus:ring-2 focus:ring-[#7A1F2B]">
-          This Week <ChevronDown size={14} className="text-gray-500" />
-        </button>
+    <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_2px_12px_rgba(15,23,42,0.06)] hover:shadow-md transition-all duration-300 p-5 flex flex-col h-full min-h-[250px]">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-full bg-[#8B1538]/10 flex items-center justify-center text-[#8B1538]">
+          <Clock size={20} />
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 leading-tight">Best Time to Call</h2>
+          <p className="text-xs text-gray-500 font-medium">Based on recent connection rates</p>
+        </div>
       </div>
       
       {chartData.length === 0 ? (
-        <div className="flex-1 flex items-center justify-center text-slate-500 font-[500]">
+        <div className="flex-1 flex items-center justify-center text-gray-500 font-medium">
           No analytics data available.
         </div>
       ) : (
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full mt-2">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barGap={2}>
               <defs>
                 <linearGradient id="colorCalls" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#7A1F2B" stopOpacity={0.2}/>
-                  <stop offset="95%" stopColor="#7A1F2B" stopOpacity={0}/>
+                  <stop offset="0%" stopColor="#8B1538" stopOpacity={0.9}/>
+                  <stop offset="100%" stopColor="#8B1538" stopOpacity={0.6}/>
                 </linearGradient>
                 <linearGradient id="colorInterested" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#F97316" stopOpacity={0.2}/>
-                  <stop offset="95%" stopColor="#F97316" stopOpacity={0}/>
+                  <stop offset="0%" stopColor="#F97316" stopOpacity={0.9}/>
+                  <stop offset="100%" stopColor="#F97316" stopOpacity={0.6}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="#F1F5F9" />
               <XAxis 
                 dataKey="day" 
                 axisLine={false} 
                 tickLine={false} 
-                tick={{ fontSize: 13, fill: '#64748B', fontWeight: 500 }} 
-                dy={10}
+                tick={{ fontSize: 12, fill: '#94A3B8', fontWeight: 600 }} 
+                dy={12}
               />
               <YAxis 
                 axisLine={false} 
                 tickLine={false} 
-                tick={{ fontSize: 13, fill: '#64748B', fontWeight: 500 }} 
+                tick={{ fontSize: 12, fill: '#94A3B8', fontWeight: 600 }} 
+                dx={-10}
               />
-              <Tooltip content={<CustomTooltip />} />
-              <Area 
-                type="monotone" 
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F8FAFC' }} />
+              <Bar 
                 dataKey="calls" 
-                stroke="#7A1F2B" 
-                strokeWidth={3}
-                fillOpacity={1} 
                 fill="url(#colorCalls)" 
-                activeDot={{ r: 6, strokeWidth: 0, fill: '#7A1F2B' }}
+                radius={[4, 4, 0, 0]} 
+                barSize={12}
               />
-              <Area 
-                type="monotone" 
+              <Bar 
                 dataKey="interested" 
-                stroke="#F97316" 
-                strokeWidth={3}
-                fillOpacity={1} 
                 fill="url(#colorInterested)" 
-                activeDot={{ r: 6, strokeWidth: 0, fill: '#F97316' }}
+                radius={[4, 4, 0, 0]} 
+                barSize={12}
               />
-            </AreaChart>
+            </BarChart>
           </ResponsiveContainer>
         </div>
       )}

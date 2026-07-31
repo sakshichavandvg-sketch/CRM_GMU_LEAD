@@ -1,43 +1,67 @@
 import { telecallerLeadService } from "./telecallerLeadService";
 import { telecallerFollowupService } from "./telecallerFollowupService";
+import { callHistoryService } from "../voice/services/callHistoryService";
+import { computeVoiceAnalytics, computeWeeklyPerformance, formatRecentActivity } from "../utils/telecallerMetrics";
 
 export const telecallerDashboardService = {
   getDashboard: async () => {
     try {
-      // 1. Fetch real leads assigned to this telecaller
-      const leadsData = await telecallerLeadService.getMyLeads({ size: 100 }).catch(() => ({ leads: [] }));
+      // 1. Fetch data concurrently
+      const [leadsData, followupsData, callsData] = await Promise.all([
+        telecallerLeadService.getMyLeads({ size: 100 }).catch(() => ({ leads: [] })),
+        telecallerFollowupService.getFollowups({ tab: "all" }).catch(() => []),
+        callHistoryService.getCallHistory().catch(() => [])
+      ]);
+
       const leads = Array.isArray(leadsData?.leads) ? leadsData.leads : [];
+      const followups = Array.isArray(followupsData) ? followupsData : [];
+      const calls = Array.isArray(callsData) ? callsData : [];
 
-      // 2. Try fetching followups (might 404 on real backend if not implemented)
-      let followups = [];
-      try {
-        const followupsData = await telecallerFollowupService.getFollowups({ tab: "all" });
-        followups = Array.isArray(followupsData) ? followupsData : [];
-      } catch (e) {
-        console.warn("Followups endpoint not ready on real backend, falling back to empty followups.");
-      }
-
+      // 2. Compute metrics from single source of truth
+      const voiceAnalytics = computeVoiceAnalytics(calls);
+      
       const todayStr = new Date().toISOString().split("T")[0];
 
-      // 3. Compute real-time metrics
+      const interestedCount = leads.filter(l => l.status === "INTERESTED" || l.stage === "Interested" || l.leadStatus === "INTERESTED").length;
+      const admissionsCount = leads.filter(l => l.status === "ENROLLED" || l.stage === "Admission" || l.leadStatus === "ENROLLED").length;
+
+      // 3. Compute dashboard summary
       const summary = {
         assigned: leads.length,
-        callsToday: leads.reduce((sum, lead) => 
-          sum + (lead.activities || []).filter(a => a.action === "Call Logged" && a.time?.startsWith(todayStr)).length
-        , 0),
-        connected: leads.reduce((sum, lead) => 
-          sum + (lead.activities || []).filter(a => a.action === "Call Logged" && a.status === "Connected" && a.time?.startsWith(todayStr)).length
-        , 0),
-        interested: leads.filter(l => l.status === "INTERESTED" || l.stage === "Interested" || l.leadStatus === "INTERESTED").length,
-        admissions: leads.filter(l => l.status === "ENROLLED" || l.stage === "Admission" || l.leadStatus === "ENROLLED").length,
+        callsToday: voiceAnalytics.callsToday, // Sourced from calls history
+        connected: voiceAnalytics.connected, // Sourced from calls history
+        interested: interestedCount,
+        admissions: admissionsCount,
         goal: 68
       };
 
-      const stages = ["Lead In", "Contacted", "Interested", "Application", "Documents", "Admission"];
-      const pipeline = stages.map(stageName => ({
-        stage: stageName,
-        count: leads.filter(l => l.stage === stageName || (l.leadStatus && l.leadStatus.toLowerCase() === stageName.toLowerCase())).length
-      }));
+      const stageMapping = {
+        "Lead In": ["NEW", "LEAD IN", "LEAD_IN"],
+        "Contacted": ["CONTACTED", "IN_PROGRESS"],
+        "Interested": ["INTERESTED"],
+        "Application": ["APPLICATION", "APPLIED"],
+        "Documents": ["DOCUMENTS", "DOCUMENT_VERIFICATION"],
+        "Admission": ["ENROLLED", "ADMISSION", "ADMITTED"]
+      };
+
+      const pipeline = Object.entries(stageMapping).map(([stageName, matchingStatuses]) => {
+        return {
+          stage: stageName,
+          count: leads.filter(l => {
+            const s1 = (l.status || "").toUpperCase();
+            const s2 = (l.stage || "").toUpperCase();
+            const s3 = (l.leadStatus || "").toUpperCase();
+            const s4 = (l.currentStage || "").toUpperCase();
+            
+            return matchingStatuses.includes(s1) || 
+                   matchingStatuses.includes(s2) || 
+                   matchingStatuses.includes(s3) || 
+                   matchingStatuses.includes(s4) ||
+                   s2 === stageName.toUpperCase() ||
+                   s4 === stageName.toUpperCase();
+          }).length
+        };
+      });
 
       const nextCalls = followups
         .filter(f => f.status === "Pending")
@@ -61,18 +85,11 @@ export const telecallerDashboardService = {
       const analytics = Array.from({ length: 7 }).map((_, i) => {
         const d = new Date();
         d.setDate(d.getDate() - (6 - i));
-        return { date: d.toISOString().split("T")[0], calls: 0, interested: 0 }; // Stub for now
+        return { date: d.toISOString().split("T")[0], calls: 0, interested: 0 };
       });
 
-      const weeklyPerformance = {
-        calls: { current: summary.callsToday * 5, target: 350 },
-        interested: { current: summary.interested, target: 100 },
-        admissions: { current: summary.admissions, target: 15 }
-      };
-
-      const activities = leads.flatMap(l => 
-        (l.activities || []).map(a => ({ ...a, leadName: l.name || l.studentName }))
-      ).sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 10);
+      const weeklyPerformance = computeWeeklyPerformance(calls, interestedCount, admissionsCount);
+      const activities = formatRecentActivity(calls, leads, 10);
 
       return {
         summary,

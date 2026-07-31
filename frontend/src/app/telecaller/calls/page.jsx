@@ -11,7 +11,6 @@ import ActiveCallCard from "@/features/telecaller/voice/components/ActiveCallCar
 import QuickDialCard from "@/features/telecaller/voice/components/QuickDialCard";
 import AnalyticsCards from "@/features/telecaller/voice/components/AnalyticsCards";
 import RecentCallsTable from "@/features/telecaller/voice/components/RecentCallsTable";
-import RecordingsCard from "@/features/telecaller/voice/components/RecordingsCard";
 import TimelineCard from "@/features/telecaller/voice/components/TimelineCard";
 import AudioTestModal from "@/features/telecaller/voice/components/AudioTestModal";
 import DeviceSettingsModal from "@/features/telecaller/voice/components/DeviceSettingsModal";
@@ -52,11 +51,8 @@ export default function TelecallerCallsPage() {
       {/* ── ANALYTICS STRIP ──────────────────────────────────────────── */}
       <AnalyticsCards />
 
-      {/* ── MIDDLE ROW: Recent Calls | Recordings ────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecentCallsTable />
-        <RecordingsCard />
-      </div>
+      {/* ── MIDDLE ROW: Recent Calls ──────────────────────────────────── */}
+      <RecentCallsTable />
 
       {/* ── BOTTOM ROW: Timeline ─────────────────────────────────────── */}
       <TimelineCard />

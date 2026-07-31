@@ -3,11 +3,7 @@ import {
   Users,
   CalendarClock,
   PhoneCall,
-  LineChart,
-  FileText,
   User,
-  LifeBuoy,
-  Mic,
 } from "lucide-react";
 
 import { ROLES } from "@/constants/roles";
@@ -37,12 +33,7 @@ const telecallerNavigation = [
     icon: PhoneCall,
     roles: [ROLES.TELE_CALLER],
   },
-  {
-    title: "Recordings",
-    path: "/telecaller/recordings",
-    icon: Mic,
-    roles: [ROLES.TELE_CALLER],
-  },
 ];
 
-export default telecallerNavigation;
+export default telecallerNavigation;
+

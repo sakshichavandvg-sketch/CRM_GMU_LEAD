@@ -33,6 +33,7 @@ export default function DashboardNavbar({
     if (pathname.endsWith('/leads')) return breadcrumbs.leads;
     if (pathname.includes('/user-directory/')) return breadcrumbs.telecallerDetails;
     if (pathname.endsWith('/user-directory')) return breadcrumbs.userDirectory;
+    if (pathname.includes('/call-reports/')) return breadcrumbs.callReportsTelecaller;
     if (pathname.endsWith('/call-reports')) return breadcrumbs.callReports;
     if (pathname.endsWith('/admissions')) return breadcrumbs.admissions;
     if (pathname.endsWith('/follow-ups')) return breadcrumbs.followups || [

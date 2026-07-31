@@ -9,6 +9,7 @@ export default function Input({
     error,
     required = false,
     disabled = false,
+    icon,
 }) {
     const errorId = name ? `${name}-error` : undefined;
 
@@ -24,37 +25,44 @@ export default function Input({
                 </label>
             )}
 
-            <input
-                id={name}
-                name={name}
-                type={type}
-                value={value}
-                onChange={onChange}
-                onBlur={onBlur}
-                placeholder={placeholder}
-                disabled={disabled}
-                aria-invalid={!!error}
-                aria-required={required}
-                aria-describedby={error ? errorId : undefined}
-                className={`
-                    w-full
-                    rounded-xl
-                    border
-                    px-4
-                    py-3
-                    text-[16px]
-                    placeholder:text-gray-400
-                    outline-none
-                    transition-all
-                    duration-200
-                    font-inter
-                    ${
-                        error
-                            ? "border-red-400 focus:ring-2 focus:ring-red-200"
-                            : "border-gray-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-yellow-100"
-                    }
-                `}
-            />
+            <div className="relative">
+                {icon && (
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                        {icon}
+                    </div>
+                )}
+                <input
+                    id={name}
+                    name={name}
+                    type={type}
+                    value={value}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    placeholder={placeholder}
+                    disabled={disabled}
+                    aria-invalid={!!error}
+                    aria-required={required}
+                    aria-describedby={error ? errorId : undefined}
+                    className={`
+                        w-full
+                        rounded-xl
+                        border
+                        ${icon ? "pl-11 pr-4" : "px-4"}
+                        py-3
+                        text-[16px]
+                        placeholder:text-gray-400
+                        outline-none
+                        transition-all
+                        duration-200
+                        font-inter
+                        ${
+                            error
+                                ? "border-red-400 focus:ring-2 focus:ring-red-200"
+                                : "border-gray-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-yellow-100"
+                        }
+                    `}
+                />
+            </div>
 
             <div className="min-h-[20px] text-[12px] text-red-500 font-inter">
                 {error && <p id={errorId}>{error}</p>}

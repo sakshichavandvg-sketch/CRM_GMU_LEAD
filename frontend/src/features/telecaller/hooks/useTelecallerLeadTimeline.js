@@ -3,7 +3,7 @@ import { telecallerLeadService } from "../services/telecallerLeadService";
 
 export const useTelecallerLeadTimeline = (enquiryNo) => {
   return useQuery({
-    queryKey: ["telecaller", "leads", enquiryNo, "timeline"],
+    queryKey: ["telecaller", "timeline", enquiryNo],
     queryFn: async () => {
       return await telecallerLeadService.getLeadTimeline(enquiryNo);
     },

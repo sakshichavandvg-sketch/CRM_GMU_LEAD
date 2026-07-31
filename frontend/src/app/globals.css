@@ -5,6 +5,14 @@
   --gold: #D1A14E;
   --background: #FAFAFA;
   --text: #1F2937;
+  
+  /* GMU Auth Design Tokens */
+  --gmu-maroon: #5B0B0B;
+  --gmu-gold: #D4AF37;
+  --gmu-card: #FFFFFF;
+  --gmu-bg: #FDFCF9;
+  --gmu-shadow: 0 20px 40px rgba(0,0,0,0.06);
+  --gmu-text: #2D3748;
 }
 
 @theme inline {

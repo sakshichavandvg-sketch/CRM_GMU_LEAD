@@ -27,6 +27,12 @@ export const breadcrumbs = {
     { label: "Management", href: "/dashboard/management" },
     { label: "Call Reports" }
   ],
+  callReportsTelecaller: [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Management", href: "/dashboard/management" },
+    { label: "Call Reports", href: "/dashboard/management/call-reports" },
+    { label: "Telecaller Logs" }
+  ],
   admissions: [
     { label: "Dashboard", href: "/dashboard" },
     { label: "Admissions" }

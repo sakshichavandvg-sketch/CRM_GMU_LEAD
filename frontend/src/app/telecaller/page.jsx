@@ -14,7 +14,6 @@ import TodayGoalGauge from "@/features/telecaller/components/kpi/TodayGoalGauge"
 
 // Actions
 import NextCallsCard from "@/features/telecaller/components/actions/NextCallsCard";
-import QuickActions from "@/features/telecaller/components/actions/QuickActions";
 
 // Pipeline & Analytics
 import PipelineSection from "@/features/telecaller/components/pipeline/PipelineSection";
@@ -65,23 +64,30 @@ export default function TelecallerDashboard() {
 
   return (
     <div 
-      className="bg-[#FFFFFF] -m-4 sm:-m-6 p-4 sm:p-6 lg:p-8 space-y-6 animate-in fade-in duration-500 min-h-screen" 
+      className="bg-[#FFFFFF] -m-4 sm:-m-6 p-4 sm:p-6 lg:pr-8 lg:py-8 lg:pl-6 space-y-4 animate-in fade-in duration-500 min-h-screen" 
       style={{ fontFamily: "var(--font-outfit), sans-serif" }}
     >
-      {/* ── HEADER & SUMMARY STRIP ────────────────────────────────────────── */}
-      <DashboardHeader 
-        isLoading={isLoading} 
-        summary={data?.summary} 
-      />
+      {/* ── HEADER GRID (12 Cols) ─────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+        <div className="lg:col-span-8 max-w-xl w-full">
+          <DashboardHeader />
+        </div>
+        <div className="lg:col-span-4">
+          <TodayGoalGauge 
+            isLoading={isLoading} 
+            summary={data?.summary} 
+          />
+        </div>
+      </div>
 
-      {/* ── KPI CARDS ─────────────────────────────────────────────────────── */}
+      {/* ── KPI GRID (6 Cols) ─────────────────────────────────────────────── */}
       <KPISection 
         isLoading={isLoading} 
         summary={data?.summary} 
       />
 
-      {/* ── ROW 1: 3-Column (Desktop) ─────────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* ── CONTENT GRID 1 (3 Cols) ───────────────────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
         <NextCallsCard 
           isLoading={isLoading} 
           nextCalls={data?.nextCalls} 
@@ -94,47 +100,29 @@ export default function TelecallerDashboard() {
           isLoading={isLoading} 
           focus={data?.todaysFocus} 
         />
-        <TodayGoalGauge 
+        <UpcomingFollowups 
           isLoading={isLoading} 
-          goal={data?.summary?.goal} 
-          completed={data?.summary?.callsToday}
+          followups={data?.nextCalls}
         />
       </div>
 
-      {/* ── ROW 2: 2-Column (Desktop) ─────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* ── CONTENT GRID 2 (3 Cols) ───────────────────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
         <PipelineSection 
           isLoading={isLoading} 
           pipeline={data?.pipeline} 
-        />
-        <UpcomingFollowups 
-          isLoading={isLoading} 
-          followups={data?.nextCalls} // Or a separate followups array if we add it
-        />
-      </div>
-
-      {/* ── ROW 3: 2-Column (Desktop) ─────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AnalyticsTrends 
-          isLoading={isLoading} 
-          analytics={data?.analytics} 
         />
         <WeeklyPerformance 
           isLoading={isLoading} 
           weeklyPerformance={data?.weeklyPerformance} 
         />
-      </div>
-
-      {/* ── ROW 4: 2-Column (Desktop) ─────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RecentActivity 
           isLoading={isLoading} 
           activities={data?.activities} 
         />
-        <QuickActions 
-          isLoading={isLoading} 
-        />
       </div>
+
+
 
       {/* ── MODALS ────────────────────────────────────────────────────────── */}
       {isLogCallOpen && (

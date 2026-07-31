@@ -51,41 +51,56 @@ export function useVoiceCall(voiceState, setErrorMsg) {
    * refreshes automatically.
    */
   const handleCallDisconnect = useCallback(() => {
-    // Legacy flat keys
-    const flatKeys = [
-      "telecaller-dashboard",
-      "telecaller-calls",
-      "lead-details",
-      "recent-activity",
-      "pipeline",
-      "followups",
-      "performance",
-      "voice-analytics",
-      "telecaller-recordings",
-    ];
+    const invalidateAll = () => {
+      // Legacy flat keys
+      const flatKeys = [
+        "telecaller-dashboard",
+        "telecaller-calls",
+        "lead-details",
+        "recent-activity",
+        "pipeline",
+        "followups",
+        "performance",
+        "voice-analytics",
+        "telecaller-recordings",
+      ];
 
-    flatKeys.forEach((key) => {
-      queryClient.invalidateQueries({ queryKey: [key] });
+      flatKeys.forEach((key) => {
+        queryClient.invalidateQueries({ queryKey: [key] });
+      });
+
+      // Namespaced array keys
+      const namespacedKeys = [
+        ["telecaller", "calls"],
+        ["telecaller", "leads"],
+        ["telecaller-dashboard"],
+      ];
+
+      namespacedKeys.forEach((queryKey) => {
+        queryClient.invalidateQueries({ queryKey });
+      });
+
+      // Invalidate all timeline queries
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey) &&
+          query.queryKey[0] === "telecaller" &&
+          query.queryKey[1] === "timeline",
+      });
+    };
+
+    // Invalidate immediately to show call ended
+    invalidateAll();
+
+    // Staggered invalidations to catch delayed Twilio webhooks (status callbacks, recordings)
+    // Twilio often takes a few seconds to process recordings and send the payload.
+    const delays = [3000, 8000, 15000, 30000];
+    delays.forEach(delay => {
+      setTimeout(() => {
+        invalidateAll();
+      }, delay);
     });
 
-    // Namespaced array keys (used by hooks in features/telecaller/hooks/)
-    const namespacedKeys = [
-      ["telecaller", "calls"],
-      ["telecaller", "leads"],
-      ["telecaller-dashboard"],
-    ];
-
-    namespacedKeys.forEach((queryKey) => {
-      queryClient.invalidateQueries({ queryKey });
-    });
-
-    // Invalidate all timeline queries for any enquiryNo
-    queryClient.invalidateQueries({
-      predicate: (query) =>
-        Array.isArray(query.queryKey) &&
-        query.queryKey[0] === "telecaller" &&
-        query.queryKey[1] === "timeline",
-    });
   }, [queryClient]);
 
   return { startCall, endCall, muteCall, sendDigits, handleCallDisconnect };

@@ -1,10 +1,10 @@
-export default function RightPanel({ children }) {
+export default function RightPanel({ children, className = "" }) {
   return (
     <section
-      className="
+      className={`
         w-full
         min-h-full
-        bg-[#FCFCFC]
+        bg-[var(--gmu-bg)]
         flex
         items-center
         justify-center
@@ -13,7 +13,8 @@ export default function RightPanel({ children }) {
         sm:px-6
         lg:px-8
         xl:px-10
-      "
+        ${className}
+      `}
     >
       {children}
     </section>

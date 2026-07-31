@@ -12,6 +12,7 @@ export default function PasswordInput({
     onBlur,
     error,
     disabled = false,
+    icon,
 }) {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -27,6 +28,11 @@ export default function PasswordInput({
             </label>
 
             <div className="relative">
+                {icon && (
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                        {icon}
+                    </div>
+                )}
                 <input
                     id={name}
                     name={name}
@@ -42,7 +48,7 @@ export default function PasswordInput({
                         w-full
                         rounded-xl
                         border
-                        px-4
+                        ${icon ? "pl-11" : "px-4"}
                         py-3
                         pr-11
                         text-[16px]

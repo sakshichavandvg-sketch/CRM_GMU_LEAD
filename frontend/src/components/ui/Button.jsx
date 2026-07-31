@@ -31,6 +31,12 @@ export default function Button({
       text-white
       hover:bg-red-700
     `,
+    maroon: `
+      bg-[var(--gmu-maroon)]
+      text-white
+      hover:bg-[#4a0808]
+      shadow-md
+    `,
   };
 
   return (
