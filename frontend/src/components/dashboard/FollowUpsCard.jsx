@@ -1,16 +1,29 @@
-import { Calendar, PhoneCall } from "lucide-react";
-import { DashboardSection } from "../dashboard-ui/DashboardSection";
+import { Calendar, Phone, MessageCircle } from "lucide-react";
 import { EmptyState } from "../dashboard-ui/EmptyState";
-import StatusBadge from "@/components/table/StatusBadge";
+
+// Priority badge styles matching Stitch design
+const PRIORITY_STYLES = {
+  High: { bg: "bg-[#FDF2F2]", text: "text-[#DE6B6B]", label: "HIGH PRIORITY" },
+  Medium: { bg: "bg-[#FEF9EC]", text: "text-[#E9B35C]", label: "MEDIUM PRIORITY" },
+  Low: { bg: "bg-blue-50", text: "text-blue-500", label: "LOW PRIORITY" },
+};
+
+// Icon colors per Stitch: first item maroon, second item blue
+const ICON_COLORS = [
+  "text-[#5D1717]",
+  "text-[#4A69BD]",
+  "text-[#5D1717]",
+  "text-[#4A69BD]",
+];
 
 export default function FollowUpsCard({ followups }) {
   const upcomingError = followups?.upcoming?.error;
   const overdueError = followups?.overdue?.error;
-  
+
   const upcomingData = followups?.upcoming?.data || [];
   const overdueData = followups?.overdue?.data || [];
-  
-  // Combine overdue and upcoming for display
+
+  // Combine overdue and upcoming for display (preserve existing logic)
   const data = [...overdueData, ...upcomingData];
 
   if (upcomingError || overdueError) {
@@ -21,56 +34,88 @@ export default function FollowUpsCard({ followups }) {
     );
   }
 
+  // Choose icon based on index (alternating phone/chat per Stitch)
+  const getIcon = (idx) => {
+    return idx % 2 === 0
+      ? <Phone size={20} />
+      : <MessageCircle size={20} />;
+  };
+
+  // Get priority style
+  const getPriorityStyle = (priority) => {
+    const key = typeof priority === "string"
+      ? priority.charAt(0).toUpperCase() + priority.slice(1).toLowerCase()
+      : "Medium";
+    return PRIORITY_STYLES[key] || PRIORITY_STYLES.Medium;
+  };
+
   return (
-    <div className="bg-white border border-[#ECECEC] rounded-[20px] p-6 shadow-sm h-full flex flex-col hover:shadow-md transition-shadow">
-      <DashboardSection title="Today's Follow-ups" className="mb-2">
-        <div className="flex flex-col gap-3 mt-4">
-          {data.length === 0 ? (
-            <div className="py-8">
-              <EmptyState title="No follow-ups" description="You have no follow-ups scheduled for today." icon={Calendar} />
-            </div>
-          ) : (
-            data.map((item, index) => {
-              const isOverdue = item.time === "Overdue";
+    <article className="bg-white rounded-3xl border border-gray-100 shadow-sm p-5 xl:p-6 h-full flex flex-col">
+      {/* Header */}
+      <header className="flex justify-between items-center mb-6 xl:mb-8">
+        <h2 className="text-[22px] xl:text-[26px] font-bold text-gray-900">Today&apos;s Follow-ups</h2>
+        <a
+          className="text-[#5D1717] font-semibold flex items-center gap-1 hover:underline text-sm xl:text-base"
+          href="#"
+        >
+          View Calendar
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+            <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
+      </header>
+
+      {/* Follow-ups List with Timeline */}
+      {data.length === 0 ? (
+        <div className="py-4 flex-1">
+          <EmptyState title="No follow-ups" description="You have no follow-ups scheduled for today." icon={Calendar} />
+        </div>
+      ) : (
+        <section className="relative flex-1">
+          {/* Vertical Timeline Stem */}
+          {data.length > 1 && (
+            <div className="absolute left-[23px] top-12 bottom-12 w-[1px] bg-gray-100" />
+          )}
+
+          <div className="space-y-6 xl:space-y-8">
+            {data.map((item, index) => {
+              const priorityStyle = getPriorityStyle(item.priority);
+              const iconColor = ICON_COLORS[index % ICON_COLORS.length];
+
               return (
                 <div
                   key={index}
-                  className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-[16px] border border-[#ECECEC] p-4 transition-all duration-300 hover:border-gray-300 hover:shadow-md hover:bg-gray-50/50 cursor-pointer"
+                  className="flex items-center justify-between relative"
                 >
-                  <div className="flex items-center gap-3 w-full">
-                    <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full font-bold ring-2 ring-white shadow-sm transition-all ${isOverdue ? 'bg-rose-50 text-rose-600 group-hover:ring-rose-100' : 'bg-orange-50 text-orange-600 group-hover:ring-orange-100'}`}>
-                      {item.student ? item.student.charAt(0).toUpperCase() : "?"}
+                  <div className="flex items-center gap-4 xl:gap-6">
+                    {/* Circular Icon Container — Stitch: white bg, bordered circle */}
+                    <div className={`relative z-10 w-12 h-12 flex items-center justify-center bg-white border border-gray-100 rounded-full shadow-sm ${iconColor} shrink-0`}>
+                      {getIcon(index)}
                     </div>
-                    <div className="flex flex-col overflow-hidden">
-                      <span className="font-[600] text-gray-900 truncate tracking-tight text-[15px]" title={item.student}>{item.student}</span>
-                      <span className="truncate text-xs font-[500] text-gray-500" title={item.course}>{item.course}</span>
+
+                    {/* Name + Subtitle */}
+                    <div className="flex flex-col">
+                      <span className="text-lg xl:text-xl font-bold text-[#1A1A1A]">
+                        {item.student || "Unknown"}
+                      </span>
+                      <span className="text-sm text-gray-400 font-medium mt-0.5">
+                        {item.time || "Scheduled"}{item.assignedTo ? ` • Assigned to ${item.assignedTo}` : ""}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between sm:justify-end gap-3 w-full">
-                    <div className="flex items-center gap-2">
-                      {isOverdue ? (
-                        <span className="rounded-md bg-rose-50 px-2 py-1 text-[11px] font-[700] text-rose-600 border border-rose-100 uppercase tracking-wider">
-                          Overdue
-                        </span>
-                      ) : (
-                        <span className="rounded-md bg-blue-50 px-2 py-1 text-[11px] font-[700] text-blue-600 border border-blue-100 uppercase tracking-wider">
-                          Today
-                        </span>
-                      )}
-                      <StatusBadge status={item.priority} />
-                    </div>
-                    
-                    <button className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-50 text-green-600 transition-colors hover:bg-green-600 hover:text-white hover:shadow-sm">
-                      <PhoneCall size={14} />
-                    </button>
+                  {/* Priority Badge */}
+                  <div className="shrink-0 ml-4">
+                    <span className={`px-3 xl:px-4 py-1.5 xl:py-2 rounded-md text-[10px] tracking-wider font-bold ${priorityStyle.bg} ${priorityStyle.text}`}>
+                      {priorityStyle.label}
+                    </span>
                   </div>
                 </div>
               );
-            })
-          )}
-        </div>
-      </DashboardSection>
-    </div>
+            })}
+          </div>
+        </section>
+      )}
+    </article>
   );
 }

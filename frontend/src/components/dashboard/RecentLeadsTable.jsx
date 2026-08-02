@@ -1,7 +1,14 @@
-import { Book, Headset, MoreHorizontal, Users } from "lucide-react";
-import { DashboardSection } from "../dashboard-ui/DashboardSection";
+import { Users } from "lucide-react";
 import { EmptyState } from "../dashboard-ui/EmptyState";
-import StatusBadge from "@/components/table/StatusBadge";
+
+// Status badge colors matching Stitch design
+const STATUS_STYLES = {
+  Contacted: "bg-[#f8e7e7] text-[#711a1a]",
+  Interested: "bg-[#fef3c7] text-[#92400e]",
+  New: "bg-blue-50 text-blue-700",
+  Converted: "bg-green-50 text-green-700",
+  Closed: "bg-gray-100 text-gray-600",
+};
 
 export default function RecentLeadsTable({ recentLeads }) {
   if (recentLeads?.error) {
@@ -14,80 +21,79 @@ export default function RecentLeadsTable({ recentLeads }) {
 
   const data = recentLeads?.data || [];
 
-  const action = (
-    <div className="flex items-center gap-3">
-      <select className="rounded-lg border border-[#ECECEC] bg-white px-3 py-1.5 text-sm font-[500] text-gray-700 outline-none hover:border-gray-300 focus:ring-2 focus:ring-[#7A1F2B] transition-colors">
-        <option>All Statuses</option>
-        <option>Enquiry</option>
-        <option>Interested</option>
-      </select>
-      <select className="hidden sm:block rounded-lg border border-[#ECECEC] bg-white px-3 py-1.5 text-sm font-[500] text-gray-700 outline-none hover:border-gray-300 focus:ring-2 focus:ring-[#7A1F2B] transition-colors">
-        <option>Newest First</option>
-        <option>Oldest First</option>
-      </select>
-    </div>
-  );
+  // Helper: get initials from name
+  const getInitials = (name) => {
+    if (!name) return "?";
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return name.charAt(0).toUpperCase();
+  };
 
   return (
-    <div className="bg-white border border-[#ECECEC] rounded-[20px] p-6 shadow-sm h-full flex flex-col hover:shadow-md transition-shadow">
-      <DashboardSection title="Recent Leads" action={action} className="mb-2">
-        <div className="flex flex-col gap-3 mt-4">
-          {data.length === 0 ? (
-            <div className="py-8">
-              <EmptyState title="No recent leads" description="There are no recent leads in your pipeline." icon={Users} />
-            </div>
-          ) : (
-            data.map((lead) => (
-              <div 
-                key={lead.id} 
-                className="group flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-[16px] border border-[#ECECEC] bg-white p-4 transition-all duration-300 hover:border-gray-300 hover:shadow-md hover:bg-gray-50/50 cursor-pointer"
-              >
-                {/* Section 1: Avatar + Name */}
-                <div className="flex w-full items-center gap-3 md:w-[220px]">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-50 font-bold text-blue-600 ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all">
-                    {lead.student ? lead.student.charAt(0).toUpperCase() : "?"}
-                  </div>
-                  <span className="font-[600] text-gray-900 truncate tracking-tight text-[15px]" title={lead.student}>{lead.student || "Unknown"}</span>
-                </div>
+    <div className="bg-white rounded-[24px] border border-gray-200 shadow-sm p-6 h-full flex flex-col">
+      {/* Header */}
+      <header className="flex justify-between items-center mb-6 px-1">
+        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Recent Leads</h2>
+        <a
+          className="flex items-center gap-1 text-[#711a1a] text-sm font-semibold hover:underline"
+          href="#"
+        >
+          View All Leads
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
+      </header>
 
-                {/* Section 2: Course */}
-                <div className="flex w-full items-center gap-3 md:w-[160px]">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500 transition-colors group-hover:bg-blue-50 group-hover:text-blue-600">
-                    <Book size={16} />
-                  </div>
-                  <div className="flex flex-col overflow-hidden">
-                    <span className="text-[11px] font-[600] uppercase tracking-wider text-slate-400">Course</span>
-                    <span className="truncate text-sm font-[500] text-gray-700" title={lead.course}>{lead.course || "Not Assigned"}</span>
-                  </div>
+      {/* Lead List */}
+      <div className="space-y-4 flex-1">
+        {data.length === 0 ? (
+          <div className="py-8">
+            <EmptyState title="No recent leads" description="There are no recent leads in your pipeline." icon={Users} />
+          </div>
+        ) : (
+          data.map((lead, index) => (
+            <article
+              key={lead.id || index}
+              className={`flex items-center justify-between p-3 rounded-[16px] transition-colors ${
+                index % 2 === 0
+                  ? "border border-gray-100 bg-white"
+                  : "bg-transparent"
+              }`}
+            >
+              <div className="flex items-center gap-4">
+                {/* Avatar */}
+                <div className="w-11 h-11 flex items-center justify-center rounded-[10px] bg-[#f5e4e4] text-[#711a1a] font-bold text-base shrink-0">
+                  {getInitials(lead.student)}
                 </div>
-
-                {/* Section 3: Assigned */}
-                <div className="flex w-full items-center gap-3 md:w-[160px]">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500 transition-colors group-hover:bg-blue-50 group-hover:text-blue-600">
-                    <Headset size={16} />
-                  </div>
-                  <div className="flex flex-col overflow-hidden">
-                    <span className="text-[11px] font-[600] uppercase tracking-wider text-slate-400">Assigned</span>
-                    <span className="truncate text-sm font-[500] text-gray-700" title={lead.assignedTo}>{lead.assignedTo || "Unassigned"}</span>
-                  </div>
-                </div>
-
-                {/* Section 4: Badges */}
-                <div className="flex w-full items-center gap-2 md:w-[140px]">
-                  <StatusBadge status={lead.status} />
-                </div>
-
-                {/* Section 5: Actions */}
-                <div className="flex items-center justify-end">
-                  <button className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-white hover:text-gray-900 hover:shadow-sm border border-transparent hover:border-gray-200">
-                    <MoreHorizontal size={18} />
-                  </button>
+                {/* Name + Subtitle */}
+                <div className="flex flex-col">
+                  <span className="font-bold text-lg leading-tight text-[#3e1212]">
+                    {lead.student || "Unknown"}
+                  </span>
+                  <span className="text-[#6b7280] text-sm font-medium mt-0.5">
+                    {lead.course || "N/A"}{lead.source ? ` • ${lead.source} Source` : ""}
+                  </span>
                 </div>
               </div>
-            ))
-          )}
-        </div>
-      </DashboardSection>
+
+              {/* Status Badge + Time */}
+              <div className="flex flex-col items-end gap-2 shrink-0">
+                <span
+                  className={`px-3 py-1 rounded-md text-xs font-semibold ${
+                    STATUS_STYLES[lead.status] || "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  {lead.status || "Unknown"}
+                </span>
+                {lead.time && (
+                  <time className="text-xs text-gray-500 font-medium">{lead.time}</time>
+                )}
+              </div>
+            </article>
+          ))
+        )}
+      </div>
     </div>
   );
 }

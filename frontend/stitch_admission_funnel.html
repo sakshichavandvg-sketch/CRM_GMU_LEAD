@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admission Funnel Card</title>
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            maroon: {
+              DEFAULT: '#801B1B',
+              dark: '#630B0B',
+              light: '#A35D5D',
+              lighter: '#C49C9C',
+              lightest: '#E4D1D1',
+              pale: '#F0E3E3'
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-fonts">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6; /* Neutral background to highlight the card */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+  </style>
+<style data-purpose="funnel-layout">
+    /* Precise sizing for the funnel bars to match the visual hierarchy */
+    .funnel-bar-1 { width: 100%; background-color: #801B1B; }
+    .funnel-bar-2 { width: 90%; background-color: #A45E5E; }
+    .funnel-bar-3 { width: 75%; background-color: #C08D8D; }
+    .funnel-bar-4 { width: 60%; background-color: #D8BABA; }
+    .funnel-bar-5 { width: 43%; background-color: #E8D5D5; }
+    
+    .percent-chip {
+      background-color: #F8F9FA;
+      color: #9CA3AF;
+      font-size: 0.75rem;
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      min-width: 2.5rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<!-- BEGIN: AdmissionFunnelCard -->
+<div class="bg-white rounded-3xl p-10 shadow-sm w-full max-w-4xl" data-purpose="admission-funnel-card">
+<!-- Header Title -->
+<h2 class="text-2xl font-bold text-maroon mb-10">Admission Funnel</h2>
+<div class="grid grid-cols-2 gap-8 items-start">
+<!-- BEGIN: LeftLegendSection -->
+<div class="flex flex-col gap-y-7" data-purpose="legend-list">
+<!-- New -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 rounded-full bg-maroon"></span>
+<span class="text-gray-600 font-medium">New</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-maroon font-bold text-lg">560</span>
+</div>
+</div>
+<!-- Contacted -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 rounded-full bg-maroon-light"></span>
+<span class="text-gray-600 font-medium">Contacted</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="percent-chip">75%</span>
+<span class="text-maroon font-bold text-lg">420</span>
+</div>
+</div>
+<!-- Interested -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 rounded-full bg-maroon-lighter"></span>
+<span class="text-gray-600 font-medium">Interested</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="percent-chip">74%</span>
+<span class="text-maroon font-bold text-lg">310</span>
+</div>
+</div>
+<!-- Application -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 rounded-full bg-maroon-lightest"></span>
+<span class="text-gray-600 font-medium">Application</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="percent-chip">61%</span>
+<span class="text-maroon font-bold text-lg">190</span>
+</div>
+</div>
+<!-- Admission -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 rounded-full bg-maroon-pale"></span>
+<span class="text-gray-600 font-medium">Admission</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="percent-chip">41%</span>
+<span class="text-maroon font-bold text-lg">78</span>
+</div>
+</div>
+</div>
+<!-- END: LeftLegendSection -->
+<!-- BEGIN: FunnelGraphicSection -->
+<div class="flex flex-col items-center" data-purpose="funnel-visualization">
+<!-- Stacked Funnel Bars -->
+<div class="w-full flex flex-col items-center gap-2 mb-8">
+<div class="funnel-bar-1 h-12 rounded-lg"></div>
+<div class="funnel-bar-2 h-12 rounded-lg"></div>
+<div class="funnel-bar-3 h-12 rounded-lg"></div>
+<div class="funnel-bar-4 h-12 rounded-lg"></div>
+<div class="funnel-bar-5 h-12 rounded-lg"></div>
+</div>
+<!-- Overall Conversion Footer -->
+<div class="text-center mt-4">
+<div class="text-5xl font-bold text-maroon">13.9%</div>
+<div class="text-gray-500 font-medium mt-1">Overall Conversion</div>
+</div>
+</div>
+<!-- END: FunnelGraphicSection -->
+</div>
+</div>
+<!-- END: AdmissionFunnelCard -->
+</body></html>

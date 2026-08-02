@@ -10,17 +10,17 @@ import { TableSkeleton } from "@/components/ui/Skeletons";
 import { EmptyState } from "@/components/dashboard-ui/EmptyState";
 import { PhoneOff } from "lucide-react";
 
+import ErrorState from "@/components/ui/ErrorState";
+
+import Avatar from "@/components/ui/Avatar";
+
 const COLUMNS = [
   {
     key: "name",
     label: "Telecaller",
     render: (value, row) => (
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-[#7A1F2B] text-white flex items-center justify-center text-xs font-[700] shrink-0">
-          {value
-            ? value.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
-            : <UserCircle2 size={16} />}
-        </div>
+        <Avatar name={value} size="sm" />
         <span className="font-[600] text-gray-900">{value || "—"}</span>
       </div>
     ),
@@ -91,12 +91,14 @@ const COLUMNS = [
 
 export default function TelecallerPerformanceTable() {
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
+  // We rely on global dashboard search if it exists, but since we were asked to remove the local page search bar
+  // we remove the `search` state from here entirely and just pass date filters.
   const { data, isLoading, isError } = useCallReportsSummary(
-    { search },
+    { date: selectedDate },
     page,
     pageSize
   );
@@ -119,6 +121,27 @@ export default function TelecallerPerformanceTable() {
     }
   };
 
+  const headerActions = (
+    <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
+        <input 
+          type="date" 
+          value={selectedDate}
+          onChange={(e) => { setSelectedDate(e.target.value); setPage(0); }}
+          className="h-11 rounded-xl border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-[#7A1F2B]"
+        />
+      </div>
+      {selectedDate && (
+        <button
+          onClick={() => { setSelectedDate(""); setPage(0); }}
+          className="text-xs font-semibold text-gray-500 hover:text-red-600 transition-colors"
+        >
+          Clear
+        </button>
+      )}
+    </div>
+  );
+
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -126,8 +149,7 @@ export default function TelecallerPerformanceTable() {
           title="Call Reports"
           description="Monitor telecaller activity and call performance"
           activeTab="calls"
-          search={search}
-          setSearch={setSearch}
+          actions={headerActions}
         />
         <TableSkeleton rows={8} />
       </div>
@@ -141,13 +163,13 @@ export default function TelecallerPerformanceTable() {
           title="Call Reports"
           description="Monitor telecaller activity and call performance"
           activeTab="calls"
-          search={search}
-          setSearch={setSearch}
+          actions={headerActions}
         />
-        <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed border-red-200 bg-red-50/30 text-center">
-          <p className="text-sm font-[600] text-red-600">Failed to load call reports</p>
-          <p className="text-xs text-red-400 mt-1">Check your connection and try again</p>
-        </div>
+        <ErrorState 
+          title="Failed to load call reports"
+          message="Check your connection and try again"
+          onRetry={() => window.location.reload()} 
+        />
       </div>
     );
   }
@@ -158,15 +180,14 @@ export default function TelecallerPerformanceTable() {
         title="Call Reports"
         description="Monitor telecaller activity and call performance"
         activeTab="calls"
-        search={search}
-        setSearch={setSearch}
+        actions={headerActions}
       />
 
       {totalItems === 0 && !isLoading && !isError ? (
         <div className="flex-1 min-h-[300px] flex items-center justify-center">
           <EmptyState 
             title="No Call Reports Found" 
-            description={search ? "No telecallers match your search criteria." : "There are no call reports available yet."}
+            description={selectedDate ? "No telecallers match your selected date." : "There are no call reports available yet."}
             icon={PhoneOff} 
           />
         </div>

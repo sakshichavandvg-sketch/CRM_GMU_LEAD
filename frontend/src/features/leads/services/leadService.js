@@ -104,6 +104,20 @@ const leadService = {
       value: item?.id || item?.value || item?.name || item
     })) : [];
   },
+
+  uploadLeadAvatar: async (leadId, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    // Pass undefined to Content-Type so Axios removes the default application/json
+    // and lets the browser natively append multipart/form-data; boundary=...
+    const response = await axiosInstance.post(`/api/leads/manager/leads/${leadId}/avatar`, formData, {
+      headers: {
+        "Content-Type": undefined,
+      }
+    });
+    return response.data.data;
+  }
 };
 
 export default leadService;

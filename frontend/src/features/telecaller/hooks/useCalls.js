@@ -12,13 +12,14 @@ export const useCalls = (filters = {}, page = 0, size = 10) => {
   });
 };
 
-export const useCallDetails = (callId) => {
+export const useCallDetails = (callId, options = {}) => {
   return useQuery({
     queryKey: ["telecaller", "call", callId],
     queryFn: async () => {
       return await telecallerCallService.getCallDetails(callId);
     },
-    enabled: !!callId,
+    enabled: !!callId && options.enabled !== false,
     staleTime: 5 * 60 * 1000,
+    ...options,
   });
 };

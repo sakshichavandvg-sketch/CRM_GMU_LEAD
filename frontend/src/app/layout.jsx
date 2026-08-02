@@ -5,6 +5,7 @@ import AppToast from "@/components/ui/AppToast";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import AuthBootstrap from "@/features/auth/components/AuthBootstrap";
+import PreviewBadge from "@/components/ui/PreviewBadge";
 
 const lora = Lora({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
           {children}
           <AppToast />
           <ConfirmDialog />
+          <PreviewBadge />
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryProvider>
       </body>

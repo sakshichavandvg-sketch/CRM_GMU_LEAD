@@ -1,7 +1,0 @@
-{
-  "success": true,
-  "message": "Token refreshed successfully",
-  "data": {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy_refreshed_token"
-  }
-}

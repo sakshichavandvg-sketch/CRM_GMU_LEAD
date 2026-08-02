@@ -38,8 +38,17 @@ export default function LeadDetailsClient({ leadId }) {
     if (confirmed) deleteLead(leadId);
   };
 
+  const isAssigned = viewModel?.assignment?.telecaller && viewModel.assignment.telecaller !== "Unassigned";
+  const currentTelecallerId = rawData?.lead?.assignedTo?._id || rawData?.lead?.assignedTo?.id || rawData?.telecallerId || rawData?.assigneeId;
+
   // Admin-specific hero actions (Assign Lead only — Edit & Delete are always in ProfileHero)
-  const actions = <AssignLeadAction leadId={leadId} />;
+  const actions = (
+    <AssignLeadAction 
+      leadId={leadId} 
+      isAssigned={isAssigned} 
+      currentTelecallerId={currentTelecallerId} 
+    />
+  );
 
   return (
     <div className="flex flex-col mt-4 max-w-6xl mx-auto">

@@ -5,12 +5,16 @@ import { X } from "lucide-react";
 
 export default function Modal({
   open,
+  isOpen,
   onClose,
   title,
   children,
   size = "md",
   footer,
 }) {
+  const visible = open ?? isOpen;
+  console.log("[Modal] visibility", { open, isOpen, visible });
+
   // Close on Escape key
   const handleKeyDown = useCallback(
     (e) => {
@@ -22,13 +26,13 @@ export default function Modal({
   );
 
   useEffect(() => {
-    if (!open) return;
+    if (!visible) return;
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [open, handleKeyDown]);
+  }, [visible, handleKeyDown]);
 
-  if (!open) return null;
+  if (!visible) return null;
 
   const sizes = {
     sm: "max-w-md",

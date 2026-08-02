@@ -10,12 +10,13 @@ import { useLeadOverviewFilters } from "../hooks/useLeadOverviewFilters";
 import { useLeadOverview } from "../hooks/useLeadOverview";
 import { useLeadFilterOptions } from "../hooks/useLeadFilterOptions";
 import { useLeadCounts } from "../hooks/useLeadCounts";
-import { useTelecallers } from "../hooks/useTelecallers";
+import useUsers from "../../users/useUsers";
 import { useAssignLeads } from "../hooks/useAssignLeads";
 import { FILTER_CONFIG } from "../constants/filterConfig";
 
 
-import LeadFilterDrawer from "./LeadFilterDrawer";
+import ReusableFilterDrawer from "@/components/layout/ReusableFilterDrawer";
+import LeadFilters from "./LeadFilters";
 
 // CRM Modular Sections
 import LeadsFilterToolbar from "./LeadsFilterToolbar";
@@ -48,6 +49,7 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
   const [selectedLeadId, setSelectedLeadId] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [assignMode, setAssignMode] = useState("assign");
 
   const [draftFilters, setDraftFilters] = useState({});
   const refineButtonRef = useRef(null);
@@ -58,7 +60,8 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
   }, [filters.page]);
 
   const { data: filterOptions } = useLeadFilterOptions();
-  const { data: telecallers = [] } = useTelecallers();
+  const { data: usersData } = useUsers({ size: 1000 });
+  const telecallers = usersData?.users || [];
 
   const { mutate: assignLeads, isPending: isAssigningLeads } = useAssignLeads(() => {
     setSelectedRows([]);
@@ -168,16 +171,30 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
 
           <div className="flex items-center justify-between px-1">
             {selectedRows.length > 0 ? (
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-semibold text-[#6F1D28]">
+              <div className="flex items-center gap-4 bg-[#7A1F2B]/5 border border-[#7A1F2B]/20 text-[#7A1F2B] px-4 py-2 rounded-xl shadow-sm w-full">
+                <span className="text-sm font-semibold">
                   {selectedRows.length} {selectedRows.length === 1 ? 'Lead' : 'Leads'} Selected
                 </span>
-                <button
-                  onClick={() => setIsAssignModalOpen(true)}
-                  className="px-4 py-1.5 text-sm bg-white border border-[#6F1D28] text-[#6F1D28] font-medium rounded-lg shadow-sm hover:bg-[#6F1D28] hover:text-white transition-colors"
-                >
-                  Assign Leads
-                </button>
+                <div className="flex items-center gap-2 ml-auto">
+                  <button
+                    onClick={() => { setAssignMode("assign"); setIsAssignModalOpen(true); }}
+                    className="px-4 py-1.5 text-sm bg-white border border-[#7A1F2B]/30 text-[#7A1F2B] font-medium rounded-lg shadow-sm hover:bg-[#7A1F2B]/10 transition-colors"
+                  >
+                    Assign
+                  </button>
+                  <button
+                    onClick={() => { setAssignMode("reassign"); setIsAssignModalOpen(true); }}
+                    className="px-4 py-1.5 text-sm bg-[#9E5A02] text-white font-medium rounded-lg shadow-sm hover:bg-[#824901] transition-colors"
+                  >
+                    Reassign
+                  </button>
+                  <button
+                    onClick={() => setSelectedRows([])}
+                    className="px-4 py-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors ml-2"
+                  >
+                    Clear Selection
+                  </button>
+                </div>
               </div>
             ) : (
               <span className="text-sm font-semibold text-gray-700">
@@ -211,23 +228,35 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
         </div>
       </div >
 
-      <LeadFilterDrawer
-        isOpen={isDrawerOpen}
+      {/* Filter Drawer */}
+      <ReusableFilterDrawer 
+        isOpen={isDrawerOpen} 
         onClose={handleCloseDrawer}
-        draftFilters={draftFilters}
-        setDraftFilters={setDraftFilters}
         onApply={handleApplyFilters}
         onReset={handleResetFilters}
-        options={filterOptions}
-      />
+      >
+        <LeadFilters 
+          values={draftFilters} 
+          options={filterOptions} 
+          onChange={(key, value) => setDraftFilters(prev => ({ ...prev, [key]: value }))} 
+        />
+        <div className="mt-10 pt-6 border-t border-gray-100">
+          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Saved Views</h3>
+          <div className="p-4 border border-dashed border-gray-200 rounded-xl bg-gray-50 text-center">
+            <span className="text-sm text-gray-500 font-medium">Coming Soon</span>
+            <p className="text-xs text-gray-400 mt-1">Save your favorite filter combinations.</p>
+          </div>
+        </div>
+      </ReusableFilterDrawer>
 
       <AssignLeadsModal
         open={isAssignModalOpen}
         onClose={() => setIsAssignModalOpen(false)}
-        telecallers={telecallers.map(t => ({ id: t.empId, name: t.name, activeLeads: t.activeLeads }))}
+        telecallers={telecallers}
         onAssign={handleAssign}
         isAssigning={isAssigningLeads}
         selectedCount={selectedRows.length}
+        mode={assignMode}
       />
     </>
   );

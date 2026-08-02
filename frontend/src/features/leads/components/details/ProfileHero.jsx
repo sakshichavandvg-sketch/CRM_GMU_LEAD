@@ -3,6 +3,12 @@
 import { Edit, Phone, Mail, Trash2, MapPin, FileText, StickyNote, Hash } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { motion } from "framer-motion";
+import { useRef } from "react";
+import Avatar from "@/components/ui/Avatar";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { LEAD_KEYS } from "../../constants/queryKeys";
+import leadService from "../../services/leadService";
+import { toast } from "sonner";
 
 /**
  * ProfileHero — ONE unified component shared by Admin and Telecaller.
@@ -29,16 +35,7 @@ export default function ProfileHero({
   noteCount,
 }) {
   if (!data) return null;
-  const { header, status, contact } = data;
-
-  const initials = header?.name
-    ? header.name
-        .split(" ")
-        .slice(0, 2)
-        .map((w) => w[0])
-        .join("")
-        .toUpperCase()
-    : "?";
+  const { header, status, contact, avatar } = data; // Assume avatar is there or we can use header.name
 
   // Determine temperature badge color
   const opinion = (header?.opinion || header?.priority || status?.stage || "WARM").toUpperCase();
@@ -51,6 +48,46 @@ export default function ProfileHero({
 
   // Current status
   const currentStatus = (status?.currentStatus || "ENQUIRY").toUpperCase();
+
+  const fileInputRef = useRef(null);
+  const queryClient = useQueryClient();
+
+  const { mutate: uploadAvatar, isPending: isUploadingAvatar } = useMutation({
+    mutationFn: (file) => leadService.uploadLeadAvatar(header?.enquiryNo, file),
+    onSuccess: (newAvatarUrl) => {
+      toast.success("Avatar Uploaded", { description: "Lead avatar updated successfully." });
+      
+      // Update cache
+      if (header?.enquiryNo) {
+        queryClient.setQueryData(LEAD_KEYS.detail(header.enquiryNo), (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            avatar: newAvatarUrl
+          };
+        });
+        queryClient.invalidateQueries({ queryKey: LEAD_KEYS.lists() });
+      }
+    },
+    onError: (error) => {
+      const msg = error?.response?.data?.message || "Could not upload lead avatar.";
+      toast.error("Upload Failed", { description: msg });
+    }
+  });
+
+  const handleAvatarClick = () => {
+    if (!isUploadingAvatar && header?.enquiryNo) {
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      uploadAvatar(file);
+    }
+    e.target.value = "";
+  };
 
   return (
     <motion.div
@@ -66,12 +103,38 @@ export default function ProfileHero({
         <div className="flex items-start gap-5 min-w-0 flex-1">
 
           {/* Avatar */}
-          <div className="relative flex-shrink-0">
-            <div className="w-[72px] h-[72px] rounded-full bg-[#6F1D28] flex items-center justify-center text-2xl font-bold text-white shadow-md select-none">
-              {initials}
-            </div>
+          <div className="relative group shrink-0 flex-shrink-0">
+            <Avatar 
+              src={avatar} 
+              name={header?.name} 
+              size="2xl" 
+              colorClass="bg-[#6F1D28] text-white" 
+              className="w-[72px] h-[72px] text-2xl border-2 border-white shadow-md bg-gray-100" 
+              onClick={handleAvatarClick}
+              isLoading={isUploadingAvatar}
+            />
             {/* Online indicator */}
-            <span className="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white shadow" />
+            <span className="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white shadow z-10" />
+            
+            {/* Upload Overlay */}
+            {header?.enquiryNo && (
+              <>
+                <div 
+                  onClick={handleAvatarClick}
+                  className="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full cursor-pointer z-20"
+                >
+                  <span className="text-white text-[10px] font-medium tracking-wide uppercase">Upload</span>
+                </div>
+                
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  onChange={handleFileChange} 
+                  accept="image/*" 
+                  className="hidden" 
+                />
+              </>
+            )}
           </div>
 
           {/* Info column */}

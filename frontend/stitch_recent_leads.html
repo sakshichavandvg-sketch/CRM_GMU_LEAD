@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recent Leads Card</title>
+<!-- Load Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'maroon-primary': '#711a1a',
+            'maroon-light': '#fdf2f2',
+            'maroon-avatar': '#f5e4e4',
+            'maroon-badge-bg': '#f8e7e7',
+            'maroon-badge-text': '#711a1a',
+            'gold-badge-bg': '#fef3c7',
+            'gold-badge-text': '#92400e',
+            'gray-subtext': '#6b7280',
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-typography">
+    /* Refined font adjustments to match visual hierarchy */
+    .lead-name {
+      font-weight: 700;
+      color: #3e1212; /* Deep maroon/brown for names */
+    }
+    .section-title {
+      color: #711a1a;
+      font-weight: 700;
+    }
+    .view-all-link {
+      color: #711a1a;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-4 flex justify-center items-start">
+<!-- BEGIN: RecentLeadsCard -->
+<main class="w-full max-w-[751px] bg-white rounded-[24px] border border-gray-200 shadow-sm p-6" data-purpose="recent-leads-card" id="recent-leads-container">
+<!-- BEGIN: CardHeader -->
+<header class="flex justify-between items-center mb-6 px-1">
+<h2 class="section-title text-2xl tracking-tight">Recent Leads</h2>
+<a class="view-all-link flex items-center gap-1 hover:underline" href="#">
+        View All Leads 
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="right" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</a>
+</header>
+<!-- END: CardHeader -->
+<!-- BEGIN: LeadList -->
+<div class="space-y-4">
+<!-- BEGIN: LeadItem_1 -->
+<article class="flex items-center justify-between p-4 rounded-[16px] border border-gray-100 bg-white" data-purpose="lead-item">
+<div class="flex items-center gap-4">
+<!-- Lead Avatar -->
+<div class="w-14 h-14 flex items-center justify-center rounded-[12px] bg-maroon-avatar text-maroon-primary font-bold text-lg" data-purpose="lead-avatar">
+            RS
+          </div>
+<!-- Lead Details -->
+<div class="flex flex-col">
+<span class="lead-name text-lg leading-tight">Rahul Sharma</span>
+<span class="text-gray-subtext text-sm font-medium mt-0.5">MBA • Website Source</span>
+</div>
+</div>
+<!-- Status and Time -->
+<div class="flex flex-col items-end gap-2">
+<span class="px-3 py-1 rounded-md text-xs font-semibold bg-maroon-badge-bg text-maroon-badge-text" data-purpose="status-badge">
+            Contacted
+          </span>
+<time class="text-xs text-gray-500 font-medium">11:30 AM</time>
+</div>
+</article>
+<!-- END: LeadItem_1 -->
+<!-- BEGIN: LeadItem_2 -->
+<article class="flex items-center justify-between p-4 rounded-[16px] bg-transparent" data-purpose="lead-item">
+<div class="flex items-center gap-4">
+<!-- Lead Avatar -->
+<div class="w-14 h-14 flex items-center justify-center rounded-[12px] bg-maroon-avatar text-maroon-primary font-bold text-lg" data-purpose="lead-avatar">
+            PV
+          </div>
+<!-- Lead Details -->
+<div class="flex flex-col">
+<span class="lead-name text-lg leading-tight">Priya Verma</span>
+<span class="text-gray-subtext text-sm font-medium mt-0.5">BCA • Facebook Source</span>
+</div>
+</div>
+<!-- Status and Time -->
+<div class="flex flex-col items-end gap-2">
+<span class="px-3 py-1 rounded-md text-xs font-semibold bg-gold-badge-bg text-gold-badge-text" data-purpose="status-badge">
+            Interested
+          </span>
+<time class="text-xs text-gray-500 font-medium">11:05 AM</time>
+</div>
+</article>
+<!-- END: LeadItem_2 -->
+</div>
+<!-- END: LeadList -->
+</main>
+<!-- END: RecentLeadsCard -->
+</body></html>

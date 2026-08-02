@@ -64,12 +64,12 @@ export default function TelecallerDashboard() {
 
   return (
     <div 
-      className="bg-[#FFFFFF] -m-4 sm:-m-6 p-4 sm:p-6 lg:pr-8 lg:py-8 lg:pl-6 space-y-4 animate-in fade-in duration-500 min-h-screen" 
+      className="bg-[#FFFFFF] -m-4 sm:-m-6 p-4 sm:p-6 lg:p-8 space-y-6 animate-in fade-in duration-500 min-h-screen" 
       style={{ fontFamily: "var(--font-outfit), sans-serif" }}
     >
       {/* ── HEADER GRID (12 Cols) ─────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
-        <div className="lg:col-span-8 max-w-xl w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
+        <div className="lg:col-span-8">
           <DashboardHeader />
         </div>
         <div className="lg:col-span-4">

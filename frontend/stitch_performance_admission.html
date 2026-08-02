@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admission Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#741B1B",
+                        "background-light": "#F8F9FA",
+                        "background-dark": "#121212",
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#1E1E1E",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "8px",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-icons-outlined { vertical-align: middle; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark p-6 min-h-screen">
+<div class="max-w-7xl mx-auto space-y-6">
+<section class="bg-card-light dark:bg-card-dark rounded-lg p-6 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-xl font-bold text-primary">Telecaller Performance</h2>
+<a class="text-primary flex items-center gap-1 text-sm font-semibold" href="#">
+                    View Ranking <span class="material-icons-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-[10px] tracking-widest text-gray-400 dark:text-gray-500 font-bold uppercase border-b border-gray-50 dark:border-gray-800">
+<th class="pb-3 w-12"># NAME</th>
+<th class="pb-3 px-4"></th>
+<th class="pb-3 text-right uppercase">Calls</th>
+<th class="pb-3 text-right uppercase">Follow-ups</th>
+<th class="pb-3 text-right uppercase">Admissions</th>
+<th class="pb-3 text-right uppercase">Conv.%</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-50 dark:divide-gray-800">
+<tr class="group">
+<td class="py-4 text-gray-500 text-sm">1</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">R</div>
+<span class="font-semibold text-gray-800 dark:text-gray-200">Rahul</span>
+</div>
+</td>
+<td class="py-4 text-right text-gray-700 dark:text-gray-300 font-medium">64</td>
+<td class="py-4 text-right text-gray-700 dark:text-gray-300 font-medium">32</td>
+<td class="py-4 text-right text-gray-700 dark:text-gray-300 font-medium">12</td>
+<td class="py-4 text-right text-green-600 font-bold">21%</td>
+</tr>
+<tr class="group">
+<td class="py-4 text-gray-500 text-sm">2</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-white text-xs font-bold">P</div>
+<span class="font-semibold text-gray-800 dark:text-gray-200">Priya</span>
+</div>
+</td>
+<td class="py-4 text-right text-gray-700 dark:text-gray-300 font-medium">59</td>
+<td class="py-4 text-right text-gray-700 dark:text-gray-300 font-medium">28</td>
+<td class="py-4 text-right text-gray-700 dark:text-gray-300 font-medium">11</td>
+<td class="py-4 text-right text-green-600 font-bold">19%</td>
+</tr>
+<tr class="group">
+<td class="py-4 text-gray-500 text-sm">3</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 text-xs font-bold">S</div>
+<span class="font-semibold text-gray-800 dark:text-gray-200">Sakshi</span>
+</div>
+</td>
+<td class="py-4 text-right text-gray-700 dark:text-gray-300 font-medium">55</td>
+<td class="py-4 text-right text-gray-700 dark:text-gray-300 font-medium">26</td>
+<td class="py-4 text-right text-gray-700 dark:text-gray-300 font-medium">9</td>
+<td class="py-4 text-right text-green-600 font-bold">17%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<section class="bg-card-light dark:bg-card-dark rounded-lg p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
+<div>
+<h2 class="text-xl font-bold text-primary mb-6">Today's Admission Summary</h2>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
+<span class="material-icons-outlined text-primary">person_add_alt</span>
+</div>
+<span class="text-gray-600 dark:text-gray-400 font-medium">New Leads</span>
+</div>
+<span class="text-lg font-bold text-gray-900 dark:text-white">186</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+<span class="material-icons-outlined text-blue-600">calendar_today</span>
+</div>
+<span class="text-gray-600 dark:text-gray-400 font-medium">Follow-ups Due</span>
+</div>
+<span class="text-lg font-bold text-gray-900 dark:text-white">92</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
+<span class="material-icons-outlined text-green-600">check_circle</span>
+</div>
+<span class="text-gray-600 dark:text-gray-400 font-medium">Admissions Today</span>
+</div>
+<span class="text-lg font-bold text-gray-900 dark:text-white">18</span>
+</div>
+<div class="pt-2 border-t border-gray-50 dark:border-gray-800">
+<div class="flex items-center justify-between py-2">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center">
+<span class="font-bold text-orange-800 dark:text-orange-400">₹</span>
+</div>
+<span class="text-gray-600 dark:text-gray-400 font-medium">Revenue Impact</span>
+</div>
+<span class="text-lg font-bold text-gray-900 dark:text-white">--</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<div class="flex justify-between items-end mb-2">
+<span class="text-sm font-bold text-primary">Target Progress</span>
+<span class="text-lg font-bold text-primary">62%</span>
+</div>
+<div class="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-2.5 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 62%"></div>
+</div>
+<p class="text-xs text-gray-400 dark:text-gray-500 mt-2 font-medium">558 / 1000 Admissions Goal</p>
+</div>
+</section>
+<section class="bg-card-light dark:bg-card-dark rounded-lg p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col">
+<div class="flex justify-between items-center mb-12">
+<h2 class="text-xl font-bold text-primary">Monthly Admission Trend</h2>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="text-xs text-gray-500 dark:text-gray-400">Admissions</span>
+</div>
+<select class="text-xs font-semibold bg-gray-50 dark:bg-gray-800 border-none rounded-md py-1.5 pl-3 pr-8 text-gray-700 dark:text-gray-300 focus:ring-0">
+<option>This Year</option>
+<option>Last Year</option>
+</select>
+</div>
+</div>
+<div class="flex-grow flex items-end justify-between gap-3 px-2">
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-[#f4eaea] dark:bg-primary/10 rounded-md h-24 mb-3 transition-all"></div>
+<span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">Jan</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-[#f4eaea] dark:bg-primary/10 rounded-md h-32 mb-3 transition-all"></div>
+<span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">Feb</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-[#f4eaea] dark:bg-primary/10 rounded-md h-40 mb-3 transition-all"></div>
+<span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">Mar</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-[#f4eaea] dark:bg-primary/10 rounded-md h-48 mb-3 transition-all"></div>
+<span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">Apr</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-[#f4eaea] dark:bg-primary/10 rounded-md h-44 mb-3 transition-all"></div>
+<span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">May</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-[#f4eaea] dark:bg-primary/10 rounded-md h-56 mb-3 transition-all"></div>
+<span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase">Jun</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary rounded-md h-64 mb-3 shadow-lg"></div>
+<span class="text-[10px] font-extrabold text-gray-900 dark:text-white uppercase">Jul</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+
+</body></html>

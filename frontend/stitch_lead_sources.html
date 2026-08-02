@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lead Sources Dashboard Card</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#7B1616", // Maroon
+                        "background-light": "#F9FAFB",
+                        "background-dark": "#111827",
+                        "chart-maroon": "#7B1616",
+                        "chart-gold": "#DAA520",
+                        "chart-blue": "#2563EB",
+                        "chart-green": "#22C55E",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        .donut-chart {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #7B1616 0% 42%,
+                #DAA520 42% 63%,
+                #2563EB 63% 78%,
+                #22C55E 78% 100%
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .donut-chart::before {
+            content: "";
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        .dark .donut-chart::before {
+            background-color: #1F2937;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display p-6 flex justify-center items-center min-h-screen">
+<div class="w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+<div class="flex justify-between items-center mb-10">
+<h2 class="text-xl font-bold text-primary">Lead Sources</h2>
+<a class="flex items-center text-primary text-sm font-semibold hover:opacity-80 transition-opacity" href="#">
+                View Full Report 
+                <span class="material-symbols-outlined text-[18px] ml-1">arrow_forward</span>
+</a>
+</div>
+<div class="flex flex-col sm:flex-row items-center sm:items-start gap-8 sm:gap-12">
+<div class="relative flex-shrink-0">
+<div class="donut-chart">
+<div class="relative z-10 text-center">
+<div class="text-3xl font-bold text-primary leading-none">12,546</div>
+<div class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">Total Leads</div>
+</div>
+</div>
+</div>
+<div class="flex-grow w-full space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 rounded-full bg-chart-maroon"></span>
+<span class="text-gray-700 dark:text-gray-200 font-medium">Website</span>
+</div>
+<span class="text-gray-900 dark:text-white font-bold">42%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 rounded-full bg-chart-gold"></span>
+<span class="text-gray-700 dark:text-gray-200 font-medium">Walk-in</span>
+</div>
+<span class="text-gray-900 dark:text-white font-bold">21%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 rounded-full bg-chart-blue"></span>
+<span class="text-gray-700 dark:text-gray-200 font-medium">Social Media</span>
+</div>
+<span class="text-gray-900 dark:text-white font-bold">15%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 rounded-full bg-chart-green"></span>
+<span class="text-gray-700 dark:text-gray-200 font-medium">WhatsApp</span>
+</div>
+<span class="text-gray-900 dark:text-white font-bold">12%</span>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

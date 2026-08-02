@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recent Activity Component</title>
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style data-purpose="custom-typography">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+    }
+
+    .text-maroon {
+      color: #7b1a1a;
+    }
+
+    .bg-maroon {
+      background-color: #7b1a1a;
+    }
+  </style>
+<style data-purpose="layout-refinements">
+    /* Timeline stem connector */
+    .timeline-stem {
+      position: absolute;
+      left: 7px; /* Centered relative to the 14px dot container */
+      top: 10px;
+      bottom: -22px;
+      width: 1px;
+      background-color: #e5e7eb; /* Light grey stem */
+    }
+
+    /* Remove stem from the last item */
+    .timeline-item:last-child .timeline-stem {
+      display: none;
+    }
+  </style>
+</head>
+<body class="p-6 flex justify-center items-start">
+<!-- BEGIN: RecentActivityCard -->
+<div class="w-full max-w-md bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden" data-purpose="activity-card" style="border-radius: 16px;">
+<!-- BEGIN: CardHeader -->
+<div class="px-5 py-4 flex justify-between items-center border-b border-gray-50"><h2 class="text-lg font-bold text-maroon">Recent Activity</h2></div>
+<!-- END: CardHeader -->
+<!-- BEGIN: TimelineList -->
+<div class="px-5 py-2"><!-- Activity Item 1 -->
+<div class="flex gap-4 py-4 items-start">
+<div class="flex-shrink-0 mt-1.5">
+<div class="h-2.5 w-2.5 rounded-full bg-green-500"></div>
+</div>
+<div class="flex-grow">
+<p class="text-sm font-bold text-gray-900">Rahul assigned 15 new leads</p>
+<p class="text-xs font-semibold text-gray-400 mt-1 uppercase">5 MIN AGO</p>
+</div>
+</div>
+<!-- Activity Item 2 -->
+<div class="flex gap-4 py-4 items-start">
+<div class="flex-shrink-0 mt-1.5">
+<div class="h-2.5 w-2.5 rounded-full bg-blue-600"></div>
+</div>
+<div class="flex-grow">
+<p class="text-sm font-bold text-gray-900">Priya completed follow-up with Neha Singh</p>
+<p class="text-xs font-semibold text-gray-400 mt-1 uppercase">25 MIN AGO</p>
+</div>
+</div>
+<!-- Activity Item 3 -->
+<div class="flex gap-4 py-4 items-start">
+<div class="flex-shrink-0 mt-1.5">
+<div class="h-2.5 w-2.5 rounded-full bg-maroon"></div>
+</div>
+<div class="flex-grow">
+<p class="text-sm font-bold text-gray-900">New admission confirmed: Ankit Singh</p>
+<p class="text-xs font-semibold text-gray-400 mt-1 uppercase">1 HR AGO</p>
+</div>
+</div></div>
+<!-- END: TimelineList -->
+<div class="px-5 py-4 border-t border-gray-100 flex justify-center">
+<a class="text-sm font-bold text-maroon underline hover:opacity-80 transition-opacity" href="#">
+    View All Activity →
+  </a>
+</div></div>
+<!-- END: RecentActivityCard -->
+</body></html>

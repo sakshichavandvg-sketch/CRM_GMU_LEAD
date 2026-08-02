@@ -1,15 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import Avatar from "@/components/ui/Avatar";
 import GeoSelectors from "./GeoSelectors";
 import { updateLeadSchema } from "../schemas/updateLeadSchema";
 import { useUpdateLead } from "../hooks/useUpdateLead";
+import leadService from "../services/leadService";
+import { useAppToast } from "@/hooks/useAppToast";
 
 export default function EditLeadDialog({ open, onClose, lead }) {
+  const toast = useAppToast();
+
   const { mutate, isPending } = useUpdateLead(() => {
     formik.resetForm();
     onClose();
@@ -35,6 +40,7 @@ export default function EditLeadDialog({ open, onClose, lead }) {
     },
     validationSchema: updateLeadSchema,
     onSubmit: (values) => {
+      // In a real app we might update avatar alongside other values or via a separate endpoint
       mutate(values);
     },
   });
@@ -90,12 +96,20 @@ export default function EditLeadDialog({ open, onClose, lead }) {
         </>
       }
     >
-      <form
-        id="edit-lead-form"
-        onSubmit={formik.handleSubmit}
-        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-      >
-        <Input
+      <div className="flex flex-col gap-6">
+        <form
+          id="edit-lead-form"
+          onSubmit={formik.handleSubmit}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+        >
+          <Input
+            label="Enquiry Number"
+            name="enquiryNo"
+            value={formik.values.enquiryNo}
+            disabled
+            className="sm:col-span-2"
+          />
+          <Input
           label="Name"
           name="name"
           value={formik.values.name}
@@ -191,6 +205,7 @@ export default function EditLeadDialog({ open, onClose, lead }) {
           className="sm:col-span-2"
         />
       </form>
+      </div>
     </Modal>
   );
 }

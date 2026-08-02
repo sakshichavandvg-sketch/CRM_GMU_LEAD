@@ -1,19 +1,34 @@
 import axiosInstance from "@/lib/axios";
 import API_ENDPOINTS from "@/utils/apiEndpoints";
 
+const normalizeAvatarPath = (avatarPath) => {
+  if (!avatarPath) return "";
+  if (typeof avatarPath !== "string") return String(avatarPath);
+  if (avatarPath.startsWith("/uploads/avatars/")) {
+    return avatarPath.replace("/uploads/avatars/", "/files/");
+  }
+  return avatarPath;
+};
+
 // Normalize a single user from the backend response to the shape
 // the UI components expect. Field name changes only need updating here.
 const normalizeUser = (raw) => ({
+  id: raw.slNo ?? raw.id ?? raw.empId ?? "",
   slNo: raw.slNo ?? raw.id,
   empId: raw.empId ?? raw.employeeId ?? "",
   username: raw.username ?? "",
   name: raw.name ?? raw.fullName ?? "",
+  email: raw.email ?? "",
+  phone: raw.phoneNo ?? raw.phone ?? raw.mobile ?? "",
   phoneNo: raw.phoneNo ?? raw.phone ?? raw.mobile ?? "",
+  avatar: normalizeAvatarPath(raw.photo ?? raw.avatar ?? raw.avatarUrl ?? ""),
+  role: raw.role ?? "TELECALLER",
   college: raw.college ?? "",
   programme: raw.programme ?? "",
   course: raw.course ?? "",
   discipline: raw.discipline ?? "",
   status: raw.status ?? "ACTIVE",
+  activeLeads: raw.activeLeads ?? 0,
   defaultPassword: raw.defaultPassword ?? null,
 });
 

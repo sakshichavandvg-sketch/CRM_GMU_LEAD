@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Today's Follow-ups Card</title>
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            maroon: {
+              DEFAULT: '#5D1717',
+              light: '#8B4242',
+              soft: '#F8EAEA',
+            },
+            status: {
+              high: {
+                bg: '#FDF2F2',
+                text: '#DE6B6B',
+              },
+              medium: {
+                bg: '#FEF9EC',
+                text: '#E9B35C',
+              },
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-typography">
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background-color: #F9FAFB;
+    }
+  </style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+</head>
+<body class="p-4 md:p-8 flex justify-center">
+<!-- BEGIN: FollowUpsCard -->
+<article class="w-full max-w-[751px] bg-white rounded-3xl border border-gray-100 shadow-sm p-8" data-purpose="dashboard-widget" id="follow-ups-card">
+<!-- BEGIN: HeaderSection -->
+<header class="flex justify-between items-center mb-10">
+<h2 class="text-[26px] font-bold text-maroon">Today's Follow-ups</h2>
+<a class="text-maroon font-semibold flex items-center gap-1 hover:underline text-base" href="#">
+        View Calendar
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</header>
+<!-- END: HeaderSection -->
+<!-- BEGIN: FollowUpsList -->
+<section class="relative" data-purpose="leads-list">
+<!-- Vertical Timeline Stem -->
+<div class="absolute left-[23px] top-12 bottom-12 w-[1px] bg-gray-100"></div>
+<div class="space-y-12">
+<!-- Follow-up Item 1: Sneha Iyer -->
+<div class="flex items-center justify-between relative" data-purpose="lead-item">
+<div class="flex items-center gap-6">
+<!-- Circular Icon Container -->
+<div class="relative z-10 w-12 h-12 flex items-center justify-center bg-white border border-gray-100 rounded-full shadow-sm text-maroon" data-purpose="lead-avatar">
+<span class="material-symbols-outlined text-[20px]">call</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xl font-bold text-[#1A1A1A]">Sneha Iyer</span>
+<span class="text-sm text-gray-400 font-medium mt-0.5">11:00 AM • Assigned to Rahul</span>
+</div>
+</div>
+<div>
+<span class="px-4 py-2 rounded-md text-[10px] tracking-wider font-bold bg-status-high-bg text-status-high-text" data-purpose="priority-badge">
+              HIGH PRIORITY
+            </span>
+</div>
+</div>
+<!-- Follow-up Item 2: Ravi Kumar -->
+<div class="flex items-center justify-between relative" data-purpose="lead-item">
+<div class="flex items-center gap-6">
+<!-- Circular Icon Container -->
+<div class="relative z-10 w-12 h-12 flex items-center justify-center bg-white border border-gray-100 rounded-full shadow-sm text-[#4A69BD]" data-purpose="lead-avatar">
+<span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xl font-bold text-[#1A1A1A]">Ravi Kumar</span>
+<span class="text-sm text-gray-400 font-medium mt-0.5">01:00 PM • Assigned to Priya</span>
+</div>
+</div>
+<div>
+<span class="px-4 py-2 rounded-md text-[10px] tracking-wider font-bold bg-status-medium-bg text-status-medium-text" data-purpose="priority-badge">
+              MEDIUM PRIORITY
+            </span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: FollowUpsList -->
+</article>
+<!-- END: FollowUpsCard -->
+</body></html>

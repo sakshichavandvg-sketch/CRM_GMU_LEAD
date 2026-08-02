@@ -1,27 +1,20 @@
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
-import { FilterX, ChevronDown } from "lucide-react";
-import { DashboardSection } from "../dashboard-ui/DashboardSection";
+import { FilterX } from "lucide-react";
 
+// Stitch design color palette for donut chart segments
 const COLORS = [
-  "#6B0F1A", // Maroon 900 (replaces blue-600)
-  "#7F1D2D", // Maroon 800 (replaces blue-500)
-  "#933244", // Maroon 700 (replaces blue-400)
-  "#B15567", // Maroon 600 (replaces blue-300)
-  "#D19AA5", // Maroon 300 (replaces slate-500)
-  "#E6C7CD", // Maroon 200 (replaces slate-400)
-  "#F8EFF1", // Maroon 100 (replaces slate-300)
+  "#7B1616", // Maroon
+  "#DAA520", // Gold
+  "#2563EB", // Blue
+  "#22C55E", // Green
+  "#9333EA", // Purple (fallback for 5+)
+  "#F97316", // Orange (fallback for 6+)
 ];
 
 export default function SourceAnalytics({ sourceAnalytics }) {
   const data = sourceAnalytics || [];
   const total = data.reduce((acc, curr) => acc + (curr.value || 0), 0);
 
+  // Preserve existing grouping logic (top 5 + Others)
   let displayData = [];
   if (data.length > 6) {
     const sorted = [...data].sort((a, b) => (b.value || 0) - (a.value || 0));
@@ -32,80 +25,84 @@ export default function SourceAnalytics({ sourceAnalytics }) {
     displayData = [...data].sort((a, b) => (b.value || 0) - (a.value || 0));
   }
 
-  const action = (
-    <button className="flex items-center gap-1.5 text-xs font-[600] text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors px-3 py-1.5 rounded-lg outline-none focus:ring-2 focus:ring-[#7A1F2B]">
-      All Sources <ChevronDown size={14} className="text-gray-500" />
-    </button>
-  );
+  // Build conic-gradient segments for the donut chart
+  const buildConicGradient = () => {
+    if (total === 0) return "conic-gradient(#E5E7EB 0% 100%)";
+    let segments = [];
+    let cumulative = 0;
+    displayData.forEach((entry, idx) => {
+      const percent = ((entry.value || 0) / total) * 100;
+      const color = COLORS[idx % COLORS.length];
+      segments.push(`${color} ${cumulative}% ${cumulative + percent}%`);
+      cumulative += percent;
+    });
+    return `conic-gradient(${segments.join(", ")})`;
+  };
 
   return (
-    <div className="bg-white border border-[#ECECEC] rounded-[20px] p-6 shadow-sm h-full flex flex-col hover:shadow-md transition-shadow">
-      <DashboardSection title="Source Analytics" action={action} className="mb-6 h-full flex-1">
-        {data.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center text-slate-500 py-6 min-h-[280px]">
-            <FilterX size={32} className="text-slate-300 mb-3" />
-            <p className="font-[600] text-gray-900">No Data Available</p>
-            <p className="text-sm mt-1">Lead sources are currently empty.</p>
-          </div>
-        ) : (
-          <div className="flex flex-1 flex-col xl:flex-row items-center justify-center gap-8 mt-6 min-h-[280px]">
-            {/* Chart Wrapper */}
-            <div className="h-[220px] w-[220px] shrink-0 relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={displayData}
-                    dataKey="value"
-                    nameKey="label"
-                    innerRadius={70}
-                    outerRadius={105}
-                    stroke="none"
-                    paddingAngle={2}
-                    cornerRadius={4}
-                  >
-                    {displayData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{ borderRadius: '12px', border: '1px solid #ECECEC', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', fontWeight: 600 }}
-                    itemStyle={{ color: '#1F2937' }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-3xl font-[700] text-gray-900 leading-none">{total}</span>
-                <span className="text-xs font-[600] text-gray-500 uppercase tracking-wider mt-1">Total</span>
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full flex flex-col">
+      {/* Header — Stitch layout */}
+      <div className="flex justify-between items-center mb-8 xl:mb-10">
+        <h2 className="text-xl font-bold text-gray-900">Lead Sources</h2>
+        <a
+          className="flex items-center text-[#7B1616] text-sm font-semibold hover:opacity-80 transition-opacity"
+          href="#"
+        >
+          View Full Report
+          <svg className="h-4 w-4 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
+      </div>
+
+      {data.length === 0 ? (
+        <div className="flex flex-col items-center justify-center flex-1 text-center text-slate-500 py-6 min-h-[280px]">
+          <FilterX size={32} className="text-slate-300 mb-3" />
+          <p className="font-semibold text-gray-900">No Data Available</p>
+          <p className="text-sm mt-1">Lead sources are currently empty.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8 sm:gap-12 flex-1">
+          {/* Donut Chart (CSS conic-gradient per Stitch) */}
+          <div className="relative flex-shrink-0">
+            <div
+              className="flex items-center justify-center rounded-full"
+              style={{
+                width: "180px",
+                height: "180px",
+                background: buildConicGradient(),
+              }}
+            >
+              {/* Inner white circle for donut hole */}
+              <div className="w-[140px] h-[140px] bg-white rounded-full flex flex-col items-center justify-center z-10">
+                <div className="text-3xl font-bold text-[#7B1616] leading-none">
+                  {total.toLocaleString()}
+                </div>
+                <div className="text-xs text-gray-500 mt-1 font-medium">Total Leads</div>
               </div>
             </div>
-
-            {/* Legend */}
-            <div className="flex w-full flex-col gap-3 max-w-xs">
-              {displayData.map((entry, index) => {
-                const percentage = total > 0 ? Math.round(((entry.value || 0) / total) * 100) : 0;
-                return (
-                  <div key={index} className="flex items-center justify-between text-sm group">
-                    <div className="flex items-center gap-3 overflow-hidden flex-1">
-                      <span
-                        className="h-3 w-3 shrink-0 rounded-full group-hover:scale-125 transition-transform"
-                        style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                      />
-                      <span className="truncate font-[600] text-gray-700">{entry.label}</span>
-                    </div>
-                    <div className="flex items-center gap-4 text-right">
-                      <span className="text-gray-500 font-medium w-8">{entry.value}</span>
-                      <span className="font-[700] text-gray-900 w-10">{percentage}%</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
-        )}
-      </DashboardSection>
+
+          {/* Legend */}
+          <div className="flex-grow w-full space-y-4">
+            {displayData.map((entry, index) => {
+              const percentage = total > 0 ? Math.round(((entry.value || 0) / total) * 100) : 0;
+              return (
+                <div key={index} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
+                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                    />
+                    <span className="text-gray-700 font-medium">{entry.label}</span>
+                  </div>
+                  <span className="text-gray-900 font-bold">{percentage}%</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

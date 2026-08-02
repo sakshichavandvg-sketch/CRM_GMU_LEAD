@@ -7,10 +7,11 @@ export const useCreateFollowup = () => {
 
   return useMutation({
     mutationFn: async (data) => {
+      console.log("[useCreateFollowup] mutationFn called", data);
       return await telecallerFollowupService.createFollowup(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["telecaller", "followups"] });
+      queryClient.invalidateQueries({ queryKey: ["followups"] });
       queryClient.invalidateQueries({ queryKey: ["telecallerDashboard"] });
       queryClient.invalidateQueries({ queryKey: ["telecaller", "lead"] });
       toast.success("Followup scheduled successfully");
@@ -26,7 +27,7 @@ export const useUpdateFollowup = () => {
       return await telecallerFollowupService.updateFollowup(id, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["telecaller", "followups"] });
+      queryClient.invalidateQueries({ queryKey: ["followups"] });
       queryClient.invalidateQueries({ queryKey: ["telecallerDashboard"] });
       toast.success("Followup updated successfully");
     },

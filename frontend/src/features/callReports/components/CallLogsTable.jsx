@@ -8,7 +8,10 @@ import SearchBar from "@/components/management/SearchBar";
 import CallDetailsModal from "@/features/telecaller/voice/components/details/CallDetailsModal";
 import { TableSkeleton } from "@/components/ui/Skeletons";
 import { EmptyState } from "@/components/dashboard-ui/EmptyState";
-import { PhoneOff } from "lucide-react";
+import { PhoneOff, SlidersHorizontal } from "lucide-react";
+import ErrorState from "@/components/ui/ErrorState";
+import CallFilterDrawer from "./CallFilterDrawer";
+import ActiveFilterChips from "./CallActiveFilterChips";
 
 const OUTCOME_STYLES = {
   Connected:    { bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500" },
@@ -113,58 +116,126 @@ const COLUMNS = [
   },
 ];
 
-export default function CallLogsTable({ userId }) {
-  const [search, setSearch] = useState("");
+export default function CallLogsTable({ data = [], isLoading, isError, filters, onFilterChange }) {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [selectedCallId, setSelectedCallId] = useState(null);
+  const [selectedCall, setSelectedCall] = useState(null);
 
-  const { data, isLoading, isError } = useTelecallerCallLogs(
-    userId,
-    { search },
-    page,
-    pageSize
-  );
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [draftFilters, setDraftFilters] = useState({});
 
-  const rows = Array.isArray(data?.content)
-    ? data.content
-    : Array.isArray(data?.calls)
-    ? data.calls
-    : Array.isArray(data)
-    ? data
-    : [];
-
-  const totalPages = data?.totalPages ?? (rows.length > 0 ? 1 : 0);
-  const totalItems = data?.totalElements ?? data?.totalItems ?? rows.length;
+  const totalItems = data.length;
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
+  const rows = data.slice(page * pageSize, (page + 1) * pageSize);
 
   const handleRowClick = (row) => {
-    const callId = row.callId || row.id || row.interactionId;
-    if (callId) setSelectedCallId(callId);
+    if (row && row.callId) {
+      setSelectedCall(row);
+    }
+  };
+
+  const handleApplyFilters = () => {
+    onFilterChange(prev => ({
+      ...prev,
+      status: draftFilters.status || "",
+      hasRecording: draftFilters.hasRecording || "",
+      direction: draftFilters.direction || "",
+    }));
+    setPage(0);
+    setIsDrawerOpen(false);
+  };
+
+  const handleResetFilters = () => {
+    setDraftFilters({});
+    onFilterChange({
+      date: "",
+      status: "",
+      hasRecording: "",
+      direction: "",
+    });
+    setPage(0);
+    setIsDrawerOpen(false);
+  };
+
+  const handleRemoveFilter = (key) => {
+    onFilterChange(prev => ({ ...prev, [key]: "" }));
+    setPage(0);
+  };
+
+  const handleClearAll = () => {
+    onFilterChange({
+      date: "",
+      status: "",
+      hasRecording: "",
+      direction: "",
+    });
+    setDraftFilters({});
+    setPage(0);
   };
 
   return (
     <div className="flex flex-col gap-4 flex-1 min-h-0">
-      {/* Search */}
-      <div className="flex items-center gap-3">
-        <SearchBar
-          value={search}
-          onChange={(val) => { setSearch(val); setPage(0); }}
-          placeholder="Search by lead name or phone..."
-        />
+      {/* Filters */}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-xl border border-gray-200">
+          <div className="flex items-center gap-2">
+            <input 
+              type="date" 
+              value={filters.date}
+              onChange={(e) => { 
+                onFilterChange(prev => ({ ...prev, date: e.target.value })); 
+                setPage(0); 
+              }}
+              className="h-10 rounded-xl border border-gray-200 px-3 text-sm text-gray-700 outline-none focus:border-[#7A1F2B]"
+            />
+          </div>
+
+          <div className="flex items-center gap-2">
+            {(filters.date || filters.status || filters.hasRecording || filters.direction) && (
+              <button
+                onClick={handleClearAll}
+                className="text-xs font-semibold text-gray-500 hover:text-red-600 transition-colors mr-2"
+              >
+                Clear All
+              </button>
+            )}
+            <button
+              onClick={() => {
+                setDraftFilters({ 
+                  status: filters.status, 
+                  hasRecording: filters.hasRecording, 
+                  direction: filters.direction 
+                });
+              setIsDrawerOpen(true);
+            }}
+            className="flex-shrink-0 flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-semibold transition-colors border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6F1D28] focus:ring-offset-1 h-10"
+          >
+            <SlidersHorizontal size={16} />
+            Refine Filters
+          </button>
+        </div>
       </div>
+      
+      <ActiveFilterChips 
+        filters={filters} 
+        onRemove={handleRemoveFilter} 
+        onClearAll={handleClearAll} 
+      />
+    </div>
 
       {/* Table */}
       {isLoading ? (
         <TableSkeleton rows={8} />
       ) : isError ? (
-        <div className="flex min-h-[250px] flex-col items-center justify-center rounded-2xl border border-dashed border-red-200 bg-red-50/30 text-center">
-          <p className="text-sm font-[600] text-red-600">Failed to load call logs</p>
-        </div>
+        <ErrorState 
+          title="Failed to load call logs"
+          message="Check your connection and try again"
+        />
       ) : totalItems === 0 ? (
         <div className="flex-1 min-h-[300px] flex items-center justify-center mt-4">
           <EmptyState 
             title="No Call Logs Found" 
-            description={search ? "No calls match your search criteria." : "This telecaller hasn't made any calls yet."}
+            description={(filters.date || filters.status || filters.direction || filters.hasRecording) ? "No calls match your filters." : "This telecaller hasn't made any calls yet."}
             icon={PhoneOff} 
           />
         </div>
@@ -189,10 +260,20 @@ export default function CallLogsTable({ userId }) {
 
       {/* Call Details Modal — admin sees Recording tab */}
       <CallDetailsModal
-        callId={selectedCallId}
-        open={!!selectedCallId}
-        onClose={() => setSelectedCallId(null)}
+        callId={selectedCall?.callId}
+        callData={selectedCall}
+        open={!!selectedCall}
+        onClose={() => setSelectedCall(null)}
         showRecording={true}
+      />
+
+      <CallFilterDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        draftFilters={draftFilters}
+        setDraftFilters={setDraftFilters}
+        onApply={handleApplyFilters}
+        onReset={handleResetFilters}
       />
     </div>
   );

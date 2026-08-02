@@ -1,3 +1,12 @@
+const normalizeAvatarPath = (avatarPath) => {
+  if (!avatarPath) return null;
+  if (typeof avatarPath !== "string") return String(avatarPath);
+  if (avatarPath.startsWith("/uploads/avatars/")) {
+    return avatarPath.replace("/uploads/avatars/", "/files/");
+  }
+  return avatarPath;
+};
+
 export function mapProfile(profileRaw) {
   if (!profileRaw) return null;
 
@@ -8,11 +17,11 @@ export function mapProfile(profileRaw) {
     email: profileRaw?.email || "N/A",
     phone: profileRaw?.phoneNo || profileRaw?.phone || "N/A",
     role: profileRaw?.role || "Telecaller",
-    department: profileRaw?.department || "General",
+    department: profileRaw?.department || profileRaw?.manager || "N/A",
     reportingManager: profileRaw?.reportingManager || profileRaw?.manager || "N/A",
     joiningDate: profileRaw?.joiningDate || profileRaw?.joinDate || null,
     status: profileRaw?.status || "INACTIVE",
-    avatar: profileRaw?.avatar || null,
+    avatar: normalizeAvatarPath(profileRaw?.photo || profileRaw?.avatar || null),
   };
 }
 

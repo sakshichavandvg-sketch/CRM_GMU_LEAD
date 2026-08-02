@@ -1,6 +1,21 @@
 import axiosInstance from "@/lib/axios";
 import { mapDashboard, mapAssignedLeads } from "@/features/users/utils/telecallerViewModelMapper";
 
+const normalizeAvatarPath = (avatarPath) => {
+  if (!avatarPath) return null;
+  if (typeof avatarPath !== "string") return String(avatarPath);
+  if (avatarPath.startsWith("/uploads/avatars/")) {
+    return avatarPath.replace("/uploads/avatars/", "/files/");
+  }
+  return avatarPath;
+};
+
+const normalizeUploadResponse = (data) => {
+  if (!data) return null;
+  if (typeof data === "string") return normalizeAvatarPath(data);
+  return normalizeAvatarPath(data?.avatar || data?.avatarUrl || data?.url || data?.photo || null);
+};
+
 const telecallerService = {
   getTelecallerDashboard: async (empId) => {
     // According to backend integration requirements: GET /api/leads/manager/users/{empId}/dashboard
@@ -46,7 +61,7 @@ const telecallerService = {
         "Content-Type": undefined,
       }
     });
-    return response.data.data;
+    return normalizeUploadResponse(response.data.data);
   }
 };
 

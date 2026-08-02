@@ -7,6 +7,7 @@ import { env } from "@/config/env";
 import EditUserDialog from "../EditUserDialog";
 import useUpdateTelecallerStatus from "@/features/users/hooks/useUpdateTelecallerStatus";
 import useUploadTelecallerAvatar from "@/features/users/hooks/useUploadTelecallerAvatar";
+import Avatar from "@/components/ui/Avatar";
 
 export default function TelecallerHeader({ profile }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -43,35 +44,21 @@ export default function TelecallerHeader({ profile }) {
         
         {/* Profile Info */}
         <div className="flex items-start md:items-center gap-6">
-          <div 
-            className={`h-24 w-24 rounded-full bg-gray-100 overflow-hidden border-2 border-white shadow-md shrink-0 relative group ${isUploadingAvatar ? 'opacity-70' : 'cursor-pointer'}`}
-            onClick={handleAvatarClick}
-          >
-            {isUploadingAvatar && (
-              <div className="absolute inset-0 z-10 bg-black/30 flex items-center justify-center">
-                <Loader2 className="w-6 h-6 text-white animate-spin" />
-              </div>
-            )}
-            {profile.avatar ? (
-              <img
-                key={profile.avatar}
-                src={profile.avatar.startsWith('http') ? profile.avatar : `${env.NEXT_PUBLIC_API_URL}${profile.avatar.startsWith('/') ? '' : '/'}${profile.avatar}`}
-                alt={profile.name}
-                className="h-full w-full object-cover"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'flex';
-                }}
-              />
-            ) : null}
-            <div 
-              className="h-full w-full flex items-center justify-center bg-[#7A1F2B]/5 text-[#7A1F2B] font-bold text-3xl uppercase"
-              style={{ display: profile.avatar ? 'none' : 'flex' }}
-            >
-              {profile.name ? profile.name.substring(0, 2) : "UN"}
-            </div>
+          <div className="relative group shrink-0">
+            <Avatar 
+              src={profile.avatar}
+              name={profile.name}
+              size="2xl"
+              onClick={handleAvatarClick}
+              isLoading={isUploadingAvatar}
+              className="border-2 border-white shadow-md bg-gray-100"
+              colorClass="bg-[#7A1F2B]/5 text-[#7A1F2B]"
+            />
             
-            <div className="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <div 
+              onClick={handleAvatarClick}
+              className="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full cursor-pointer"
+            >
               <span className="text-white text-[10px] font-medium tracking-wide uppercase">Upload</span>
             </div>
             

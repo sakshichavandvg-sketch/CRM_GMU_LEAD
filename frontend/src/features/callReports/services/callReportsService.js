@@ -8,7 +8,7 @@ const callReportsService = {
    * @param {Object} params - { page, size, search, dateFrom, dateTo }
    */
   getTelecallerPerformance: async (params = {}) => {
-    const { page = 0, size = 10, search = "", dateFrom = "", dateTo = "" } = params;
+    const { page = 0, size = 10, search = "", date = "" } = params;
 
     const queryParams = new URLSearchParams({
       page: page.toString(),
@@ -16,8 +16,10 @@ const callReportsService = {
     });
 
     if (search) queryParams.append("search", search);
-    if (dateFrom) queryParams.append("dateFrom", dateFrom);
-    if (dateTo) queryParams.append("dateTo", dateTo);
+    if (date) {
+      queryParams.append("dateFrom", `${date}T00:00:00`);
+      queryParams.append("dateTo", `${date}T23:59:59`);
+    }
 
     const response = await axiosInstance.get(
       `${API_ENDPOINTS.REPORTS.USERS}?${queryParams.toString()}`
@@ -33,24 +35,43 @@ const callReportsService = {
    * @param {Object} params - { page, size, search, status, dateFrom, dateTo }
    */
   getTelecallerCallLogs: async (userId, params = {}) => {
-    const { page = 0, size = 10, search = "", status = "", dateFrom = "", dateTo = "" } = params;
+    const { page = 0, size = 10, search = "", status = "", date = "", direction = "", hasRecording = "" } = params;
 
     const queryParams = new URLSearchParams({
-      userId: userId.toString(),
+      empId: userId.toString(),
       page: page.toString(),
       size: size.toString(),
     });
 
     if (search) queryParams.append("search", search);
-    if (status) queryParams.append("status", status);
-    if (dateFrom) queryParams.append("dateFrom", dateFrom);
-    if (dateTo) queryParams.append("dateTo", dateTo);
+    if (status) queryParams.append("status", status.toUpperCase().replace(" ", "_"));
+    if (date) {
+      queryParams.append("dateFrom", `${date}T00:00:00`);
+      queryParams.append("dateTo", `${date}T23:59:59`);
+    }
+    if (direction) queryParams.append("direction", direction.toUpperCase());
+    if (hasRecording) queryParams.append("hasRecording", hasRecording);
 
     const response = await axiosInstance.get(
       `${API_ENDPOINTS.REPORTS.INDIVIDUAL}?${queryParams.toString()}`
     );
 
-    return response.data?.data ?? response.data;
+    const responseData = response.data?.data ?? response.data;
+    
+    // Normalize identifier: interactionId -> callId
+    if (responseData?.content && Array.isArray(responseData.content)) {
+      responseData.content = responseData.content.map(call => ({
+        ...call,
+        callId: call.callId || call.interactionId || call.id
+      }));
+    } else if (Array.isArray(responseData)) {
+      return responseData.map(call => ({
+        ...call,
+        callId: call.callId || call.interactionId || call.id
+      }));
+    }
+
+    return responseData;
   },
 };
 

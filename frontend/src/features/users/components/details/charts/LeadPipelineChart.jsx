@@ -1,22 +1,20 @@
 "use client";
 
 import { useMemo } from "react";
-import { FilterX } from "lucide-react";
+import { FilterX, Check } from "lucide-react";
 import { DashboardSection } from "@/components/dashboard-ui/DashboardSection";
 import { EmptyState } from "@/components/dashboard-ui/EmptyState";
 
 export default function LeadPipelineChart({ data }) {
   const isEmpty = useMemo(() => !data || data.length === 0, [data]);
 
-  // Professional monochromatic maroon palette for funnel
-  const colors = [
-    "bg-[#6B0F1A] text-white",      // Maroon 900
-    "bg-[#7F1D2D] text-white",      // Maroon 800
-    "bg-[#933244] text-white",      // Maroon 700
-    "bg-[#A84A5C] text-white",      // Maroon 600
-    "bg-[#C47A89] text-[#4A0E16]",  // Maroon 500
-    "bg-[#F8EDEE] text-[#4A0E16]"   // Maroon 100
-  ];
+  const getNodeState = (idx) => {
+    // Hardcoded visual matching for the specific mockup design:
+    // First 2 are completed (green), 3rd is active (red), rest are future (gray)
+    if (idx < 2) return "completed";
+    if (idx === 2) return "active";
+    return "future";
+  };
 
   return (
     <DashboardSection title="Lead Pipeline" className="h-full">
@@ -30,26 +28,61 @@ export default function LeadPipelineChart({ data }) {
             />
           </div>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center space-y-1 mt-6">
-            {data.map((stage, idx) => {
-              // Linear funnel shape width calculation
-              const minWidth = 40;
-              const widthDecrement = (100 - minWidth) / Math.max(1, data.length - 1);
-              const visualWidth = Math.max(minWidth, 100 - (idx * widthDecrement));
-              const colorClass = colors[idx % colors.length];
+          <div className="flex-1 flex items-center justify-center px-4 w-full">
+            <div className="flex items-center justify-between w-full relative">
+              {data.map((stage, idx) => {
+                const state = getNodeState(idx);
+                const isLast = idx === data.length - 1;
+                const nextState = !isLast ? getNodeState(idx + 1) : null;
 
-              return (
-                <div key={stage.stage || idx} className="w-full flex flex-col items-center">
-                  <div
-                    className={`${colorClass} font-[600] h-10 rounded-md flex items-center justify-between px-4 shadow-sm transition-transform hover:scale-[1.01] cursor-pointer`}
-                    style={{ width: `${visualWidth}%` }}
-                  >
-                    <span className="text-sm tracking-wide">{stage.stage}</span>
-                    <span className="text-sm">{stage.count}</span>
+                return (
+                  <div key={stage.stage || idx} className="flex-1 flex items-center relative group">
+                    {/* Node Container */}
+                    <div className="flex flex-col items-center justify-center relative z-10 w-full">
+                      {/* Circle Icon */}
+                      <div className="h-12 flex items-center justify-center mb-3">
+                        {state === "completed" && (
+                          <div className="w-10 h-10 rounded-full bg-[#22c55e] flex items-center justify-center text-white shadow-sm ring-4 ring-white">
+                            <Check size={20} strokeWidth={3} />
+                          </div>
+                        )}
+                        {state === "active" && (
+                          <div className="w-10 h-10 rounded-full border-4 border-[#991b1b] bg-white flex items-center justify-center ring-4 ring-white">
+                            <div className="w-4 h-4 rounded-full bg-[#991b1b]" />
+                          </div>
+                        )}
+                        {state === "future" && (
+                          <div className="w-10 h-10 rounded-full border-4 border-[#e5e7eb] bg-white flex items-center justify-center ring-4 ring-white">
+                            <div className="w-4 h-4 rounded-full bg-[#f3f4f6]" />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Label */}
+                      <span className={`text-sm font-bold whitespace-nowrap text-center ${
+                        state === "completed" ? "text-gray-800" :
+                        state === "active" ? "text-[#991b1b]" :
+                        "text-gray-500"
+                      }`}>
+                        {stage.stage}
+                      </span>
+                    </div>
+
+                    {/* Connecting Line (drawn from the center of this node to the center of the next) */}
+                    {!isLast && (
+                      <div className="absolute top-6 left-1/2 w-full h-[2px] -translate-y-1/2 -z-10"
+                           style={{
+                             background: state === "completed" && nextState === "completed" ? "#22c55e" :
+                                         state === "completed" && nextState === "active" ? "linear-gradient(to right, #22c55e, #991b1b)" :
+                                         state === "active" ? "linear-gradient(to right, #991b1b, #e5e7eb)" :
+                                         "#e5e7eb"
+                           }}
+                      />
+                    )}
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         )}
       </div>

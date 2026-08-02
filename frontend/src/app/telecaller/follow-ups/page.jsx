@@ -1,181 +1,212 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import DashboardShell from "@/components/layout/DashboardShell";
 import { useFollowups } from "@/features/telecaller/hooks/useFollowups";
-import { useUpdateFollowup } from "@/features/telecaller/hooks/useFollowupMutations";
-import { Search, CalendarClock, PhoneCall, CheckCircle2 } from "lucide-react";
+import { useFollowupWorkspace } from "@/features/telecaller/hooks/useFollowupWorkspace";
+
+import FollowupListView from "@/features/telecaller/components/followups/FollowupListView";
+import FollowupCalendarView from "@/features/telecaller/components/followups/FollowupCalendarView";
+import WorkspaceControls from "@/features/telecaller/components/followups/WorkspaceControls";
+import ReusableFilterDrawer from "@/components/layout/ReusableFilterDrawer";
+import RescheduleModal from "@/features/telecaller/components/followups/RescheduleModal";
+import ScheduleFollowupModal from "@/features/telecaller/components/followups/ScheduleFollowupModal";
+import EmptyFollowups from "@/features/telecaller/components/followups/EmptyFollowups";
 import Button from "@/components/ui/Button";
 
-const KanbanColumn = ({ title, followups, onComplete, colorClass }) => {
-  return (
-    <div className="flex flex-col h-full bg-slate-50/50 rounded-2xl border border-[#ECECEC] p-4">
-      <div className="flex justify-between items-center mb-4 px-2">
-        <h3 className="font-[600] text-gray-900">{title}</h3>
-        <span className={`text-xs font-[600] px-2.5 py-1 rounded-full bg-white border border-[#ECECEC] shadow-sm`}>
-          {followups.length}
-        </span>
-      </div>
-
-      <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar pr-2">
-        {followups.length === 0 ? (
-          <div className="h-32 flex items-center justify-center text-sm text-slate-400 font-[500] border-2 border-dashed border-slate-200 rounded-xl">
-            No follow-ups
-          </div>
-        ) : (
-          followups.map(f => (
-            <div key={f.id} className="bg-white border border-[#ECECEC] rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h4 className="font-[600] text-gray-900 text-[15px]">{f.student || f.leadName || "Unknown Lead"}</h4>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-xs text-slate-500 font-[500]">{f.course || "No Course"}</span>
-                    <span className="text-[10px] text-slate-400">•</span>
-                    <span className="text-xs font-[600] text-[#7A1F2B]">{f.leadStatus || f.stage || f.status || "New"}</span>
-                  </div>
-                </div>
-                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm border ${
-                  f.priority === "High" ? "text-[#7A1F2B] bg-[#7A1F2B]/5 border-[#7A1F2B]/20" :
-                  f.priority === "Medium" ? "text-orange-700 bg-orange-50 border-orange-200" :
-                  "text-emerald-700 bg-emerald-50 border-emerald-200"
-                }`}>
-                  {f.priority || "Normal"}
-                </span>
-              </div>
-              
-              <div className="flex items-center gap-2 text-xs text-slate-600 font-[500] mb-3">
-                <CalendarClock size={14} className="text-slate-400" />
-                {f.scheduledDate || f.date} at {f.scheduledTime || f.time || "TBA"}
-              </div>
-
-              {f.remarks && (
-                <div className="bg-slate-50 border border-slate-100 rounded-lg p-2 text-xs text-slate-600 mb-3 line-clamp-2">
-                  {f.remarks}
-                </div>
-              )}
-
-              <div className="flex gap-2">
-                {f.status !== "Completed" && (
-                  <>
-                    <Button variant="outline" size="sm" className="flex-1 h-8 text-xs font-[600]">
-                      <PhoneCall size={12} className="mr-1.5" /> Call
-                    </Button>
-                    <Button 
-                      onClick={() => onComplete(f.id)}
-                      variant="primary" 
-                      size="sm" 
-                      className="flex-1 h-8 text-xs font-[600] bg-[#16A34A] hover:bg-[#15803d]"
-                    >
-                      <CheckCircle2 size={12} className="mr-1.5" /> Done
-                    </Button>
-                  </>
-                )}
-                {f.status === "Completed" && (
-                  <div className="w-full text-center text-xs font-[600] text-emerald-600 bg-emerald-50 py-1.5 rounded-lg border border-emerald-100 flex items-center justify-center gap-1.5">
-                    <CheckCircle2 size={14} />
-                    Completed
-                  </div>
-                )}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-};
-
 export default function FollowUpsPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  
-  // Fetch ALL followups so we can distribute them into Kanban columns on the client
+  // Fetch data
   const { data: allFollowupsData, isLoading } = useFollowups("all");
   const allFollowups = Array.isArray(allFollowupsData) ? allFollowupsData : [];
-  const updateMutation = useUpdateFollowup();
 
-  const handleComplete = (id) => {
-    updateMutation.mutate({ id, data: { status: "Completed" } });
+  // Workspace UI State & Derived Filtered Data
+  const workspace = useFollowupWorkspace(allFollowups);
+
+  // Modals state
+  const [isFilterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [rescheduleData, setRescheduleData] = useState(null);
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
+  const [scheduleDefaultDate, setScheduleDefaultDate] = useState("");
+
+  const handleOpenReschedule = (followup) => setRescheduleData(followup);
+  const handleCloseReschedule = () => setRescheduleData(null);
+
+  const handleOpenSchedule = (date) => {
+    console.log("[FollowUpsPage] handleOpenSchedule called", { date, selectedCalendarDay: workspace.selectedCalendarDay });
+    setScheduleDefaultDate(date || "");
+    setIsScheduleOpen(true);
   };
-
-  const filteredFollowups = allFollowups.filter(f => 
-    f.student?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const todayStr = new Date().toISOString().split("T")[0];
-
-  const overdue = filteredFollowups.filter(f => f.scheduledDate < todayStr && f.status !== "Completed");
-  const today = filteredFollowups.filter(f => f.scheduledDate === todayStr && f.status !== "Completed");
-  const upcoming = filteredFollowups.filter(f => f.scheduledDate > todayStr && f.status !== "Completed");
-  const completed = filteredFollowups.filter(f => f.status === "Completed");
+  const handleCloseSchedule = () => setIsScheduleOpen(false);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden">
-      {/* Header */}
-      <div className="flex-none bg-white border-b border-[#ECECEC] px-8 py-5">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-[700] text-gray-900 tracking-tight font-outfit">Follow-ups Board</h1>
-            <p className="text-sm text-slate-500 font-[500] mt-1">Manage your pending calls and schedules</p>
+    <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden bg-white">
+      <div className="flex-1 overflow-y-auto relative custom-scrollbar pb-8">
+        
+        <div className="max-w-[1200px] mx-auto w-full px-6">
+          {/* Sticky Controls Section */}
+          <div className="sticky top-0 z-20 bg-white pb-3 pt-6">
+            <WorkspaceControls 
+              workspace={workspace} 
+              onOpenFilters={() => setFilterDrawerOpen(true)}
+            />
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent mt-3"></div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="relative w-64">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search by student name..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-white border border-[#ECECEC] rounded-xl text-sm font-[500] outline-none focus:ring-2 focus:ring-[#7A1F2B] transition-shadow placeholder:text-slate-400"
-              />
-            </div>
+          {/* Content Section */}
+          <div className="pt-4 min-h-[500px]">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7A1F2B]"></div>
+              </div>
+            ) : (
+              workspace.viewMode === "list" ? (
+                <FollowupListView 
+                  followups={workspace.displayFollowups} 
+                  onReschedule={handleOpenReschedule}
+                  activeTab={workspace.activeTab}
+                />
+              ) : (
+                // Calendar mode: two separate cards (left calendar ~40%, right follow-up list ~60%)
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="lg:w-[40%] w-full bg-white border border-[#ECECEC] rounded-2xl p-4 shadow-sm">
+                    <FollowupCalendarView 
+                      followups={workspace.filteredFollowups}
+                      selectedDate={workspace.selectedCalendarDay}
+                      onSelectDate={(d) => workspace.setSelectedCalendarDay(d)}
+                      onSchedule={handleOpenSchedule}
+                    />
+                  </div>
+
+                  <div className="lg:w-[60%] w-full bg-white border border-[#ECECEC] rounded-2xl p-4 shadow-sm flex flex-col">
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h3 className="text-lg font-[700] text-gray-900">{workspace.selectedCalendarDay ? new Date(workspace.selectedCalendarDay).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) : 'Select a date'}</h3>
+                        <p className="text-sm text-slate-500">{workspace.selectedCalendarDay ? `${workspace.filteredFollowups.filter(f => (f.scheduledDate || f.date) === workspace.selectedCalendarDay).length} follow-up${workspace.filteredFollowups.filter(f => (f.scheduledDate || f.date) === workspace.selectedCalendarDay).length !== 1 ? 's' : ''}` : 'No date selected'}</p>
+                      </div>
+                      <div className="ml-3">
+                        <Button onClick={() => handleOpenSchedule(workspace.selectedCalendarDay)} className="bg-[#7A1F2B] hover:bg-[#6F1D28] text-white">Schedule Follow-up</Button>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto">
+                      {(!workspace.selectedCalendarDay || workspace.filteredFollowups.filter(f => (f.scheduledDate || f.date) === workspace.selectedCalendarDay).length === 0) ? (
+                        <div>
+                          <EmptyFollowups type={workspace.selectedCalendarDay ? 'empty_day' : 'no_results'} />
+                        </div>
+                      ) : (
+                        <FollowupListView 
+                          followups={workspace.filteredFollowups.filter(f => (f.scheduledDate || f.date) === workspace.selectedCalendarDay)}
+                          onReschedule={handleOpenReschedule}
+                          activeTab={workspace.activeTab}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            )}
           </div>
         </div>
       </div>
 
-      {/* Kanban Board */}
-      <div className="flex-1 overflow-x-auto p-8">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7A1F2B]"></div>
+      <ReusableFilterDrawer 
+        isOpen={isFilterDrawerOpen}
+        onClose={() => setFilterDrawerOpen(false)}
+        title="Refine Follow-ups"
+        onApply={() => setFilterDrawerOpen(false)}
+        onReset={() => workspace.setFilters({ priority: "", course: "", status: "", source: "", assignedCounselor: "", date: "" })}
+      >
+        <div className="flex flex-col gap-5">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Priority</label>
+            <select
+              value={workspace.filters.priority}
+              onChange={(e) => workspace.setFilters({...workspace.filters, priority: e.target.value})}
+              className="w-full h-10 px-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#6F1D28]"
+            >
+              <option value="">All Priorities</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
           </div>
-        ) : (
-          <div className="flex h-full gap-6 min-w-[1000px]">
-            <div className="flex-1 min-w-[300px]">
-              <KanbanColumn 
-                title="Overdue" 
-                followups={overdue} 
-                onComplete={handleComplete}
-                colorClass="text-red-600"
-              />
-            </div>
-            <div className="flex-1 min-w-[300px]">
-              <KanbanColumn 
-                title="Today" 
-                followups={today} 
-                onComplete={handleComplete}
-                colorClass="text-blue-600"
-              />
-            </div>
-            <div className="flex-1 min-w-[300px]">
-              <KanbanColumn 
-                title="Upcoming" 
-                followups={upcoming} 
-                onComplete={handleComplete}
-                colorClass="text-orange-600"
-              />
-            </div>
-            <div className="flex-1 min-w-[300px]">
-              <KanbanColumn 
-                title="Completed" 
-                followups={completed} 
-                onComplete={handleComplete}
-                colorClass="text-green-600"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Course</label>
+            <select
+              value={workspace.filters.course}
+              onChange={(e) => workspace.setFilters({...workspace.filters, course: e.target.value})}
+              className="w-full h-10 px-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#6F1D28]"
+            >
+              <option value="">All Courses</option>
+              <option value="B.Tech">B.Tech</option>
+              <option value="BCA">BCA</option>
+              <option value="BBA">BBA</option>
+            </select>
           </div>
-        )}
-      </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Status</label>
+            <select
+              value={workspace.filters.status}
+              onChange={(e) => workspace.setFilters({...workspace.filters, status: e.target.value})}
+              className="w-full h-10 px-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#6F1D28]"
+            >
+              <option value="">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Rescheduled">Rescheduled</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Source</label>
+            <select
+              value={workspace.filters.source}
+              onChange={(e) => workspace.setFilters({...workspace.filters, source: e.target.value})}
+              className="w-full h-10 px-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#6F1D28]"
+            >
+              <option value="">All Sources</option>
+              <option value="Website">Website</option>
+              <option value="Walk-in">Walk-in</option>
+              <option value="Referral">Referral</option>
+              <option value="Social Media">Social Media</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Assigned Counselor</label>
+            <select
+              value={workspace.filters.assignedCounselor}
+              onChange={(e) => workspace.setFilters({...workspace.filters, assignedCounselor: e.target.value})}
+              className="w-full h-10 px-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#6F1D28]"
+            >
+              <option value="">Any Counselor</option>
+              {/* Typically these would come from an API, hardcoding a few for UI purposes */}
+              <option value="Sarah Jenkins">Sarah Jenkins</option>
+              <option value="Michael Scott">Michael Scott</option>
+              <option value="Priya Sharma">Priya Sharma</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Specific Date</label>
+            <input
+              type="date"
+              value={workspace.filters.date}
+              onChange={(e) => workspace.setFilters({...workspace.filters, date: e.target.value})}
+              className="w-full h-10 px-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#6F1D28]"
+            />
+          </div>
+        </div>
+      </ReusableFilterDrawer>
+
+      <RescheduleModal 
+        isOpen={!!rescheduleData}
+        onClose={handleCloseReschedule}
+        followup={rescheduleData}
+      />
+
+      <ScheduleFollowupModal 
+        isOpen={isScheduleOpen}
+        onClose={handleCloseSchedule}
+        defaultDate={scheduleDefaultDate}
+        existingFollowups={workspace.filteredFollowups.filter(f => (f.scheduledDate || f.date) === scheduleDefaultDate)}
+      />
     </div>
   );
 }

@@ -21,15 +21,17 @@ const CallDetailsSkeleton = () => (
   </div>
 );
 
-export default function CallDetailsView({ callId, defaultTab = "summary", showRecording = false }) {
-  const { data: call, isLoading, isError } = useCallDetails(callId);
+export default function CallDetailsView({ callId, callData, defaultTab = "summary", showRecording = false }) {
+  const { data: fetchedCall, isLoading, isError } = useCallDetails(callId, { enabled: !callData });
   const [activeTab, setActiveTab] = useState(defaultTab);
+  
+  const call = callData || fetchedCall;
 
-  if (isLoading) {
+  if (isLoading && !call) {
     return <CallDetailsSkeleton />;
   }
 
-  if (isError || !call) {
+  if ((isError && !call) || !call) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <AlertCircle size={32} className="text-red-400 mb-3" />

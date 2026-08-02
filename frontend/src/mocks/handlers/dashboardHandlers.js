@@ -1,6 +1,6 @@
 import API_ENDPOINTS from "@/utils/apiEndpoints";
 import { env } from "@/config/env";
-import { dashboardMetricsService } from "../services/dashboardMetricsService";
+import { dashboardData } from "../dashboard/data";
 
 const getScenarioResponse = (successData) => {
   const scenario = env.MOCK_SCENARIO;
@@ -16,12 +16,27 @@ const getScenarioResponse = (successData) => {
 
 export const setupDashboardHandlers = (mock) => {
   mock.onGet(API_ENDPOINTS.TELECALLER.DASHBOARD).reply(() => {
-    console.log("🌐 [MOCK API HIT] GET /api/leads/telecaller/dashboard");
-    const dashboardData = dashboardMetricsService.getDashboardData();
     return getScenarioResponse({
       success: true,
       message: "Dashboard fetched successfully",
       data: dashboardData
+    });
+  });
+
+  // Admin dashboard if applicable
+  mock.onGet(API_ENDPOINTS.DASHBOARD?.STATS).reply(() => {
+    return getScenarioResponse({
+      success: true,
+      message: "Dashboard stats fetched successfully",
+      data: dashboardData.stats
+    });
+  });
+  
+  mock.onGet(API_ENDPOINTS.DASHBOARD?.ACTIVITY).reply(() => {
+    return getScenarioResponse({
+      success: true,
+      message: "Dashboard activity fetched successfully",
+      data: dashboardData.recentActivities
     });
   });
 };

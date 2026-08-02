@@ -4,13 +4,14 @@ import { useState } from "react";
 import { UserPlus } from "lucide-react";
 import Button from "@/components/ui/Button";
 import AssignLeadsModal from "../../AssignLeadsModal";
-import { useTelecallers } from "../../../hooks/useTelecallers";
+import useUsers from "../../../../users/useUsers";
 import { useAssignLeads } from "../../../hooks/useAssignLeads";
 
-export default function AssignLeadAction({ leadId, fullWidth }) {
+export default function AssignLeadAction({ leadId, isAssigned, currentTelecallerId, fullWidth }) {
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   
-  const { data: telecallers = [] } = useTelecallers();
+  const { data: usersData } = useUsers({ size: 1000 });
+  const telecallers = usersData?.users || [];
   const { mutate: assignLeads, isPending: isAssigning } = useAssignLeads(() => {
     setIsAssignModalOpen(false);
   });
@@ -22,6 +23,8 @@ export default function AssignLeadAction({ leadId, fullWidth }) {
     });
   };
 
+  const mode = isAssigned ? "reassign" : "assign";
+
   return (
     <>
       <Button 
@@ -29,7 +32,7 @@ export default function AssignLeadAction({ leadId, fullWidth }) {
         icon={<UserPlus size={16} />}
         onClick={() => setIsAssignModalOpen(true)}
       >
-        Assign Lead
+        {isAssigned ? "Reassign Lead" : "Assign Lead"}
       </Button>
 
       {isAssignModalOpen && (
@@ -40,6 +43,8 @@ export default function AssignLeadAction({ leadId, fullWidth }) {
           telecallers={telecallers}
           selectedCount={1}
           isAssigning={isAssigning}
+          mode={mode}
+          currentTelecallerId={currentTelecallerId}
         />
       )}
     </>
