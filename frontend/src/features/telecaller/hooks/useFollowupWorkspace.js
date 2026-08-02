@@ -208,6 +208,34 @@ export function useFollowupWorkspace(rawFollowups = []) {
       }
     });
   }, [filteredFollowups, activeTab, viewMode, selectedCalendarDay]);
+  // Workspace Diagnostics
+  useEffect(() => {
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    
+    const debugToday = filteredFollowups.filter(f => {
+      const rawDateStr = f.scheduledDate || f.date || f.createdAt;
+      if (!rawDateStr) return false;
+      const fDateStr = typeof rawDateStr === 'string' ? rawDateStr.split('T')[0].split(' ')[0] : rawDateStr;
+      const isCompleted = f.status === "Completed" || f.leadStatus === "Completed" || f.stage === "Completed";
+      return fDateStr === todayStr && !isCompleted;
+    });
+
+    const debugUpcoming = filteredFollowups.filter(f => {
+      const rawDateStr = f.scheduledDate || f.date || f.createdAt;
+      if (!rawDateStr) return false;
+      const fDateStr = typeof rawDateStr === 'string' ? rawDateStr.split('T')[0].split(' ')[0] : rawDateStr;
+      const isCompleted = f.status === "Completed" || f.leadStatus === "Completed" || f.stage === "Completed";
+      return fDateStr > todayStr && !isCompleted;
+    });
+
+    console.log("========== WORKSPACE READ DIAGNOSTICS ==========");
+    console.log("1. rawFollowups:", rawFollowups);
+    console.log("2. mapped filteredFollowups:", filteredFollowups);
+    console.log("3. filteredToday:", debugToday);
+    console.log("4. filteredUpcoming:", debugUpcoming);
+    console.log("================================================");
+  }, [rawFollowups, filteredFollowups]);
 
   return {
     viewMode, setViewMode,

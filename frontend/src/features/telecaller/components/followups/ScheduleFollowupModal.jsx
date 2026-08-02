@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -6,14 +6,8 @@ import Textarea from "@/components/ui/Textarea";
 import Select from "@/components/ui/Select";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { useCreateFollowup } from "@/features/telecaller/hooks/useFollowupMutations";
+import { useTelecallerLeads } from "@/features/telecaller/hooks/useMyLeads";
 import { Clock } from "lucide-react";
-
-const MOCK_LEADS = [
-  { label: "Rahul Sharma (BCA) - +91 9876543210", value: "GMU1001" },
-  { label: "Priya Singh (B.Tech) - +91 9988776655", value: "GMU1002" },
-  { label: "Amit Kumar (BBA) - +91 9123456789", value: "GMU1003" },
-  { label: "Sneha Gupta (MBA) - +91 9876123450", value: "GMU1004" }
-];
 
 export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, existingFollowups = [] }) {
   console.log("[ScheduleFollowupModal] render", { isOpen, defaultDate, existingFollowupsCount: existingFollowups.length });
@@ -24,6 +18,16 @@ export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, ex
   const [leadId, setLeadId] = useState(""); 
 
   const createMutation = useCreateFollowup();
+  const { data: leadsData } = useTelecallerLeads({ size: 100 }, 0, 100);
+
+  const leadOptions = useMemo(() => {
+    const leads = leadsData?.leads || [];
+    return leads.map(l => ({
+      label: `${l.name} (${l.course || 'N/A'}) - ${l.mobileNo}`,
+      value: String(l.enquiryNo),
+      enquiryId: l.enquiryNo
+    }));
+  }, [leadsData]);
 
   useEffect(() => {
     if (isOpen) {
@@ -37,31 +41,37 @@ export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, ex
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("[ScheduleFollowupModal] handleSubmit", {
-      leadId,
-      selectedDate: date,
-      selectedTime: time,
-      priority,
-      notes,
-      canSubmit: !!leadId && !!date && !!time,
-      isOpen,
-    });
+    // Format values to match backend contract exactly
+    const selectedLead = leadOptions.find(l => l.value === leadId) || null;
+    const enquiryNo = selectedLead ? selectedLead.enquiryId : null;
+
+    const props = { isOpen, defaultDate, existingFollowupsCount: existingFollowups?.length };
+
+    const payload = {
+      enquiryNo,
+      scheduledDate: date, // <input type="date"> returns YYYY-MM-DD
+      scheduledTime: time.length === 5 ? `${time}:00` : time, // <input type="time"> returns HH:mm
+      priority: priority.toUpperCase(),
+      remarks: notes
+    };
+
+    console.log("========== FOLLOW-UP DEBUG ==========");
+    console.log("Lead:", JSON.stringify(selectedLead, null, 2));
+    console.log("Props:", JSON.stringify(props, null, 2));
+    console.log("Payload:", JSON.stringify(payload, null, 2));
+    console.log("====================================");
 
     createMutation.mutate(
-      { 
-        leadId,
-        scheduledDate: date, 
-        scheduledTime: time, 
-        priority,
-        remarks: notes 
-      },
+      payload,
       {
         onSuccess: () => {
           console.log("[ScheduleFollowupModal] createMutation success");
           onClose();
         },
         onError: (error) => {
-          console.error("[ScheduleFollowupModal] createMutation error", error);
+          console.error("Follow-up Error:", error);
+          console.log("Status:", error.response?.status);
+          console.log("Response:", error.response?.data);
         }
       }
     );
@@ -112,7 +122,7 @@ export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, ex
           <SearchableSelect
             label="Select Lead"
             placeholder="Search leads by name or phone..."
-            options={MOCK_LEADS}
+            options={leadOptions}
             value={leadId}
             onChange={setLeadId}
             required

@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import ErrorState from "@/components/ui/ErrorState";
 
 import { TABS_CONFIG } from "../../constants/detailsConfig";
-import ProfileHero from "./ProfileHero";
-import QuickStatsRow from "./sections/QuickStatsRow";
-import LeadTabs from "./LeadTabs";
+import LeadHeaderCard from "./sections/LeadHeaderCard";
+import LeadStatisticsSection from "./sections/LeadStatisticsSection";
 import ProfileSkeleton from "./ProfileSkeleton";
 import EditLeadDialog from "../EditLeadDialog";
 
@@ -20,16 +18,9 @@ export default function LeadDetailsView({
   error,
   isDeleting,
   onDelete,
-  /** Role-specific action buttons rendered in the hero's right column */
   actions,
-  /** Override tabs — Telecaller passes TELECALLER_TABS_CONFIG (no Documents/Activity) */
   tabsConfig,
-  /** Hide the QuickStatsRow below the hero (Telecaller uses false) */
   showStats = true,
-  /** Optional document count to display in hero badge */
-  docCount,
-  /** Optional notes count to display in hero badge */
-  noteCount,
 }) {
   const [activeTab, setActiveTab] = useState((tabsConfig || TABS_CONFIG)[0].id);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -55,20 +46,17 @@ export default function LeadDetailsView({
   if (!viewModel) return null;
 
   return (
-    <div className="flex flex-col mt-4" style={{ fontFamily: "var(--font-outfit), sans-serif" }}>
-
-      {/* ── Unified Profile Hero ─────────────────────────────────────────────── */}
-      <ProfileHero
-        data={viewModel}
+    <div className="p-lg flex flex-col gap-lg max-w-[1440px] mx-auto w-full">
+      
+      {/* ── Lead Header & Metadata ─────────────────────────────────────────────── */}
+      <LeadHeaderCard
+        viewModel={viewModel}
+        rawData={rawData}
         actions={actions}
         onDelete={onDelete}
-        isDeleting={isDeleting}
         onEdit={() => setIsEditModalOpen(true)}
-        docCount={docCount}
-        noteCount={noteCount}
       />
 
-      {/* Edit Lead dialog (admin has rawData, telecaller passes undefined) */}
       {isEditModalOpen && (
         <EditLeadDialog
           open={isEditModalOpen}
@@ -77,27 +65,32 @@ export default function LeadDetailsView({
         />
       )}
 
-      {/* Stats row — shown for Admin, hidden for Telecaller */}
-      {showStats && <QuickStatsRow data={viewModel} />}
+      {/* ── Statistics Section ─────────────────────────────────────────────────── */}
+      {showStats && <LeadStatisticsSection viewModel={viewModel} rawData={rawData} />}
 
-      {/* ── Tab section ─────────────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-5 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
-        <LeadTabs activeTab={activeTab} onTabChange={setActiveTab} tabsConfig={resolvedTabs} />
-
-        <div className="min-h-[400px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <ActiveTabComponent data={viewModel} leadId={leadId} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
+      {/* ── Tabs Navigation ─────────────────────────────────────────────────────── */}
+      <div className="flex border-b border-outline-variant mt-md">
+        {resolvedTabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-xl py-md flex items-center gap-sm transition-colors ${
+              activeTab === tab.id
+                ? "border-b-4 border-primary text-primary font-bold"
+                : "text-on-surface-variant hover:text-primary"
+            }`}
+          >
+            <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: activeTab === tab.id ? "'FILL' 1" : "'FILL' 0" }}>
+              {tab.id === 'info' ? 'visibility' : tab.id === 'timeline' ? 'history' : tab.id === 'notes' ? 'edit_note' : 'folder'}
+            </span>
+            {tab.label}
+          </button>
+        ))}
       </div>
+
+      {/* ── Active Tab Content ─────────────────────────────────────────────────── */}
+      <ActiveTabComponent data={viewModel} rawData={rawData} leadId={leadId} />
+
     </div>
   );
 }

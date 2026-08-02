@@ -12,7 +12,7 @@ function makeRequest(path, method = 'GET', data = null, headers = {}) {
     }
 
     console.log(`\n--- REQUEST ---`);
-    console.log(`URL: http://192.168.1.8:3000${path}`);
+    console.log(`URL: http://192.168.1.25:3000${path}`);
     console.log(`Method: ${method}`);
     if (reqData) console.log(`Payload: ${reqData}`);
 
