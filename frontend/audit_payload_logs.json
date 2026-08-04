@@ -1,0 +1,102 @@
+[
+  {
+    "timestamp": "2026-08-03T12:38:57.694Z",
+    "type": "GET_FOLLOWUPS_RESPONSE",
+    "sample": {
+      "id": 10,
+      "enquiryNo": 135,
+      "leadName": "naruto",
+      "mobileNo": "6363907325",
+      "scheduledDate": "2026-07-29",
+      "scheduledTime": null,
+      "priority": null,
+      "status": "PENDING",
+      "nextAction": "contact",
+      "createdAt": "2026-07-28T17:20:36"
+    },
+    "allLength": 25
+  },
+  {
+    "timestamp": "2026-08-03T12:39:14.282Z",
+    "type": "GET_FOLLOWUPS_RESPONSE",
+    "sample": {
+      "id": 10,
+      "enquiryNo": 135,
+      "leadName": "naruto",
+      "mobileNo": "6363907325",
+      "scheduledDate": "2026-07-29",
+      "scheduledTime": null,
+      "priority": null,
+      "status": "PENDING",
+      "nextAction": "contact",
+      "createdAt": "2026-07-28T17:20:36"
+    },
+    "allLength": 25
+  },
+  {
+    "timestamp": "2026-08-03T12:41:36.501Z",
+    "type": "UPDATE_FOLLOWUP_RESPONSE",
+    "payload": {
+      "id": 61,
+      "enquiryNo": 135,
+      "leadName": "naruto",
+      "mobileNo": "6363907325",
+      "scheduledDate": "2026-08-03",
+      "scheduledTime": "07:07:00",
+      "priority": "HIGH",
+      "status": "PENDING",
+      "nextAction": "",
+      "createdAt": "2026-08-02T18:06:20"
+    }
+  },
+  {
+    "timestamp": "2026-08-03T12:41:36.985Z",
+    "type": "GET_FOLLOWUPS_RESPONSE",
+    "sample": {
+      "id": 10,
+      "enquiryNo": 135,
+      "leadName": "naruto",
+      "mobileNo": "6363907325",
+      "scheduledDate": "2026-07-29",
+      "scheduledTime": null,
+      "priority": null,
+      "status": "PENDING",
+      "nextAction": "contact",
+      "createdAt": "2026-07-28T17:20:36"
+    },
+    "allLength": 25
+  },
+  {
+    "timestamp": "2026-08-03T12:42:47.660Z",
+    "type": "UPDATE_FOLLOWUP_RESPONSE",
+    "payload": {
+      "id": 61,
+      "enquiryNo": 135,
+      "leadName": "naruto",
+      "mobileNo": "6363907325",
+      "scheduledDate": "2026-08-03",
+      "scheduledTime": "07:07:00",
+      "priority": "HIGH",
+      "status": "PENDING",
+      "nextAction": "",
+      "createdAt": "2026-08-02T18:06:20"
+    }
+  },
+  {
+    "timestamp": "2026-08-03T12:42:47.962Z",
+    "type": "GET_FOLLOWUPS_RESPONSE",
+    "sample": {
+      "id": 10,
+      "enquiryNo": 135,
+      "leadName": "naruto",
+      "mobileNo": "6363907325",
+      "scheduledDate": "2026-07-29",
+      "scheduledTime": null,
+      "priority": null,
+      "status": "PENDING",
+      "nextAction": "contact",
+      "createdAt": "2026-07-28T17:20:36"
+    },
+    "allLength": 25
+  }
+]

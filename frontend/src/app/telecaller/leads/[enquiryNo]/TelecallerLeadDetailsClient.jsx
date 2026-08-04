@@ -94,6 +94,7 @@ export default function TelecallerLeadDetailsClient({ enquiryNo }) {
       <LeadDetailsView
         leadId={enquiryNo}
         viewModel={viewModel}
+        rawData={viewModel?.rawData}
         isLoading={isLoading}
         isError={isError}
         error={error}

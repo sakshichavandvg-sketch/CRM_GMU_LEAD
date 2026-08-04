@@ -10,6 +10,8 @@ export default function Input({
     required = false,
     disabled = false,
     icon,
+    className = "",
+    ...props
 }) {
     const errorId = name ? `${name}-error` : undefined;
 
@@ -60,6 +62,7 @@ export default function Input({
                                 ? "border-red-400 focus:ring-2 focus:ring-red-200"
                                 : "border-gray-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-yellow-100"
                         }
+                        ${className}
                     `}
                 />
             </div>

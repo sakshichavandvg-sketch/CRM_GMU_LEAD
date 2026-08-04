@@ -1,0 +1,525 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>My Leads - CRM Dashboard</title>
+<!-- Google Fonts: Outfit & Material Symbols Rounded -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #F7F8FC;
+            color: #151C27;
+        }
+        .premium-shadow {
+            box-shadow: 0 10px 40px rgba(15, 23, 42, 0.06);
+        }
+        /* Custom scrollbar for horizontal KPI section */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#69000d",
+                        "primary-container": "#8f111b",
+                        "on-primary": "#ffffff",
+                        "secondary": "#0051d5",
+                        "secondary-container": "#316bf3",
+                        "surface": "#f9f9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-container": "#e7eefe",
+                        "surface-variant": "#dce2f3",
+                        "on-surface": "#151c27",
+                        "on-surface-variant": "#59413f",
+                        "outline": "#8d706e",
+                        "outline-variant": "#e1bfbc",
+                        "background": "#f9f9ff",
+                        "error": "#ba1a1a",
+                        "tertiary": "#003914",
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.375rem", /* 22px */
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "container-margin": "2rem",
+                        "padding-card-y": "1.5rem",
+                        "gutter-md": "1rem",
+                        "card-gap": "1.5rem",
+                        "padding-card-x": "1.5rem",
+                        "row-height": "72px"
+                    },
+                    fontFamily: {
+                        "title-sm": ["Outfit"],
+                        "display-lg": ["Outfit"],
+                        "headline-md": ["Outfit"],
+                        "body-sm": ["Outfit"],
+                        "status-pill": ["Outfit"],
+                        "body-md": ["Outfit"],
+                        "label-caps": ["Outfit"]
+                    },
+                    fontSize: {
+                        "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "status-pill": ["10px", {"lineHeight": "12px", "letterSpacing": "0.02em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background min-h-screen">
+<!-- Top Navigation Shell (Shared Component Mapping) -->
+<header class="bg-surface sticky top-0 z-50 premium-shadow">
+
+</header>
+<main class="max-w-[1440px] mx-auto px-4 md:px-container-margin py-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div>
+<h2 class="text-[42px] font-bold leading-tight tracking-tight text-on-surface">My Leads</h2>
+<div class="flex items-center gap-3 mt-1">
+<span class="flex items-center gap-1.5 text-body-md text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(0,57,20,0.4)]"></span>
+                        5 assigned leads
+                    </span>
+<span class="text-outline-variant">•</span>
+<span class="text-body-md text-on-surface-variant">Last synced 2 mins ago</span>
+</div>
+</div>
+<button class="flex items-center justify-center gap-2 px-6 py-2.5 border-2 border-primary text-primary font-title-sm font-semibold rounded-lg hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">filter_list</span>
+                Filters
+            </button>
+</div>
+<!-- KPI Bento/Grid Section -->
+<div class="overflow-x-auto hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0 mb-8">
+<div class="flex md:grid md:grid-cols-3 lg:grid-cols-6 gap-card-gap min-w-max md:min-w-0">
+<!-- Card 1: Total Assigned -->
+<div class="bg-surface-container-lowest premium-shadow p-6 rounded-2xl w-[220px] md:w-auto h-[170px] flex flex-col justify-between transition-transform hover:-translate-y-1">
+<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined fill-icon">group</span>
+</div>
+<div>
+<p class="text-display-lg text-[54px] font-bold text-on-surface leading-none">5</p>
+<p class="text-title-sm font-title-sm mt-1">Total Assigned</p>
+</div>
+<p class="text-body-sm text-on-surface-variant">All your assigned leads</p>
+</div>
+<!-- Card 2: New Leads -->
+<div class="bg-surface-container-lowest premium-shadow p-6 rounded-2xl w-[220px] md:w-auto h-[170px] flex flex-col justify-between transition-transform hover:-translate-y-1">
+<div class="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined fill-icon">bolt</span>
+</div>
+<div>
+<p class="text-display-lg text-[54px] font-bold text-on-surface leading-none">2</p>
+<p class="text-title-sm font-title-sm mt-1">New Leads</p>
+</div>
+<p class="text-body-sm text-on-surface-variant">Require your attention</p>
+</div>
+<!-- Card 3: In Progress -->
+<div class="bg-surface-container-lowest premium-shadow p-6 rounded-2xl w-[220px] md:w-auto h-[170px] flex flex-col justify-between transition-transform hover:-translate-y-1">
+<div class="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined fill-icon">schedule</span>
+</div>
+<div>
+<p class="text-display-lg text-[54px] font-bold text-on-surface leading-none">1</p>
+<p class="text-title-sm font-title-sm mt-1">In Progress</p>
+</div>
+<p class="text-body-sm text-on-surface-variant">Active follow-ups</p>
+</div>
+<!-- Card 4: Interested -->
+<div class="bg-surface-container-lowest premium-shadow p-6 rounded-2xl w-[220px] md:w-auto h-[170px] flex flex-col justify-between transition-transform hover:-translate-y-1">
+<div class="w-12 h-12 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined fill-icon">check_circle</span>
+</div>
+<div>
+<p class="text-display-lg text-[54px] font-bold text-on-surface leading-none">3</p>
+<p class="text-title-sm font-title-sm mt-1">Interested</p>
+</div>
+<p class="text-body-sm text-on-surface-variant">Showing interest</p>
+</div>
+<!-- Card 5: Not Interested -->
+<div class="bg-surface-container-lowest premium-shadow p-6 rounded-2xl w-[220px] md:w-auto h-[170px] flex flex-col justify-between transition-transform hover:-translate-y-1">
+<div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center text-error">
+<span class="material-symbols-outlined fill-icon">cancel</span>
+</div>
+<div>
+<p class="text-display-lg text-[54px] font-bold text-on-surface leading-none">1</p>
+<p class="text-title-sm font-title-sm mt-1">Not Interested</p>
+</div>
+<p class="text-body-sm text-on-surface-variant">Not showing interest</p>
+</div>
+<!-- Card 6: Converted -->
+<div class="bg-surface-container-lowest premium-shadow p-6 rounded-2xl w-[220px] md:w-auto h-[170px] flex flex-col justify-between transition-transform hover:-translate-y-1">
+<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined fill-icon">stars</span>
+</div>
+<div>
+<p class="text-display-lg text-[54px] font-bold text-on-surface leading-none">0</p>
+<p class="text-title-sm font-title-sm mt-1">Converted</p>
+</div>
+<p class="text-body-sm text-on-surface-variant">Successfully converted</p>
+</div>
+</div>
+</div>
+<!-- Toolbar Section -->
+<div class="bg-surface-container-lowest premium-shadow p-4 rounded-xl mb-8 flex flex-col lg:flex-row gap-4">
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-background border-none rounded-lg focus:ring-2 focus:ring-primary/20 text-body-md" placeholder="Search by name, mobile or enquiry no..." type="text">
+</div>
+<div class="flex flex-wrap gap-3">
+
+
+
+
+<button class="bg-primary text-white px-8 py-2.5 rounded-lg font-title-sm font-semibold hover:bg-primary-container transition-all active:scale-95 flex items-center gap-2 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">done_all</span>
+                    Apply Filters
+                </button>
+</div>
+</div>
+<!-- Leads List Section -->
+<div class="bg-surface-container-lowest premium-shadow rounded-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[1000px]">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant" style="transform: translateX(0px); transition: 0.3s;">
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Enquiry No</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Lead</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Mobile No</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Course</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Opinion</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Calls</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">District</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Source</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<!-- Lead Row 1: Naruto -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group h-row-height" style="transform: translateX(0px); transition: 0.3s;">
+<td class="px-6 py-4 text-body-md font-semibold">#135</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-700 font-bold">NA</div>
+<div>
+<p class="text-title-sm font-title-sm">Naruto</p>
+<p class="text-body-sm text-on-surface-variant">naruto@gmail.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2 text-secondary font-medium">
+
+                                    +91 63639 07325
+                                </div>
+</td>
+<td class="px-6 py-4 text-body-md">MCA</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full font-status-pill text-status-pill">ENQUIRY</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 px-3 py-1 bg-orange-500/10 text-orange-600 rounded-full font-status-pill text-status-pill">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
+                                    WARM
+                                </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary">phone_forwarded</span>
+<span class="font-bold">7</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-body-md font-semibold">Davangere</p>
+<p class="text-body-sm text-on-surface-variant">Karnataka</p>
+</td>
+<td class="px-6 py-4 text-body-md">Instagram</td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-2 px-4 py-1.5 border border-primary text-primary font-semibold rounded hover:bg-primary hover:text-white transition-all text-sm">
+<span class="material-symbols-outlined text-lg">visibility</span>
+                                    View
+                                </button>
+</td>
+</tr>
+<!-- Lead Row 2: Sakshi Chavan -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group h-row-height" style="transform: translateX(0px); transition: 0.3s;">
+<td class="px-6 py-4 text-body-md font-semibold">#028</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-700 font-bold">SC</div>
+<div>
+<p class="text-title-sm font-title-sm">Sakshi Chavan</p>
+<p class="text-body-sm text-on-surface-variant">sakshi@gmail.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-secondary font-medium whitespace-nowrap">+91 93532 70442</td>
+<td class="px-6 py-4 text-body-md">Cybersecurity</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full font-status-pill text-status-pill">ENQUIRY</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 px-3 py-1 bg-orange-500/10 text-orange-600 rounded-full font-status-pill text-status-pill">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
+                                    WARM
+                                </span>
+</td>
+<td class="px-6 py-4 font-bold text-on-surface-variant">8</td>
+<td class="px-6 py-4">
+<p class="text-body-md font-semibold">Davangere</p>
+<p class="text-body-sm text-on-surface-variant">Karnataka</p>
+</td>
+<td class="px-6 py-4 text-body-md">Web</td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-2 px-4 py-1.5 border border-primary text-primary font-semibold rounded hover:bg-primary hover:text-white transition-all text-sm">
+<span class="material-symbols-outlined text-lg">visibility</span>
+                                    View
+                                </button>
+</td>
+</tr>
+<!-- Lead Row 3: Pooja Verma -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group h-row-height" style="transform: translateX(0px); transition: 0.3s;">
+<td class="px-6 py-4 text-body-md font-semibold">#006</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 font-bold">PV</div>
+<div>
+<p class="text-title-sm font-title-sm">Pooja Verma</p>
+<p class="text-body-sm text-on-surface-variant">pooja.verma@gmail.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-secondary font-medium whitespace-nowrap">+91 92960 12503</td>
+<td class="px-6 py-4 text-body-md">MCA</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary/10 text-secondary rounded-full font-status-pill text-status-pill">ENQUIRY</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 px-3 py-1 bg-tertiary/10 text-tertiary rounded-full font-status-pill text-status-pill">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                    HOT
+                                </span>
+</td>
+<td class="px-6 py-4 font-bold text-on-surface-variant">4</td>
+<td class="px-6 py-4">
+<p class="text-body-md font-semibold">Mysore</p>
+<p class="text-body-sm text-on-surface-variant">Karnataka</p>
+</td>
+<td class="px-6 py-4 text-body-md">Referral</td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-2 px-4 py-1.5 border border-primary text-primary font-semibold rounded hover:bg-primary hover:text-white transition-all text-sm">
+<span class="material-symbols-outlined text-lg">visibility</span>
+                                    View
+                                </button>
+</td>
+</tr>
+<!-- Lead Row 4: Harsha B -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group h-row-height" style="transform: translateX(0px); transition: 0.3s;">
+<td class="px-6 py-4 text-body-md font-semibold">#005</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-700 font-bold">HB</div>
+<div>
+<p class="text-title-sm font-title-sm">Harsha B</p>
+<p class="text-body-sm text-on-surface-variant">harsha.b@gmail.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-secondary font-medium whitespace-nowrap">+91 90822 52144</td>
+<td class="px-6 py-4 text-body-md">BCA</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full font-status-pill text-status-pill">FOLLOW UP</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 rounded-full font-status-pill text-status-pill">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                    COLD
+                                </span>
+</td>
+<td class="px-6 py-4 font-bold text-on-surface-variant">2</td>
+<td class="px-6 py-4">
+<p class="text-body-md font-semibold">Hubli</p>
+<p class="text-body-sm text-on-surface-variant">Karnataka</p>
+</td>
+<td class="px-6 py-4 text-body-md">Walk-in</td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-2 px-4 py-1.5 border border-primary text-primary font-semibold rounded hover:bg-primary hover:text-white transition-all text-sm">
+<span class="material-symbols-outlined text-lg">visibility</span>
+                                    View
+                                </button>
+</td>
+</tr>
+<!-- Lead Row 5: Rahul Sharma -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group h-row-height" style="transform: translateX(0px); transition: 0.3s;">
+<td class="px-6 py-4 text-body-md font-semibold">#002</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">RS</div>
+<div>
+<p class="text-title-sm font-title-sm">Rahul Sharma</p>
+<p class="text-body-sm text-on-surface-variant">rahul.sharma@gmail.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-secondary font-medium whitespace-nowrap">+91 93384 95402</td>
+<td class="px-6 py-4 text-body-md">MBA</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-tertiary/10 text-tertiary rounded-full font-status-pill text-status-pill">INTERESTED</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 px-3 py-1 bg-tertiary/10 text-tertiary rounded-full font-status-pill text-status-pill">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                    INTERESTED
+                                </span>
+</td>
+<td class="px-6 py-4 font-bold text-on-surface-variant">11</td>
+<td class="px-6 py-4">
+<p class="text-body-md font-semibold">Bengaluru</p>
+<p class="text-body-sm text-on-surface-variant">Karnataka</p>
+</td>
+<td class="px-6 py-4 text-body-md">Referral</td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-2 px-4 py-1.5 border border-primary text-primary font-semibold rounded hover:bg-primary hover:text-white transition-all text-sm">
+<span class="material-symbols-outlined text-lg">visibility</span>
+                                    View
+                                </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Section -->
+<div class="flex flex-col md:flex-row justify-between items-center px-6 py-6 border-t border-outline-variant gap-4">
+<p class="text-body-md text-on-surface-variant">Showing 1 to 5 of 5 leads</p>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<span class="text-body-md">Rows per page</span>
+<div class="relative">
+<select class="appearance-none bg-background border border-outline-variant rounded-lg px-4 py-1.5 pr-8 text-body-md font-semibold focus:ring-primary/20">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-xl">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-xl">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Drawer (Mapped from JSON) -->
+<aside class="hidden fixed left-0 top-0 h-screen w-64 bg-surface-container-lowest border-r border-outline-variant shadow-sm z-[60] flex flex-col p-4 transform -translate-x-full lg:translate-x-0 transition-transform">
+<div class="flex items-center gap-3 mb-10 mt-4 px-2">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<h1 class="font-display-lg text-primary text-xl">CRM Pro</h1>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-title-sm text-title-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold" href="#">
+<span class="material-symbols-outlined">person_search</span>
+<span class="font-title-sm text-title-sm">My Leads</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-title-sm text-title-sm">Performance</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-title-sm text-title-sm">Reports</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-title-sm text-title-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-6 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young business professional with a warm, friendly smile, set against a clean, neutral background for a premium SaaS application profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJQAqt7j81TY9ZqzVAsuUxy_dODAPCQRyv9s_CzFMjX6aL3OET3IiV3BDEsSnWqAiUoED24HM88c7OSorFF94zVA1vsVfLP5sCSj4TxdMNhNYkLy-mbbjKeV7JRzX7Pz6wmIEfzPa66RROj6Xdd5HIvneiGJehvupVDlQayfJsKCZg_8opH_L2UoEwBYS7x_sQvxg7XPZXmp96WkZtLh0PDCCIeUlyzcmp0FeE0XcBQ9TA8trpbL-LGw">
+</div>
+<div>
+<p class="font-bold text-sm">Rahul Sharma</p>
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-[10px] text-on-surface-variant font-bold tracking-wider">ONLINE</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Footer Shell (Mapped from JSON) -->
+<footer class="bg-surface border-t border-outline-variant mt-12">
+
+</footer>
+<!-- Mobile FAB (Transactional Suppression Logic) -->
+<button class="md:hidden fixed right-6 bottom-6 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-transform z-50">
+<span class="material-symbols-outlined text-2xl">add_comment</span>
+</button>
+<script>
+        // Micro-interactions and subtle effects
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.transform = 'translateX(4px)';
+                row.style.transition = 'all 0.3s ease';
+            });
+            row.addEventListener('mouseleave', () => {
+                row.style.transform = 'translateX(0)';
+            });
+        });
+
+        // Search highlight interaction
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/10');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/10');
+        });
+    </script>
+
+
+</body></html>

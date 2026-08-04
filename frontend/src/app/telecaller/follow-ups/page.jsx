@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import DashboardShell from "@/components/layout/DashboardShell";
 import { useFollowups } from "@/features/telecaller/hooks/useFollowups";
+import { useUpdateFollowup, useCompleteFollowup } from "@/features/telecaller/hooks/useFollowupMutations";
 import { useFollowupWorkspace } from "@/features/telecaller/hooks/useFollowupWorkspace";
 
 import FollowupListView from "@/features/telecaller/components/followups/FollowupListView";
@@ -18,6 +19,8 @@ export default function FollowUpsPage() {
   // Fetch data
   const { data: allFollowupsData, isLoading } = useFollowups("all");
   const allFollowups = Array.isArray(allFollowupsData) ? allFollowupsData : [];
+  
+  const { mutate: completeFollowup } = useCompleteFollowup();
 
   // Workspace UI State & Derived Filtered Data
   const workspace = useFollowupWorkspace(allFollowups);
@@ -30,6 +33,10 @@ export default function FollowUpsPage() {
 
   const handleOpenReschedule = (followup) => setRescheduleData(followup);
   const handleCloseReschedule = () => setRescheduleData(null);
+  
+  const handleComplete = (followup) => {
+    completeFollowup(followup.id);
+  };
 
   const handleOpenSchedule = (date) => {
     console.log("[FollowUpsPage] handleOpenSchedule called", { date, selectedCalendarDay: workspace.selectedCalendarDay });
@@ -63,6 +70,7 @@ export default function FollowUpsPage() {
                 <FollowupListView 
                   followups={workspace.displayFollowups} 
                   onReschedule={handleOpenReschedule}
+                  onComplete={handleComplete}
                   activeTab={workspace.activeTab}
                 />
               ) : (
@@ -81,7 +89,7 @@ export default function FollowUpsPage() {
                     <div className="flex items-start justify-between mb-4">
                       <div>
                         <h3 className="text-lg font-[700] text-gray-900">{workspace.selectedCalendarDay ? new Date(workspace.selectedCalendarDay).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) : 'Select a date'}</h3>
-                        <p className="text-sm text-slate-500">{workspace.selectedCalendarDay ? `${workspace.filteredFollowups.filter(f => (f.scheduledDate || f.date) === workspace.selectedCalendarDay).length} follow-up${workspace.filteredFollowups.filter(f => (f.scheduledDate || f.date) === workspace.selectedCalendarDay).length !== 1 ? 's' : ''}` : 'No date selected'}</p>
+                        <p className="text-sm text-slate-500">{workspace.selectedCalendarDay ? `${workspace.filteredFollowups.filter(f => f.scheduledDate === workspace.selectedCalendarDay && String(f.status || "").toLowerCase() !== "completed").length} follow-up${workspace.filteredFollowups.filter(f => f.scheduledDate === workspace.selectedCalendarDay && String(f.status || "").toLowerCase() !== "completed").length !== 1 ? 's' : ''}` : 'No date selected'}</p>
                       </div>
                       <div className="ml-3">
                         <Button onClick={() => handleOpenSchedule(workspace.selectedCalendarDay)} className="bg-[#7A1F2B] hover:bg-[#6F1D28] text-white">Schedule Follow-up</Button>
@@ -89,14 +97,15 @@ export default function FollowUpsPage() {
                     </div>
 
                     <div className="flex-1 overflow-y-auto">
-                      {(!workspace.selectedCalendarDay || workspace.filteredFollowups.filter(f => (f.scheduledDate || f.date) === workspace.selectedCalendarDay).length === 0) ? (
+                      {(!workspace.selectedCalendarDay || workspace.filteredFollowups.filter(f => f.scheduledDate === workspace.selectedCalendarDay && String(f.status || "").toLowerCase() !== "completed").length === 0) ? (
                         <div>
                           <EmptyFollowups type={workspace.selectedCalendarDay ? 'empty_day' : 'no_results'} />
                         </div>
                       ) : (
                         <FollowupListView 
-                          followups={workspace.filteredFollowups.filter(f => (f.scheduledDate || f.date) === workspace.selectedCalendarDay)}
+                          followups={workspace.filteredFollowups.filter(f => f.scheduledDate === workspace.selectedCalendarDay && String(f.status || "").toLowerCase() !== "completed")}
                           onReschedule={handleOpenReschedule}
+                          onComplete={handleComplete}
                           activeTab={workspace.activeTab}
                         />
                       )}
@@ -205,7 +214,8 @@ export default function FollowUpsPage() {
         isOpen={isScheduleOpen}
         onClose={handleCloseSchedule}
         defaultDate={scheduleDefaultDate}
-        existingFollowups={workspace.filteredFollowups.filter(f => (f.scheduledDate || f.date) === scheduleDefaultDate)}
+        existingFollowups={workspace.filteredFollowups.filter(f => f.scheduledDate === scheduleDefaultDate)}
+        allFollowups={allFollowups}
       />
     </div>
   );

@@ -48,7 +48,7 @@ export const mapLeadDetail = (rawLead) => {
   if (!rawLead) return null;
   
   // Reuse structure expected by existing admin Lead Detail page where applicable
-  return {
+  const mapped = {
     header: {
       name: rawLead.name || "Unknown",
       course: rawLead.course || "N/A",
@@ -76,5 +76,30 @@ export const mapLeadDetail = (rawLead) => {
     },
     timeline: Array.isArray(rawLead.timeline) ? rawLead.timeline : [],
     notes: Array.isArray(rawLead.notes) ? rawLead.notes : [],
+  };
+
+  return {
+    ...mapped,
+    rawData: rawLead,
+  };
+};
+
+export const mapFollowup = (raw) => {
+  if (!raw) return null;
+  return {
+    id: raw.id,
+    leadId: raw.leadId || raw.enquiryNo,
+    enquiryNo: raw.enquiryNo || raw.leadId,
+    name: raw.leadName || raw.student || "Unknown Lead",
+    phone: raw.mobileNo || raw.phone || raw.mobile || "N/A",
+    course: raw.course || "B.Tech",
+    priority: raw.priority
+      ? raw.priority.charAt(0).toUpperCase() + raw.priority.slice(1).toLowerCase()
+      : null,
+    scheduledDate: raw.scheduledDate || raw.date,
+    scheduledTime: raw.scheduledTime || raw.time,
+    status: raw.status || raw.leadStatus || raw.stage || "PENDING",
+    remarks: raw.nextAction || raw.remarks || raw.notes || "",
+    createdAt: raw.createdAt,
   };
 };

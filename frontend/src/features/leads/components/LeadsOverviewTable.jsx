@@ -1,12 +1,8 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useMemo } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useTableScroll } from "@/providers/TableScrollProvider";
-import StatusBadge from "@/components/table/StatusBadge";
-import { Users, TrendingUp, Target } from "lucide-react";
 
-import { useLeadOverviewFilters } from "../hooks/useLeadOverviewFilters";
 import { useLeadOverview } from "../hooks/useLeadOverview";
 import { useLeadFilterOptions } from "../hooks/useLeadFilterOptions";
 import { useLeadCounts } from "../hooks/useLeadCounts";
@@ -14,39 +10,19 @@ import useUsers from "../../users/useUsers";
 import { useAssignLeads } from "../hooks/useAssignLeads";
 import { FILTER_CONFIG } from "../constants/filterConfig";
 
-
 import ReusableFilterDrawer from "@/components/layout/ReusableFilterDrawer";
 import LeadFilters from "./LeadFilters";
-
-// CRM Modular Sections
-import LeadsFilterToolbar from "./LeadsFilterToolbar";
-import LeadTableSection from "./LeadTableSection";
 import AssignLeadsModal from "./AssignLeadsModal";
 
-const SPECIAL_FILTER_KEYS = [
-  "state",
-  "district",
-  "taluk"
-];
+// Modular Sections
+import LeadsKPICards from "./LeadsKPICards";
+import LeadsFilterPills from "./LeadsFilterPills";
+import LeadTableSection from "./LeadTableSection";
 
-const columns = [
-  { key: "enquiryNo", label: "Enquiry No" },
-  { key: "name", label: "Name" },
-  { key: "mobileNo", label: "Mobile" },
-  { key: "course", label: "Course" },
-  { key: "source", label: "Source" },
-  {
-    key: "status",
-    label: "Status",
-    render: (value) => <StatusBadge status={value} />,
-  },
-];
+const SPECIAL_FILTER_KEYS = ["state", "district", "taluk"];
 
 export default function LeadsOverviewTable({ filters, actions, search }) {
-  const { isScrolled } = useTableScroll();
-
   const [selectedRows, setSelectedRows] = useState([]);
-  const [selectedLeadId, setSelectedLeadId] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [assignMode, setAssignMode] = useState("assign");
@@ -54,10 +30,27 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
   const [draftFilters, setDraftFilters] = useState({});
   const refineButtonRef = useRef(null);
 
+  // Destructure filters so they go to the hook correctly
+  const { page = 0, size = 10, sort = "", type = "", source = "", status = "", callerName = "", course = "", opinion = "", state = "", district = "", taluk = "" } = filters;
+
+  // Build sub-filters object (everything except page/size/sort)
+  const subFilters = {
+    ...(search ? { search } : {}),
+    ...(type ? { type } : {}),
+    ...(source ? { source } : {}),
+    ...(status ? { status } : {}),
+    ...(callerName ? { callerName } : {}),
+    ...(course ? { course } : {}),
+    ...(opinion ? { opinion } : {}),
+    ...(state ? { state } : {}),
+    ...(district ? { district } : {}),
+    ...(taluk ? { taluk } : {}),
+  };
+
   // Clear selection on page change
   React.useEffect(() => {
     setSelectedRows([]);
-  }, [filters.page]);
+  }, [page]);
 
   const { data: filterOptions } = useLeadFilterOptions();
   const { data: usersData } = useUsers({ size: 1000 });
@@ -68,28 +61,22 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
     setIsAssignModalOpen(false);
   });
 
-  const query = useLeadOverview(filters);
+  // Call hook with the correct signature: ({ filters, page, size, sort })
+  const query = useLeadOverview({ filters: subFilters, page, size, sort });
   const { data, isLoading, isError, error, isFetching } = query;
 
   const leadsData = data?.leads || [];
   const totalResults = data?.totalItems || 0;
-  const currentPage = data?.currentPage || 0;
+  const currentPage = data?.currentPage ?? page;
   const totalPages = data?.totalPages || 1;
-  const pageSize = data?.pageSize || 10;
+  const pageSize = data?.pageSize || size;
 
-  const { data: bucketCounts = {}, isLoading: isCountsLoading, isError: isCountsError } = useLeadCounts();
+  const { data: bucketCounts = {} } = useLeadCounts();
 
   // Drawer Handlers
-  const handleOpenDrawer = useCallback(() => {
-    setDraftFilters({ ...filters });
-    setIsDrawerOpen(true);
-  }, [filters]);
-
   const handleCloseDrawer = useCallback(() => {
     setIsDrawerOpen(false);
-    setTimeout(() => {
-      refineButtonRef.current?.focus();
-    }, 100);
+    setTimeout(() => refineButtonRef.current?.focus(), 100);
   }, []);
 
   const handleApplyFilters = useCallback(() => {
@@ -99,9 +86,7 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
 
       if (isConfigured || isSpecial) {
         const actionName = `set${key.charAt(0).toUpperCase()}${key.slice(1)}`;
-        if (actions[actionName]) {
-          actions[actionName](val);
-        }
+        if (actions[actionName]) actions[actionName](val);
       }
     });
     handleCloseDrawer();
@@ -110,30 +95,6 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
   const handleResetFilters = useCallback(() => {
     setDraftFilters({});
   }, []);
-
-  const handleRemoveActiveFilter = useCallback((key) => {
-    const actionName = `set${key.charAt(0).toUpperCase()}${key.slice(1)}`;
-    if (actions[actionName]) {
-      actions[actionName]("");
-    }
-  }, [actions]);
-
-  const handleClearAllActiveFilters = useCallback(() => {
-    // Clear generic filters
-    FILTER_CONFIG.forEach(config => {
-      const actionName = `set${config.key.charAt(0).toUpperCase()}${config.key.slice(1)}`;
-      if (actions[actionName]) {
-        actions[actionName]("");
-      }
-    });
-    // Clear special filters
-    SPECIAL_FILTER_KEYS.forEach(key => {
-      const actionName = `set${key.charAt(0).toUpperCase()}${key.slice(1)}`;
-      if (actions[actionName]) {
-        actions[actionName]("");
-      }
-    });
-  }, [actions]);
 
   // Table Handlers
   const router = useRouter();
@@ -151,84 +112,65 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
 
   return (
     <>
-      <div className="flex flex-col flex-1 min-h-0 overflow-hidden gap-4">
-        <div className="shrink-0">
-          <LeadsFilterToolbar
-            activeFilter={filters.type}
-            onSelect={actions.setType}
-            counts={bucketCounts}
-            isCountsLoading={isCountsLoading}
-            isCountsError={isCountsError}
-            filters={filters}
-            onRemove={handleRemoveActiveFilter}
-            onClearAll={handleClearAllActiveFilters}
-            onOpenDrawer={handleOpenDrawer}
-            refineButtonRef={refineButtonRef}
-          />
-        </div>
-
-        <div className={`flex flex-col flex-1 min-h-0 transition-all duration-300 ease-in-out ${isScrolled ? "gap-2 mt-2" : "gap-4 mt-3"}`}>
-
-          <div className="flex items-center justify-between px-1">
-            {selectedRows.length > 0 ? (
-              <div className="flex items-center gap-4 bg-[#7A1F2B]/5 border border-[#7A1F2B]/20 text-[#7A1F2B] px-4 py-2 rounded-xl shadow-sm w-full">
-                <span className="text-sm font-semibold">
-                  {selectedRows.length} {selectedRows.length === 1 ? 'Lead' : 'Leads'} Selected
-                </span>
-                <div className="flex items-center gap-2 ml-auto">
-                  <button
-                    onClick={() => { setAssignMode("assign"); setIsAssignModalOpen(true); }}
-                    className="px-4 py-1.5 text-sm bg-white border border-[#7A1F2B]/30 text-[#7A1F2B] font-medium rounded-lg shadow-sm hover:bg-[#7A1F2B]/10 transition-colors"
-                  >
-                    Assign
-                  </button>
-                  <button
-                    onClick={() => { setAssignMode("reassign"); setIsAssignModalOpen(true); }}
-                    className="px-4 py-1.5 text-sm bg-[#9E5A02] text-white font-medium rounded-lg shadow-sm hover:bg-[#824901] transition-colors"
-                  >
-                    Reassign
-                  </button>
-                  <button
-                    onClick={() => setSelectedRows([])}
-                    className="px-4 py-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors ml-2"
-                  >
-                    Clear Selection
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <span className="text-sm font-semibold text-gray-700">
-                {totalResults} {totalResults === 1 ? 'Lead' : 'Leads'} Found
-              </span>
-            )}
+      <LeadsKPICards counts={bucketCounts} />
+      
+      <div className="flex flex-col gap-3">
+        <LeadsFilterPills 
+          activeFilter={type} 
+          onSelect={actions.setType} 
+          counts={bucketCounts} 
+        />
+        
+        {/* Bulk Action Bar: shown when rows are selected */}
+        {selectedRows.length > 0 && (
+          <div className="flex items-center gap-4 bg-[#8B0D16]/5 border border-[#8B0D16]/20 text-[#8B0D16] px-4 py-2.5 rounded-xl shadow-sm w-full transition-all">
+            <span className="text-sm font-semibold">
+              {selectedRows.length} {selectedRows.length === 1 ? 'Lead' : 'Leads'} Selected
+            </span>
+            <div className="flex items-center gap-2 ml-auto">
+              <button
+                onClick={() => { setAssignMode("assign"); setIsAssignModalOpen(true); }}
+                className="px-4 py-1.5 text-sm bg-white border border-[#8B0D16]/30 text-[#8B0D16] font-medium rounded-lg shadow-sm hover:bg-[#8B0D16]/10 transition-colors cursor-pointer"
+              >
+                Assign
+              </button>
+              <button
+                onClick={() => { setAssignMode("reassign"); setIsAssignModalOpen(true); }}
+                className="px-4 py-1.5 text-sm bg-[#9E5A02] text-white font-medium rounded-lg shadow-sm hover:bg-[#824901] transition-colors cursor-pointer"
+              >
+                Reassign
+              </button>
+              <button
+                onClick={() => setSelectedRows([])}
+                className="px-4 py-1.5 text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors ml-2 cursor-pointer"
+              >
+                Clear Selection
+              </button>
+            </div>
           </div>
+        )}
+      </div>
 
-          <div className="flex-1 min-h-0 flex flex-col relative">
-            <LeadTableSection
-              columns={columns}
-              data={leadsData}
-              selectedRows={selectedRows}
-              setSelectedRows={setSelectedRows}
-              onRowClick={handleRowClick}
-              isLoading={isLoading}
-              isError={isError}
-              error={error}
-              isFetching={isFetching}
-              pagination={{
-                currentPage,
-                pageSize,
-                totalPages,
-                totalItems: totalResults,
-                onPageChange: actions.setPage,
-                onPageSizeChange: actions.setSize,
-              }}
-              onRetry={() => query.refetch()}
-            />
-          </div>
-        </div>
-      </div >
+      <LeadTableSection
+        data={leadsData}
+        selectedRows={selectedRows}
+        setSelectedRows={setSelectedRows}
+        onRowClick={handleRowClick}
+        isLoading={isLoading}
+        isError={isError}
+        error={error}
+        isFetching={isFetching}
+        pagination={{
+          currentPage,
+          pageSize,
+          totalPages,
+          totalItems: totalResults,
+          onPageChange: actions.setPage,
+          onPageSizeChange: actions.setSize,
+        }}
+        onRetry={() => query.refetch()}
+      />
 
-      {/* Filter Drawer */}
       <ReusableFilterDrawer 
         isOpen={isDrawerOpen} 
         onClose={handleCloseDrawer}

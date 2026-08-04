@@ -19,6 +19,12 @@ const logAuth = (message, ...args) => {
 };
 
 axiosInstance.interceptors.request.use((config) => {
+  if (config.url && config.url.includes("followups")) {
+    console.log("[Axios] ========== AXIOS REQUEST BODY ==========");
+    console.log("[Axios] URL:", config.url);
+    console.log("[Axios] Method:", config.method?.toUpperCase());
+    console.log("[Axios] Request body:", JSON.stringify(config.data, null, 2));
+  }
   return config;
 });
 

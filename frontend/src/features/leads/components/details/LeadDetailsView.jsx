@@ -46,7 +46,7 @@ export default function LeadDetailsView({
   if (!viewModel) return null;
 
   return (
-    <div className="p-lg flex flex-col gap-lg max-w-[1440px] mx-auto w-full">
+    <div className="p-6 flex flex-col gap-6 max-w-[1440px] mx-auto w-full">
       
       {/* ── Lead Header & Metadata ─────────────────────────────────────────────── */}
       <LeadHeaderCard
@@ -69,12 +69,12 @@ export default function LeadDetailsView({
       {showStats && <LeadStatisticsSection viewModel={viewModel} rawData={rawData} />}
 
       {/* ── Tabs Navigation ─────────────────────────────────────────────────────── */}
-      <div className="flex border-b border-outline-variant mt-md">
+      <div className="flex border-b border-outline-variant mt-4">
         {resolvedTabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-xl py-md flex items-center gap-sm transition-colors ${
+            className={`px-8 py-4 flex items-center gap-2 transition-colors ${
               activeTab === tab.id
                 ? "border-b-4 border-primary text-primary font-bold"
                 : "text-on-surface-variant hover:text-primary"

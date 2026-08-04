@@ -1,0 +1,404 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Telecaller Call Report Details | GM University CRM</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#b02c2f",
+                    "on-primary-fixed": "#410005",
+                    "outline": "#8d706e",
+                    "on-primary-fixed-variant": "#8e101b",
+                    "primary-fixed-dim": "#ffb3ae",
+                    "surface-container-highest": "#f6dddb",
+                    "tertiary": "#00344f",
+                    "on-tertiary-fixed-variant": "#004b6f",
+                    "on-secondary-container": "#5e6572",
+                    "on-secondary-fixed": "#151c27",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#404754",
+                    "surface-variant": "#f6dddb",
+                    "on-error-container": "#93000a",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-container": "#004c70",
+                    "on-tertiary-container": "#86bce5",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#dce2f3",
+                    "on-surface": "#261817",
+                    "inverse-primary": "#ffb3ae",
+                    "secondary-fixed": "#dce2f3",
+                    "surface-bright": "#fff8f7",
+                    "primary-container": "#8f111b",
+                    "surface-container-high": "#fce2e0",
+                    "on-surface-variant": "#59413f",
+                    "on-background": "#261817",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#c0c7d6",
+                    "background": "#FFFFFF",
+                    "inverse-surface": "#3c2d2c",
+                    "surface-container-low": "#fff0ef",
+                    "tertiary-fixed-dim": "#96cdf7",
+                    "error": "#ba1a1a",
+                    "surface-container": "#ffe9e7",
+                    "secondary": "#585f6c",
+                    "on-tertiary-fixed": "#001e2f",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#e1bfbc",
+                    "primary-fixed": "#ffdad7",
+                    "surface": "#fff8f7",
+                    "tertiary-fixed": "#c9e6ff",
+                    "surface-dim": "#edd4d2",
+                    "primary": "#69000d",
+                    "inverse-on-surface": "#ffedeb",
+                    "on-primary-container": "#ff9a95"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "card-padding": "24px",
+                    "grid-gutter": "16px",
+                    "container-max": "1500px",
+                    "page-padding": "40px",
+                    "section-gap": "32px"
+            },
+            "fontFamily": {
+                    "subtitle": ["Outfit"],
+                    "headline-xl": ["Outfit"],
+                    "table-header": ["Outfit"],
+                    "kpi-value": ["Outfit"],
+                    "label-sm": ["Outfit"],
+                    "body-md": ["Outfit"],
+                    "headline-xl-mobile": ["Outfit"]
+            },
+            "fontSize": {
+                    "subtitle": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-xl": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "table-header": ["13px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "kpi-value": ["44px", {"lineHeight": "1.1", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-md": ["15px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                    "headline-xl-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Outfit', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .main-shadow { box-shadow: 0 8px 32px rgba(15,23,42,.05); }
+        .table-row-hover:hover { background-color: #F9FAFB; }
+        .transition-standard { transition: all 0.2s ease-in-out; }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen">
+<!-- Navbar (Logo placeholder as Sidebar is removed) -->
+
+<!-- Main Workspace -->
+<main class="w-full max-w-container-max mx-auto px-page-padding py-10 flex flex-col gap-section-gap">
+<!-- Header Section -->
+<header class="flex justify-between items-end">
+<div class="flex flex-col gap-2">
+
+<h1 class="font-headline-xl text-headline-xl text-on-surface">Telecaller</h1>
+<p class="text-on-surface-variant font-subtitle text-subtitle">Call logs and performance summary</p>
+</div>
+</header>
+<!-- KPI Cards Section -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-grid-gutter">
+<!-- Total Calls -->
+<div class="bg-white p-card-padding rounded-[24px] main-shadow border border-outline-variant/50 flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-blue-600 text-3xl">call</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm text-label-sm mb-1 uppercase tracking-wider">Total Calls</p>
+<h2 class="font-kpi-value text-kpi-value text-on-surface">48</h2>
+<p class="text-on-surface-variant text-[11px]">Total calls</p>
+</div>
+</div>
+<!-- Connected Rate -->
+<div class="bg-white p-card-padding rounded-[24px] main-shadow border border-outline-variant/50 flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-600 text-3xl">phone_enabled</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm text-label-sm mb-1 uppercase tracking-wider">Connected Rate</p>
+<h2 class="font-kpi-value text-kpi-value text-on-surface">63%</h2>
+<p class="text-on-surface-variant text-[11px]">30 / 48 Connected</p>
+</div>
+</div>
+<!-- Avg Duration -->
+<div class="bg-white p-card-padding rounded-[24px] main-shadow border border-outline-variant/50 flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-orange-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-orange-500 text-3xl">timer</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm text-label-sm mb-1 uppercase tracking-wider">Avg Duration</p>
+<h2 class="font-kpi-value text-kpi-value text-on-surface">02:45</h2>
+<p class="text-on-surface-variant text-[11px]">Per call average</p>
+</div>
+</div>
+<!-- Recordings -->
+<div class="bg-white p-card-padding rounded-[24px] main-shadow border border-outline-variant/50 flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-purple-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-purple-600 text-3xl">mic</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm text-label-sm mb-1 uppercase tracking-wider">Recordings</p>
+<h2 class="font-kpi-value text-kpi-value text-on-surface">4</h2>
+<p class="text-on-surface-variant text-[11px]">Available recordings</p>
+</div>
+</div>
+</section>
+<!-- Filters Section -->
+<section class="bg-white p-6 rounded-[24px] main-shadow border border-outline-variant/50 flex items-center gap-6">
+<!-- Search -->
+<div class="flex-[2] relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">search</span>
+<input class="w-full pl-12 pr-4 py-3 rounded-[18px] border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md transition-standard" placeholder="Search by Lead, Mobile, or Call ID..." type="text">
+</div>
+<!-- Date Range -->
+<div class="flex items-center gap-4">
+<div class="flex flex-col gap-1">
+<div class="relative">
+<input class="pl-4 pr-10 py-3 rounded-[18px] border border-outline-variant focus:ring-primary focus:border-primary text-body-md w-40" type="text" value="01 Jul 2026">
+<span class="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant pointer-events-none">calendar_today</span>
+</div>
+</div>
+<span class="text-outline-variant">—</span>
+<div class="flex flex-col gap-1">
+<div class="relative">
+<input class="pl-4 pr-10 py-3 rounded-[18px] border border-outline-variant focus:ring-primary focus:border-primary text-body-md w-40" type="text" value="20 Jul 2026">
+<span class="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant pointer-events-none">calendar_today</span>
+</div>
+</div>
+</div>
+<!-- Apply button -->
+<button class="bg-primary px-8 py-3.5 rounded-[18px] text-white font-bold hover:bg-surface-tint transition-standard active:scale-95 shadow-lg shadow-primary/10 whitespace-nowrap">
+                APPLY FILTERS
+            </button>
+</section>
+<!-- Table Section -->
+<section class="bg-white rounded-[24px] main-shadow border border-outline-variant/50 overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#FFF6F5] border-b border-outline-variant">
+<th class="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">SL NO</th>
+<th class="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">CALL DATE</th>
+<th class="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">LEAD NAME</th>
+<th class="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">MOBILE NO</th>
+<th class="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider text-center">CALL COUNT</th>
+<th class="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">DURATION</th>
+<th class="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">STATUS</th>
+<th class="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">COURSE</th>
+<th class="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">DISTRICT</th>
+<th class="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider text-right">RECORDING</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#EEF1F5]">
+<!-- Row 1 -->
+<tr class="h-[72px] table-row-hover transition-standard">
+<td class="px-6 text-body-md text-on-surface-variant">1</td>
+<td class="px-6 text-body-md font-medium">03 Aug 2026</td>
+<td class="px-6 text-body-md font-bold text-on-surface">Aarav Sharma</td>
+<td class="px-6 text-body-md text-on-surface-variant">+91 9000000000</td>
+<td class="px-6 text-body-md text-center font-bold">1</td>
+<td class="px-6 text-body-md">0:45</td>
+<td class="px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[12px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                                    Connected
+                                </span>
+</td>
+<td class="px-6 text-body-md">B.Tech CSE</td>
+<td class="px-6 text-body-md">Mumbai City</td>
+<td class="px-6 text-right">
+<button class="w-10 h-10 rounded-full border border-primary text-primary flex items-center justify-center hover:bg-primary-fixed transition-standard">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">play_arrow</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="h-[72px] table-row-hover transition-standard">
+<td class="px-6 text-body-md text-on-surface-variant">2</td>
+<td class="px-6 text-body-md font-medium">02 Aug 2026</td>
+<td class="px-6 text-body-md font-bold text-on-surface">Priya Kumar</td>
+<td class="px-6 text-body-md text-on-surface-variant">+91 9000987654</td>
+<td class="px-6 text-body-md text-center font-bold">2</td>
+<td class="px-6 text-body-md">1:12</td>
+<td class="px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 text-[12px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>
+                                    No Answer
+                                </span>
+</td>
+<td class="px-6 text-body-md">B.Tech ECE</td>
+<td class="px-6 text-body-md">Delhi</td>
+<td class="px-6 text-right">
+<button class="w-10 h-10 rounded-full border border-primary text-primary flex items-center justify-center hover:bg-primary-fixed transition-standard">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">play_arrow</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="h-[72px] table-row-hover transition-standard">
+<td class="px-6 text-body-md text-on-surface-variant">3</td>
+<td class="px-6 text-body-md font-medium">01 Aug 2026</td>
+<td class="px-6 text-body-md font-bold text-on-surface">Rahul Mehta</td>
+<td class="px-6 text-body-md text-on-surface-variant">+91 9001975308</td>
+<td class="px-6 text-body-md text-center font-bold">3</td>
+<td class="px-6 text-body-md">2:30</td>
+<td class="px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 text-orange-700 text-[12px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
+                                    Busy
+                                </span>
+</td>
+<td class="px-6 text-body-md">MBA</td>
+<td class="px-6 text-body-md">Bangalore Urban</td>
+<td class="px-6 text-right">
+<button class="w-10 h-10 rounded-full border border-primary text-primary flex items-center justify-center hover:bg-primary-fixed transition-standard">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">play_arrow</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="h-[72px] table-row-hover transition-standard">
+<td class="px-6 text-body-md text-on-surface-variant">4</td>
+<td class="px-6 text-body-md font-medium">31 Jul 2026</td>
+<td class="px-6 text-body-md font-bold text-on-surface">Ananya Nair</td>
+<td class="px-6 text-body-md text-on-surface-variant">+91 9002962962</td>
+<td class="px-6 text-body-md text-center font-bold">4</td>
+<td class="px-6 text-body-md">0:20</td>
+<td class="px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50 text-slate-600 text-[12px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                    Voicemail
+                                </span>
+</td>
+<td class="px-6 text-body-md">MBBS</td>
+<td class="px-6 text-body-md">Chennai</td>
+<td class="px-6 text-right">
+<span class="mr-4 text-on-surface-variant text-body-md">—</span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="h-[72px] table-row-hover transition-standard">
+<td class="px-6 text-body-md text-on-surface-variant">5</td>
+<td class="px-6 text-body-md font-medium">30 Jul 2026</td>
+<td class="px-6 text-body-md font-bold text-on-surface">Vikram Das</td>
+<td class="px-6 text-body-md text-on-surface-variant">+91 9003950616</td>
+<td class="px-6 text-body-md text-center font-bold">1</td>
+<td class="px-6 text-body-md">3:15</td>
+<td class="px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-50 text-yellow-800 text-[12px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-yellow-600"></span>
+                                    Call Back
+                                </span>
+</td>
+<td class="px-6 text-body-md">B.Com</td>
+<td class="px-6 text-body-md">Hyderabad</td>
+<td class="px-6 text-right">
+<button class="w-10 h-10 rounded-full border border-primary text-primary flex items-center justify-center hover:bg-primary-fixed transition-standard">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">play_arrow</span>
+</button>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="h-[72px] table-row-hover transition-standard">
+<td class="px-6 text-body-md text-on-surface-variant">6</td>
+<td class="px-6 text-body-md font-medium">29 Jul 2026</td>
+<td class="px-6 text-body-md font-bold text-on-surface">Sneha Mukherjee</td>
+<td class="px-6 text-body-md text-on-surface-variant">+91 9004938270</td>
+<td class="px-6 text-body-md text-center font-bold">2</td>
+<td class="px-6 text-body-md">1:50</td>
+<td class="px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-50 text-cyan-700 text-[12px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-600"></span>
+                                    Interested
+                                </span>
+</td>
+<td class="px-6 text-body-md">BCA</td>
+<td class="px-6 text-body-md">Pune</td>
+<td class="px-6 text-right">
+<button class="w-10 h-10 rounded-full border border-primary text-primary flex items-center justify-center hover:bg-primary-fixed transition-standard">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">play_arrow</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<footer class="px-6 py-4 flex items-center justify-between border-t border-outline-variant bg-surface-container-low">
+<div class="flex items-center gap-4">
+<p class="text-on-surface-variant font-body-md text-body-md flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">description</span>
+                        Showing 1 to 10 of 48 results
+                    </p>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<span class="text-on-surface-variant text-label-sm">Rows per page:</span>
+<div class="relative">
+<select class="pl-3 pr-8 py-1.5 rounded-lg border border-outline-variant bg-white text-label-sm appearance-none outline-none focus:ring-1 focus:ring-primary">
+<option>10 per page</option>
+<option>25 per page</option>
+<option>50 per page</option>
+</select>
+<span class="absolute right-2 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-sm pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest transition-standard">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white font-bold text-label-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest transition-standard text-label-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest transition-standard text-label-sm">3</button>
+<span class="px-2 text-on-surface-variant">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest transition-standard text-label-sm">5</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-highest transition-standard">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</footer>
+</section>
+</main>
+<!-- Global Footer -->
+
+<script>
+        // Micro-interactions and subtle enhancements
+        document.querySelectorAll('button, a').forEach(elem => {
+            elem.addEventListener('mousedown', () => {
+                elem.style.transform = 'scale(0.98)';
+            });
+            elem.addEventListener('mouseup', () => {
+                elem.style.transform = 'scale(1)';
+            });
+            elem.addEventListener('mouseleave', () => {
+                elem.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+
+
+</body></html>

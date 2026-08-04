@@ -1,4 +1,4 @@
-import { Search, Filter, CalendarDays, ChevronDown, List } from "lucide-react";
+import { Search, Filter, CalendarDays, ChevronDown, List, X } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import FollowupTabs from "./FollowupTabs";
 
@@ -31,7 +31,7 @@ const DateRangeDropdown = ({ datePreset, setDatePreset, dateRange, setDateRange 
   };
 
   const getLabel = () => {
-    if (datePreset === "all") return "Select Date";
+    if (datePreset === "all") return "All Dates";
     if (datePreset === "custom") {
       if (dateRange.from && dateRange.to) return `${dateRange.from} - ${dateRange.to}`;
       return "Custom Range";
@@ -56,7 +56,7 @@ const DateRangeDropdown = ({ datePreset, setDatePreset, dateRange, setDateRange 
             
             <div className="h-px bg-slate-100 my-1"></div>
             
-            {["today", "tomorrow", "this_week", "next_week", "this_month"].map(preset => (
+            {["all", "today", "tomorrow", "this_week", "next_week", "this_month"].map(preset => (
               <button
                 key={preset}
                 onClick={() => {
@@ -68,7 +68,7 @@ const DateRangeDropdown = ({ datePreset, setDatePreset, dateRange, setDateRange 
                 <div className={`w-3.5 h-3.5 rounded-full border mr-3 flex items-center justify-center transition-colors ${datePreset === preset ? 'border-[#7A1F2B]' : 'border-slate-300'}`}>
                   {datePreset === preset && <div className="w-1.5 h-1.5 rounded-full bg-[#7A1F2B]" />}
                 </div>
-                {preset.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}
+                {preset === "all" ? "All Dates" : preset.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}
               </button>
             ))}
             
@@ -124,75 +124,113 @@ const DateRangeDropdown = ({ datePreset, setDatePreset, dateRange, setDateRange 
 export default function WorkspaceControls({ workspace, onOpenFilters }) {
   const showSearch = workspace.filteredFollowups.length > 10 || workspace.searchText;
 
+  // Determine if any filter is active
+  const hasActiveFilters = 
+    workspace.searchText ||
+    workspace.datePreset !== "all" ||
+    workspace.filters.priority ||
+    workspace.filters.course ||
+    workspace.filters.status ||
+    workspace.filters.source ||
+    workspace.filters.assignedCounselor ||
+    workspace.filters.date;
+
+  const handleResetAll = () => {
+    workspace.setSearchText("");
+    workspace.setDatePreset("all");
+    workspace.setDateRange({ from: null, to: null });
+    workspace.setFilters({
+      priority: "",
+      course: "",
+      status: "",
+      source: "",
+      assignedCounselor: "",
+      date: "",
+    });
+  };
+
   return (
     <div className="w-full">
-      <div className="flex flex-row justify-between items-center gap-6 w-full">
-        
-        {/* Left Side: Tabs */}
-        <div className="flex-none">
+      {/* Row 1: Tabs (full width, scrollable if needed) */}
+      {workspace.viewMode !== "calendar" && (
+        <div className="overflow-x-auto pb-2">
           <FollowupTabs 
             activeTab={workspace.activeTab}
             onTabChange={workspace.setActiveTab}
             tabCounts={workspace.tabCounts}
           />
         </div>
+      )}
 
-        {/* Right Side: Controls */}
-        <div className="flex items-center justify-end gap-3 flex-1 min-w-0">
-          
-          {showSearch && (
-            <div className="relative min-w-0">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search follow-ups..."
-                value={workspace.searchText}
-                onChange={(e) => workspace.setSearchText(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-white border border-[#ECECEC] rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-[#7A1F2B] transition-shadow placeholder:text-slate-400 h-10"
-              />
-            </div>
-          )}
+      {/* Row 2: Controls */}
+      <div className="flex flex-wrap items-center justify-end gap-3 w-full">
+        
+        {workspace.viewMode !== "calendar" && (
+          <>
+            {showSearch && (
+              <div className="relative min-w-[180px] flex-1 max-w-xs">
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search follow-ups..."
+                  value={workspace.searchText}
+                  onChange={(e) => workspace.setSearchText(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 bg-white border border-[#ECECEC] rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-[#7A1F2B] transition-shadow placeholder:text-slate-400 h-10"
+                />
+              </div>
+            )}
 
-          <DateRangeDropdown 
-            datePreset={workspace.datePreset}
-            setDatePreset={workspace.setDatePreset}
-            dateRange={workspace.dateRange}
-            setDateRange={workspace.setDateRange}
-          />
+            <DateRangeDropdown 
+              datePreset={workspace.datePreset}
+              setDatePreset={workspace.setDatePreset}
+              dateRange={workspace.dateRange}
+              setDateRange={workspace.setDateRange}
+            />
 
-          <button 
-            onClick={onOpenFilters}
-            className="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-[#ECECEC] hover:bg-slate-50 rounded-xl text-sm font-medium text-slate-700 transition-colors"
+            <button 
+              onClick={onOpenFilters}
+              className="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-[#ECECEC] hover:bg-slate-50 rounded-xl text-sm font-medium text-slate-700 transition-colors"
+            >
+              <Filter size={16} />
+              <span className="hidden sm:inline">Filters</span>
+            </button>
+
+            {hasActiveFilters && (
+              <button 
+                onClick={handleResetAll}
+                className="flex items-center justify-center gap-1.5 h-10 px-3 bg-red-50 border border-red-200 hover:bg-red-100 rounded-xl text-sm font-medium text-red-700 transition-colors"
+              >
+                <X size={14} />
+                <span>Reset</span>
+              </button>
+            )}
+          </>
+        )}
+
+        {/* Segmented Control */}
+        <div className="flex bg-slate-100 p-1 rounded-xl h-10 ml-auto">
+          <button
+            onClick={() => workspace.setViewMode("list")}
+            className={`flex items-center gap-2 px-3 rounded-lg text-sm font-medium transition-all ${
+              workspace.viewMode === "list" 
+                ? "bg-white text-gray-900 shadow-sm" 
+                : "text-slate-500 hover:text-gray-900"
+            }`}
           >
-            <Filter size={16} />
-            <span className="hidden sm:inline">Filters</span>
+            <List size={16} /> <span className="hidden sm:inline">List</span>
           </button>
-
-          {/* Segmented Control */}
-          <div className="flex bg-slate-100 p-1 rounded-xl h-10">
-            <button
-              onClick={() => workspace.setViewMode("list")}
-              className={`flex items-center gap-2 px-3 rounded-lg text-sm font-medium transition-all ${
-                workspace.viewMode === "list" 
-                  ? "bg-white text-gray-900 shadow-sm" 
-                  : "text-slate-500 hover:text-gray-900"
-              }`}
-            >
-              <List size={16} /> <span className="hidden sm:inline">List</span>
-            </button>
-            <button
-              onClick={() => workspace.setViewMode("calendar")}
-              className={`flex items-center gap-2 px-3 rounded-lg text-sm font-medium transition-all ${
-                workspace.viewMode === "calendar" 
-                  ? "bg-white text-gray-900 shadow-sm" 
-                  : "text-slate-500 hover:text-gray-900"
-              }`}
-            >
-              <CalendarDays size={16} /> <span className="hidden sm:inline">Calendar</span>
-            </button>
-          </div>
-
+          <button
+            onClick={() => workspace.setViewMode("calendar")}
+            className={`flex items-center gap-2 px-3 rounded-lg text-sm font-medium transition-all ${
+              workspace.viewMode === "calendar" 
+                ? "bg-white text-gray-900 shadow-sm" 
+                : "text-slate-500 hover:text-gray-900"
+            }`}
+          >
+            <CalendarDays size={16} /> <span className="hidden sm:inline">Calendar</span>
+          </button>
         </div>
+
       </div>
     </div>
   );

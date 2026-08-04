@@ -2,9 +2,10 @@ import React from "react";
 
 export default function FollowupTabs({ activeTab, onTabChange, tabCounts }) {
   const tabs = [
+    { id: "all", label: "All Schedules" },
     { id: "today", label: "Today" },
     { id: "upcoming", label: "Upcoming" },
-    { id: "overdue", label: "Missed" }, // Note: user said "Missed" instead of overdue in the examples
+    { id: "overdue", label: "Missed" },
     { id: "completed", label: "Completed" },
   ];
 

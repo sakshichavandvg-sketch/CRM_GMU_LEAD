@@ -42,14 +42,14 @@ const columns = [
   },
 ];
 
+import UserKPICards from "./components/UserKPICards";
+import UserToolbar from "./components/UserToolbar";
+import UserDirectoryTable from "./components/UserDirectoryTable";
+import UserPagination from "./components/UserPagination";
+
 export default function UsersTable() {
   const router = useRouter();
   const [search, setSearch] = useState("");
-
-  const [selectedRows, setSelectedRows] =
-    useState([]);
-
-
 
   const {
     data,
@@ -64,20 +64,11 @@ export default function UsersTable() {
     search,
   });
 
-  const loadMoreRef = useInfiniteScrollObserver({
-    isLoading,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  });
-
   const usersData = useMemo(() => {
     return data?.pages?.flatMap(page => page?.users ?? page?.content ?? []) ?? [];
   }, [data]);
 
   const totalResults = data?.pages?.[0]?.totalItems ?? data?.pages?.[0]?.page?.totalElements ?? 0;
-
-
 
   if (isLoading) {
     return <TableSkeleton rows={5} columns={5} />;
@@ -92,64 +83,34 @@ export default function UsersTable() {
   }
 
   return (
-    <>
-      <div className="space-y-6">
-
-        <div className="flex items-center justify-between gap-4">
-
-          <div className="flex-1">
-            <SearchBar
-              value={search}
-              onChange={setSearch}
-              placeholder="Search telecallers..."
-            />
-          </div>
-
-        </div>
-
-        <BulkActionBar
-          selectedCount={selectedRows.length}
-          onClear={() =>
-            setSelectedRows([])
-          }
+    <div className="p-page-padding space-y-section-gap font-body-sm">
+      <UserKPICards users={usersData} totalResults={totalResults} />
+      
+      <UserToolbar search={search} onSearchChange={setSearch} />
+      
+      <div className="flex flex-col">
+        <UserDirectoryTable 
+          users={usersData} 
+          onView={(user) => router.push(`/dashboard/management/user-directory/${user.empId}`)} 
         />
-
-        <DataTable
-          density="compact"
-          columns={columns}
-          data={usersData}
-          rowKey="slNo"
-          selectedRows={selectedRows}
-          setSelectedRows={setSelectedRows}
-          onRowClick={(user) => router.push(`/dashboard/management/user-directory/${user.empId}`)}
-        />
-
-        {!isLoading && !isError && totalResults === 0 && (
-          <div className="py-16 text-center text-gray-500 bg-white rounded-xl shadow-sm border border-gray-200">
+        
+        {totalResults === 0 ? (
+          <div className="py-16 text-center text-gray-500 bg-white rounded-b-card shadow-sm border border-t-0 border-[#E8EAF2]">
             <p className="text-lg font-medium">No Telecallers Found</p>
           </div>
+        ) : (
+          <UserPagination 
+            totalResults={totalResults}
+            currentCount={usersData.length}
+            hasNextPage={hasNextPage}
+            fetchNextPage={fetchNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
         )}
-
-        {!isLoading && !isError && totalResults > 0 && (
-          <div className="py-6 text-center text-sm text-gray-500 font-medium">
-            {hasNextPage ? (
-              <div ref={loadMoreRef} className="flex items-center justify-center gap-2">
-                {isFetchingNextPage ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
-                    <span>Loading more telecallers...</span>
-                  </>
-                ) : (
-                  "Scroll for more"
-                )}
-              </div>
-            ) : (
-              "End of Results"
-            )}
-          </div>
-        )}
-
       </div>
-    </>
+      
+      {/* Bottom Space for Scroll Breathability */}
+      <div className="h-10"></div>
+    </div>
   );
 }

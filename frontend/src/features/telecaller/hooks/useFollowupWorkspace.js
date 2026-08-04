@@ -40,10 +40,10 @@ export function useFollowupWorkspace(rawFollowups = []) {
     if (debouncedSearch) {
       const q = debouncedSearch.toLowerCase();
       result = result.filter(f => 
-        (f.student || f.leadName || "").toLowerCase().includes(q) ||
-        (f.phone || f.mobile || "").includes(q) ||
+        (f.name || "").toLowerCase().includes(q) ||
+        (f.phone || "").includes(q) ||
         (f.course || "").toLowerCase().includes(q) ||
-        (f.enquiryNo || "").toLowerCase().includes(q)
+        (String(f.enquiryNo) || "").toLowerCase().includes(q)
       );
     }
 
@@ -61,7 +61,7 @@ export function useFollowupWorkspace(rawFollowups = []) {
     // B. Date Preset (Applies to all tabs if a preset is selected)
     if (datePreset !== "all") {
       result = result.filter(f => {
-        const rawDateStr = f.scheduledDate || f.date || f.createdAt;
+        const rawDateStr = f.scheduledDate || f.createdAt;
         if (!rawDateStr) return false;
         
         const fDateStr = typeof rawDateStr === 'string' ? rawDateStr.split('T')[0].split(' ')[0] : rawDateStr;
@@ -105,12 +105,12 @@ export function useFollowupWorkspace(rawFollowups = []) {
     // C. Advanced Filters
     if (filters.priority) result = result.filter(f => f.priority === filters.priority);
     if (filters.course) result = result.filter(f => f.course === filters.course);
-    if (filters.status) result = result.filter(f => (f.leadStatus || f.status || f.stage) === filters.status);
+    if (filters.status) result = result.filter(f => f.status === filters.status);
     if (filters.source) result = result.filter(f => f.source === filters.source);
     if (filters.assignedCounselor) result = result.filter(f => f.assignedCounselor === filters.assignedCounselor);
     if (filters.date) {
       result = result.filter(f => {
-        const rawDateStr = f.scheduledDate || f.date || f.createdAt;
+        const rawDateStr = f.scheduledDate || f.createdAt;
         if (!rawDateStr) return false;
         const fDateStr = typeof rawDateStr === 'string' ? rawDateStr.split('T')[0].split(' ')[0] : rawDateStr;
         return fDateStr === filters.date;
@@ -119,8 +119,8 @@ export function useFollowupWorkspace(rawFollowups = []) {
 
     // D. Sorting
     result.sort((a, b) => {
-      const dateAStr = `${a.scheduledDate || a.date || "9999-12-31"}T${a.scheduledTime || a.time || "00:00"}`;
-      const dateBStr = `${b.scheduledDate || b.date || "9999-12-31"}T${b.scheduledTime || b.time || "00:00"}`;
+      const dateAStr = `${a.scheduledDate || "9999-12-31"}T${a.scheduledTime || "00:00"}`;
+      const dateBStr = `${b.scheduledDate || "9999-12-31"}T${b.scheduledTime || "00:00"}`;
       
       if (activeTab === "overdue") {
         return dateAStr.localeCompare(dateBStr); 
@@ -134,34 +134,85 @@ export function useFollowupWorkspace(rawFollowups = []) {
     return result;
   }, [rawFollowups, debouncedSearch, datePreset, dateRange, filters, activeTab]);
 
+  const parseFollowupDate = (dateStr) => {
+    if (!dateStr) return null;
+    let dStr = typeof dateStr === 'string' ? dateStr.split('T')[0].split(' ')[0] : dateStr;
+    if (typeof dStr === 'string' && /^\d{2}-\d{2}-\d{4}$/.test(dStr)) {
+      const [dd, mm, yyyy] = dStr.split('-');
+      dStr = `${yyyy}-${mm}-${dd}`;
+    }
+    
+    // Robust local timezone parsing: "YYYY-MM-DD"
+    const [year, month, day] = dStr.split('-');
+    const d = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
+    
+    if (!isNaN(d.getTime())) {
+      d.setHours(0, 0, 0, 0);
+      return d;
+    }
+    return null;
+  };
+
   // 4. Summaries & Tab Distributions
   const { summaryCards, tabCounts, workSummary } = useMemo(() => {
     const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
 
     let tCount = 0;
     let oCount = 0;
     let uCount = 0;
     let cCount = 0;
-
     let totalPending = 0;
 
-    filteredFollowups.forEach(f => {
-      const rawDateStr = f.scheduledDate || f.date || f.createdAt;
-      if (!rawDateStr) return;
-      const fDateStr = typeof rawDateStr === 'string' ? rawDateStr.split('T')[0].split(' ')[0] : rawDateStr;
+    console.log("========== FOLLOWUP DIAGNOSTICS ==========");
+    console.log("Current Date (midnight):", today, todayTime);
 
-      const isCompleted = f.status === "Completed" || f.leadStatus === "Completed" || f.stage === "Completed";
+    filteredFollowups.forEach(f => {
+      const rawDateStr = f.scheduledDate || f.createdAt;
+      const fDate = parseFollowupDate(rawDateStr);
       
+      const isCompleted = String(f.status || "").toLowerCase() === "completed";
+
+      let bucket = "none";
+      let reason = "";
+
       if (isCompleted) {
         cCount++;
+        bucket = "Completed";
+        reason = `Status is completed (status=${f.status}, leadStatus=${f.leadStatus})`;
+      } else if (!fDate) {
+        // Fallback if no valid date
+        totalPending++;
+        uCount++;
+        bucket = "Upcoming (Fallback)";
+        reason = `No valid date found (rawDateStr=${rawDateStr})`;
       } else {
         totalPending++;
-        if (fDateStr < todayStr) oCount++;
-        else if (fDateStr === todayStr) tCount++;
-        else if (fDateStr > todayStr) uCount++;
+        const fTime = fDate.getTime();
+        if (fTime < todayTime) {
+          oCount++;
+          bucket = "Missed/Overdue";
+          reason = `fTime (${fTime}) < todayTime (${todayTime})`;
+        } else if (fTime === todayTime) {
+          tCount++;
+          bucket = "Today";
+          reason = `fTime (${fTime}) === todayTime (${todayTime})`;
+        } else {
+          uCount++;
+          bucket = "Upcoming";
+          reason = `fTime (${fTime}) > todayTime (${todayTime})`;
+        }
       }
+
+      console.log(`[Followup ID: ${f.id || f.followupId}]`);
+      console.log(`  - scheduledDate: ${rawDateStr}`);
+      console.log(`  - parsed Date:`, fDate);
+      console.log(`  - status: ${f.status} | leadStatus: ${f.leadStatus}`);
+      console.log(`  - Assigned Bucket: ${bucket}`);
+      console.log(`  - Reason: ${reason}`);
     });
+    console.log("==========================================");
 
     return {
       tabCounts: {
@@ -179,63 +230,51 @@ export function useFollowupWorkspace(rawFollowups = []) {
   // 5. Final Tab Filter
   const displayFollowups = useMemo(() => {
     const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
+
+    let result = [];
 
     if (viewMode === "calendar" && selectedCalendarDay) {
-      return filteredFollowups.filter(f => {
-        const rawDateStr = f.scheduledDate || f.date || f.createdAt;
-        if (!rawDateStr) return false;
-        const fDateStr = typeof rawDateStr === 'string' ? rawDateStr.split('T')[0].split(' ')[0] : rawDateStr;
-        return fDateStr === selectedCalendarDay;
+      result = filteredFollowups.filter(f => {
+        const rawDateStr = f.scheduledDate || f.createdAt;
+        const fDate = parseFollowupDate(rawDateStr);
+        if (!fDate) return false;
+        
+        const isCompleted = String(f.status || "").toLowerCase() === "completed";
+        if (isCompleted) return false;
+
+        // selectedCalendarDay is usually YYYY-MM-DD
+        const calDate = new Date(selectedCalendarDay);
+        calDate.setHours(0, 0, 0, 0);
+        return fDate.getTime() === calDate.getTime();
+      });
+    } else if (activeTab === "all") {
+      result = filteredFollowups;
+    } else {
+      result = filteredFollowups.filter(f => {
+        const rawDateStr = f.scheduledDate || f.createdAt;
+        const fDate = parseFollowupDate(rawDateStr);
+        
+        const isCompleted = String(f.status || "").toLowerCase() === "completed";
+
+        switch (activeTab) {
+          case "today": 
+            return fDate && fDate.getTime() === todayTime && !isCompleted;
+          case "upcoming": 
+            return (!fDate || fDate.getTime() > todayTime) && !isCompleted;
+          case "overdue": 
+            return fDate && fDate.getTime() < todayTime && !isCompleted;
+          case "completed": 
+            return isCompleted;
+          default: 
+            return true;
+        }
       });
     }
 
-    if (activeTab === "all") return filteredFollowups;
-
-    return filteredFollowups.filter(f => {
-      const rawDateStr = f.scheduledDate || f.date || f.createdAt;
-      if (!rawDateStr) return false;
-      const fDateStr = typeof rawDateStr === 'string' ? rawDateStr.split('T')[0].split(' ')[0] : rawDateStr;
-
-      const isCompleted = f.status === "Completed" || f.leadStatus === "Completed" || f.stage === "Completed";
-
-      switch (activeTab) {
-        case "today": return fDateStr === todayStr && !isCompleted;
-        case "upcoming": return fDateStr > todayStr && !isCompleted;
-        case "overdue": return fDateStr < todayStr && !isCompleted;
-        case "completed": return isCompleted;
-        default: return true;
-      }
-    });
+    return result;
   }, [filteredFollowups, activeTab, viewMode, selectedCalendarDay]);
-  // Workspace Diagnostics
-  useEffect(() => {
-    const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    
-    const debugToday = filteredFollowups.filter(f => {
-      const rawDateStr = f.scheduledDate || f.date || f.createdAt;
-      if (!rawDateStr) return false;
-      const fDateStr = typeof rawDateStr === 'string' ? rawDateStr.split('T')[0].split(' ')[0] : rawDateStr;
-      const isCompleted = f.status === "Completed" || f.leadStatus === "Completed" || f.stage === "Completed";
-      return fDateStr === todayStr && !isCompleted;
-    });
-
-    const debugUpcoming = filteredFollowups.filter(f => {
-      const rawDateStr = f.scheduledDate || f.date || f.createdAt;
-      if (!rawDateStr) return false;
-      const fDateStr = typeof rawDateStr === 'string' ? rawDateStr.split('T')[0].split(' ')[0] : rawDateStr;
-      const isCompleted = f.status === "Completed" || f.leadStatus === "Completed" || f.stage === "Completed";
-      return fDateStr > todayStr && !isCompleted;
-    });
-
-    console.log("========== WORKSPACE READ DIAGNOSTICS ==========");
-    console.log("1. rawFollowups:", rawFollowups);
-    console.log("2. mapped filteredFollowups:", filteredFollowups);
-    console.log("3. filteredToday:", debugToday);
-    console.log("4. filteredUpcoming:", debugUpcoming);
-    console.log("================================================");
-  }, [rawFollowups, filteredFollowups]);
 
   return {
     viewMode, setViewMode,

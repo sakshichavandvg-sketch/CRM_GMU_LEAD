@@ -1,5 +1,6 @@
 import axiosInstance from "@/lib/axios";
 import API_ENDPOINTS from "@/utils/apiEndpoints";
+import { mapFollowup } from "../mappers/telecallerViewModelMapper";
 
 export const telecallerFollowupService = {
   getFollowups: async (params) => {
@@ -15,43 +16,48 @@ export const telecallerFollowupService = {
 
     const url = `${API_ENDPOINTS.TELECALLER.FOLLOWUPS}?${queryParams.toString()}`;
     
-    // 1 & 2: Log URL and Query Parameters
-    console.log("1. Full Request URL:", url);
-    console.log("2. Query Parameters:", queryParams.toString());
-
-    // 3: Log Request Headers (can be extracted via axios interceptors or request config, but we'll try to log what axiosInstance holds as defaults)
-    console.log("3. Default Request Headers:", Object.keys(axiosInstance.defaults.headers).reduce((acc, key) => {
-      if (key !== 'common') acc[key] = axiosInstance.defaults.headers[key];
-      return acc;
-    }, { ...axiosInstance.defaults.headers.common }));
+    const response = await axiosInstance.get(url);
+    const data = response.data?.data;
     
-    // 5: Try to extract user info from localStorage if present
-    try {
-      const userStr = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
-      console.log("5. Current Logged-in Telecaller:", userStr ? JSON.parse(userStr) : "Not found in localStorage");
-    } catch (e) {
-      console.log("5. Current Logged-in Telecaller: Error parsing");
+    let combined = data?.content || [];
+    const totalPages = data?.totalPages || 1;
+    const totalElements = data?.totalElements || combined.length;
+    
+    if (totalPages > 1) {
+      for (let i = 1; i < totalPages; i++) {
+        const nextParams = new URLSearchParams(queryParams);
+        nextParams.set('page', i);
+        
+        const nextResponse = await axiosInstance.get(`${API_ENDPOINTS.TELECALLER.FOLLOWUPS}?${nextParams.toString()}`);
+        const nextContent = nextResponse.data?.data?.content || [];
+        combined = combined.concat(nextContent);
+      }
     }
 
-    const response = await axiosInstance.get(url);
+    console.log(
+      "[Followups] Loaded",
+      combined.length,
+      "records across",
+      totalPages,
+      "pages"
+    );
 
-    // 4: Raw response body
-    console.log("4. Raw Response Body:", response.data);
-
-    const followups = response.data?.data?.content || [];
-    console.log("Mapped followups:", followups);
-
-    return followups;
+    return combined.map(mapFollowup);
   },
 
   createFollowup: async (data) => {
     const response = await axiosInstance.post(API_ENDPOINTS.TELECALLER.FOLLOWUPS, data);
-    return response.data.data;
+    return mapFollowup(response.data.data);
   },
 
   updateFollowup: async (id, data) => {
+    console.log("[telecallerFollowupService] ========== PAYLOAD INSIDE SERVICE ==========");
+    console.log("[telecallerFollowupService] ID:", id);
+    console.log("[telecallerFollowupService] Data before axios:", JSON.stringify(data, null, 2));
     const response = await axiosInstance.patch(API_ENDPOINTS.TELECALLER.FOLLOWUP_DETAILS(id), data);
-    return response.data.data;
+    console.log("[telecallerFollowupService] Response status:", response.status);
+    console.log("[telecallerFollowupService] Response body:", JSON.stringify(response.data, null, 2));
+    return mapFollowup(response.data.data);
   },
 
   deleteFollowup: async (id) => {

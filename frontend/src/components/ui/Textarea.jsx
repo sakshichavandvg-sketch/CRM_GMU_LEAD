@@ -6,6 +6,8 @@ export default function Textarea({
   rows = 4,
   placeholder,
   error,
+  className = "",
+  ...props
 }) {
   const errorId = name ? `${name}-error` : undefined;
 
@@ -44,7 +46,9 @@ export default function Textarea({
               ? "border-red-400"
               : "border-gray-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-yellow-100"
           }
+          ${className}
         `}
+        {...props}
       />
 
       <div id={errorId} className="min-h-[20px] text-[12px] text-red-500">

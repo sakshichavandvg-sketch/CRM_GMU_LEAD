@@ -5,6 +5,13 @@ import Input from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import { useUpdateFollowup } from "@/features/telecaller/hooks/useFollowupMutations";
 
+const normalizeTimeValue = (value) => {
+  if (!value) return "";
+  const timeValue = String(value).trim();
+  if (timeValue.length <= 5) return timeValue;
+  return timeValue.slice(0, 5);
+};
+
 export default function RescheduleModal({ isOpen, onClose, followup }) {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -15,7 +22,7 @@ export default function RescheduleModal({ isOpen, onClose, followup }) {
   useEffect(() => {
     if (followup) {
       setDate(followup.scheduledDate || followup.date || "");
-      setTime(followup.scheduledTime || followup.time || "");
+      setTime(normalizeTimeValue(followup.scheduledTime || followup.time));
       setNotes(followup.remarks || "");
     }
   }, [followup]);
@@ -24,14 +31,23 @@ export default function RescheduleModal({ isOpen, onClose, followup }) {
     e.preventDefault();
     if (!followup) return;
 
+    const payload = {
+      scheduledDate: date,
+      scheduledTime: time.length === 5 ? `${time}:00` : time,
+      remarks: notes,
+    };
+
+    console.log("[RescheduleModal] ========== PAYLOAD BEFORE MUTATE ==========");
+    console.log("[RescheduleModal] Followup ID:", followup.id);
+    console.log("[RescheduleModal] Form state - date:", date);
+    console.log("[RescheduleModal] Form state - time:", time);
+    console.log("[RescheduleModal] Form state - notes:", notes);
+    console.log("[RescheduleModal] Constructed payload:", JSON.stringify(payload, null, 2));
+
     updateMutation.mutate(
       { 
         id: followup.id, 
-        data: { 
-          scheduledDate: date, 
-          scheduledTime: time, 
-          remarks: notes 
-        } 
+        data: payload
       },
       {
         onSuccess: () => {

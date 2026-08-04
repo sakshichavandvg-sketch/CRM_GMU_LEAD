@@ -4,35 +4,29 @@ import Button from "@/components/ui/Button";
 import Link from "next/link";
 
 const getPriorityColor = (p) => {
-  if (p === "High") return "text-red-700 bg-red-50 border-red-200";
-  if (p === "Medium") return "text-amber-700 bg-amber-50 border-amber-200";
-  return "text-blue-700 bg-blue-50 border-blue-200";
+  const val = (p || "").toLowerCase();
+  if (val === "high") return "text-red-700 bg-red-50 border-red-200";
+  if (val === "medium") return "text-amber-700 bg-amber-50 border-amber-200";
+  if (val === "low") return "text-blue-700 bg-blue-50 border-blue-200";
+  return "text-slate-600 bg-slate-50 border-slate-200";
 };
 
-export default function FollowupCard({ followup, onReschedule }) {
+export default function FollowupCard({ followup, onReschedule, onComplete }) {
   const {
     id,
-    student,
-    leadName,
+    name,
     course,
     phone,
-    mobile,
     priority,
     scheduledDate,
-    date,
     scheduledTime,
-    time,
     remarks,
     enquiryNo,
     leadId,
+    status
   } = followup;
 
-  const displayName = student || leadName || "Unknown Lead";
-  const displayPhone = phone || mobile || "N/A";
-  const displayCourse = course || "B.Tech";
-  const displayDate = scheduledDate || date;
-  const displayTime = scheduledTime || time || "09:00 AM";
-  const displayPriority = priority || "Normal";
+  const displayTime = scheduledTime || "09:00 AM";
   
   const leadUrl = `/telecaller/leads/${enquiryNo || leadId || id}`;
 
@@ -45,12 +39,12 @@ export default function FollowupCard({ followup, onReschedule }) {
         {/* Row 1: Lead Name & Time */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2">
           <h3 className="text-lg font-bold text-gray-900 truncate">
-            {displayName}
+            {name}
           </h3>
           <div className="flex items-center gap-1.5 text-gray-900 font-semibold shrink-0">
              <Clock size={16} className="text-[#7A1F2B]" />
              <span>{displayTime}</span>
-             <span className="text-slate-400 font-medium ml-1 text-sm">• {displayDate}</span>
+             <span className="text-slate-400 font-medium ml-1 text-sm">• {scheduledDate}</span>
           </div>
         </div>
         
@@ -58,21 +52,23 @@ export default function FollowupCard({ followup, onReschedule }) {
         <div className="flex items-center gap-2 text-sm font-medium text-slate-600 mb-3">
           <span className="flex items-center gap-1.5 bg-slate-100/50 px-2 py-0.5 rounded-md border border-slate-100">
             <Phone size={14} className="text-slate-400" />
-            {displayPhone}
+            {phone}
           </span>
           <span className="text-slate-300">•</span>
           <span className="flex items-center gap-1.5">
             <BookOpen size={14} className="text-slate-400" />
-            {displayCourse}
+            {course}
           </span>
         </div>
 
         {/* Row 3: Priority */}
-        <div className="flex items-center gap-2 mb-2">
-          <span className={`text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${getPriorityColor(displayPriority)}`}>
-            {displayPriority} Priority
-          </span>
-        </div>
+        {priority && (
+          <div className="flex items-center gap-2 mb-2">
+            <span className={`text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${getPriorityColor(priority)}`}>
+              {priority} Priority
+            </span>
+          </div>
+        )}
 
         {remarks && (
           <div className="flex items-start gap-2 bg-slate-50 border border-slate-100 rounded-lg p-2.5 text-xs text-slate-600 mt-2 w-full">
@@ -96,6 +92,15 @@ export default function FollowupCard({ followup, onReschedule }) {
         >
           Reschedule
         </Button>
+        {String(status || "").toLowerCase() !== "completed" && (
+          <Button 
+            variant="outline" 
+            onClick={() => onComplete(followup)}
+            className="w-full sm:w-auto justify-center h-10 text-sm font-semibold text-green-700 bg-green-50 border-green-200 hover:bg-green-100"
+          >
+            Mark Complete
+          </Button>
+        )}
       </div>
 
     </div>

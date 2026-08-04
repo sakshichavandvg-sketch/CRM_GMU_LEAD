@@ -16,67 +16,130 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
+  --color-background: #FAFBFD;
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-outfit);
+  --font-sans: "Outfit", sans-serif;
 
-  /* Stitch Colors */
-  --color-inverse-surface: #3b2d2c;
-  --color-primary-fixed: #ffdad8;
-  --color-on-background: #251818;
-  --color-on-error-container: #93000a;
-  --color-on-primary-fixed: #410006;
-  --color-on-tertiary-fixed-variant: #004e5d;
-  --color-on-secondary: #ffffff;
-  --color-tertiary-fixed: #b0ecfe;
-  --color-on-primary-container: #ff9b98;
-  --color-surface-bright: #fff8f7;
-  --color-surface-variant: #f5dddc;
-  --color-error: #ba1a1a;
-  --color-surface-dim: #ecd5d3;
-  --color-tertiary-container: #004f5e;
-  --color-on-surface: #251818;
-  --color-surface-container-high: #fbe3e1;
-  --color-inverse-on-surface: #ffedeb;
-  --color-surface-container: #ffe9e7;
-  --color-outline: #8c716f;
-  --color-on-primary: #ffffff;
-  --color-on-secondary-container: #7b3c3b;
-  --color-secondary-fixed: #ffdad8;
-  --color-secondary-container: #ffaba8;
-  --color-on-error: #ffffff;
-  --color-tertiary-fixed-dim: #94d0e1;
-  --color-inverse-primary: #ffb3b0;
+  /* Stitch Colors from HTML Config */
+  --color-tertiary: #003052;
   --color-surface-container-low: #fff0ef;
-  --color-primary-container: #8d1822;
-  --color-surface-container-highest: #f5dddc;
-  --color-surface: #fff8f7;
-  --color-surface-container-lowest: #ffffff;
-  --color-on-secondary-fixed-variant: #713434;
-  --color-surface-tint: #ad3036;
-  --color-on-tertiary-fixed: #001f26;
-  --color-on-tertiary-container: #84bfd1;
-  --color-on-primary-fixed-variant: #8b1721;
-  --color-on-surface-variant: #584140;
-  --color-outline-variant: #dfbfbd;
-  --color-secondary-fixed-dim: #ffb3b0;
-  --color-error-container: #ffdad6;
-  --color-secondary: #8d4b4a;
+  --color-primary-fixed-dim: #ffb3ad;
+  --color-surface-container: #ffe9e7;
+  --color-secondary-fixed-dim: #ffb3ad;
+  --color-secondary-fixed: #ffdad7;
+  --color-tertiary-container: #004775;
+  --color-surface-container-highest: #f6ddda;
+  --color-on-background: #261817;
+  --color-inverse-surface: #3c2d2b;
+  --color-on-surface-variant: #59413f;
+  --color-on-tertiary-fixed-variant: #064a78;
+  --color-on-error: #ffffff;
+  --color-primary-fixed: #ffdad7;
+  --color-surface-tint: #b02c2c;
+  --color-on-secondary: #ffffff;
   --color-on-tertiary: #ffffff;
-  --color-primary-fixed-dim: #ffb3b0;
-  --color-on-secondary-fixed: #3a0a0c;
-  --color-tertiary: #003742;
+  --color-outline-variant: #e1bfbb;
+  --color-inverse-primary: #ffb3ad;
+  --color-surface-bright: #fff8f7;
+  --color-surface-container-high: #fce2e0;
+  --color-on-tertiary-fixed: #001d34;
+  --color-error: #ba1a1a;
+  --color-inverse-on-surface: #ffedeb;
+  --color-primary-container: #8B0D16;
+  --color-on-secondary-container: #783430;
+  --color-on-surface: #261817;
+  --color-on-secondary-fixed: #3c0607;
+  --color-primary: #640009;
+  --color-outline: #8d706e;
+  --color-on-primary-fixed: #410004;
+  --color-surface-dim: #edd4d2;
+  --color-on-primary-container: #ff948d;
+  --color-secondary-container: #fe9f98;
+  --color-tertiary-fixed: #d0e4ff;
+  --color-error-container: #ffdad6;
+  --color-surface-variant: #f6ddda;
+  --color-tertiary-fixed-dim: #9acbff;
+  --color-secondary: #934844;
+  --color-on-primary: #ffffff;
+  --color-on-error-container: #93000a;
+  --color-surface: #ffffff;
+  --color-on-secondary-fixed-variant: #75312e;
+  --color-on-primary-fixed-variant: #8e1018;
+  --color-on-tertiary-container: #84b6ea;
+  --color-surface-container-lowest: #ffffff;
 
-  /* Stitch Spacing */
-  --spacing-section_gap: 64px;
-  --spacing-sm: 8px;
-  --spacing-xl: 32px;
-  --spacing-md: 16px;
-  --spacing-xxl: 48px;
-  --spacing-container_max: 1440px;
-  --spacing-gutter: 24px;
-  --spacing-xs: 4px;
-  --spacing-lg: 24px;
+  /* Stitch Spacing — prefixed with --gmu- to avoid overriding Tailwind v4's numeric spacing scale */
+  --gmu-spacing-grid_margin: 32px;
+  --gmu-spacing-grid_gutter: 20px;
+  --gmu-spacing-sm: 8px;
+  --gmu-spacing-2xl: 48px;
+  --gmu-spacing-md: 16px;
+  --gmu-spacing-xs: 4px;
+  --gmu-spacing-lg: 24px;
+  --gmu-spacing-base: 4px;
+  --gmu-spacing-xl: 32px;
+
+  /* Stitch User Directory Spacing */
+  --spacing-stack-sm: 8px;
+  --spacing-stack-md: 16px;
+  --spacing-page-padding: 32px;
+  --spacing-card-gap: 24px;
+  --spacing-section-gap: 28px;
+  --spacing-inline-gutter: 12px;
+
+  /* Stitch Border Radius */
+  --radius: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+  --radius-card: 22px;
+
+  /* Stitch User Directory Fonts */
+  --font-stat-number: "Outfit", sans-serif;
+  --font-table-header: "Outfit", sans-serif;
+  --font-card-label: "Outfit", sans-serif;
+  --font-table-body: "Outfit", sans-serif;
+  --font-body-sm: "Outfit", sans-serif;
+  --font-button-text: "Outfit", sans-serif;
+  --font-title-main: "Outfit", sans-serif;
+  --font-subtitle: "Outfit", sans-serif;
+
+  /* Stitch User Directory Font Sizes */
+  --text-stat-number: 46px;
+  --text-stat-number--line-height: 1;
+  --text-stat-number--letter-spacing: -0.03em;
+  --text-stat-number--font-weight: 700;
+
+  --text-table-header: 13px;
+  --text-table-header--line-height: 1;
+  --text-table-header--letter-spacing: 0.05em;
+  --text-table-header--font-weight: 700;
+
+  --text-card-label: 15px;
+  --text-card-label--line-height: 1.4;
+  --text-card-label--font-weight: 600;
+
+  --text-table-body: 15px;
+  --text-table-body--line-height: 1.6;
+  --text-table-body--font-weight: 500;
+
+  --text-body-sm: 13px;
+  --text-body-sm--line-height: 1.4;
+  --text-body-sm--font-weight: 400;
+
+  --text-button-text: 15px;
+  --text-button-text--line-height: 1;
+  --text-button-text--font-weight: 600;
+
+  --text-title-main: 42px;
+  --text-title-main--line-height: 1.2;
+  --text-title-main--letter-spacing: -0.02em;
+  --text-title-main--font-weight: 700;
+
+  --text-subtitle: 18px;
+  --text-subtitle--line-height: 1.5;
+  --text-subtitle--font-weight: 500;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -124,6 +187,9 @@ body {
   border-radius: 10px;
 }
 
+.standard-shadow { box-shadow: 0 10px 40px rgba(15,23,42,0.05); }
+.premium-border { border: 1px solid #EAECEF; }
+
 /* Typography Utilities */
 @utility font-headline-lg {
   font-size: 32px;
@@ -148,6 +214,30 @@ body {
   line-height: 56px;
   letter-spacing: -0.02em;
   font-weight: 700;
+}
+@utility font-display-md {
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+@utility text-display-md {
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+@utility font-display-sm {
+  font-size: 22px;
+  line-height: 30px;
+  letter-spacing: 0em;
+  font-weight: 600;
+}
+@utility text-display-sm {
+  font-size: 22px;
+  line-height: 30px;
+  letter-spacing: 0em;
+  font-weight: 600;
 }
 @utility font-headline-md {
   font-size: 24px;
@@ -220,4 +310,106 @@ body {
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
+}
+
+/* Call Reports Theme Scoped Variables */
+.call-reports-theme {
+  --color-surface-container-highest: #e1e2e6;
+  --color-surface-bright: #f8f9fd;
+  --color-on-primary-container: #ff9a95;
+  --color-surface-tint: #b02c2f;
+  --color-on-tertiary-container: #aeb5c5;
+  --color-on-secondary-fixed: #1b1b1d;
+  --color-secondary-fixed: #e4e2e4;
+  --color-inverse-surface: #2e3134;
+  --color-on-error: #ffffff;
+  --color-tertiary-fixed: #dce2f3;
+  --color-surface-container-high: #e7e8ec;
+  --color-on-background: #191c1f;
+  --color-secondary: #5f5e60;
+  --color-surface-dim: #d9dade;
+  --color-primary-container: #8f111b;
+  --color-outline: #8d706e;
+  --color-on-secondary: #ffffff;
+  --color-tertiary-fixed-dim: #c0c7d6;
+  --color-on-primary-fixed: #410005;
+  --color-on-tertiary-fixed: #151c27;
+  --color-on-surface: #191c1f;
+  --color-inverse-on-surface: #eff1f5;
+  --color-surface-container-lowest: #ffffff;
+  --color-outline-variant: #e1bfbc;
+  --color-primary-fixed: #ffdad7;
+  --color-error-container: #ffdad6;
+  --color-on-surface-variant: #59413f;
+  --color-on-secondary-fixed-variant: #474649;
+  --color-inverse-primary: #ffb3ae;
+  --color-background: #f8f9fd;
+  --color-surface-container: #edeef2;
+  --color-surface-variant: #e1e2e6;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #404754;
+  --color-on-secondary-container: #636264;
+  --color-on-error-container: #93000a;
+  --color-tertiary: #2a313d;
+  --color-surface: #f8f9fd;
+  --color-on-primary-fixed-variant: #8e101b;
+  --color-secondary-container: #e2dfe1;
+  --color-secondary-fixed-dim: #c8c6c8;
+  --color-surface-container-low: #f2f3f7;
+  --color-error: #ba1a1a;
+  --color-primary-fixed-dim: #ffb3ae;
+  --color-on-tertiary-fixed-variant: #404754;
+  --color-on-primary: #ffffff;
+  --color-primary: #69000d;
+
+  /* Fonts */
+  --font-headline-md: "Outfit";
+  --font-body-md: "Outfit";
+  --font-headline-sm: "Outfit";
+  --font-title-lg: "Outfit";
+  --font-body-lg: "Outfit";
+  --font-headline-lg: "Outfit";
+  --font-description: "Outfit";
+  --font-label-md: "Outfit";
+
+  /* Font Sizes */
+  --text-headline-md: 32px;
+  --text-headline-md--line-height: 1.2;
+  --text-headline-md--letter-spacing: -0.01em;
+  --text-headline-md--font-weight: 700;
+
+  --text-body-md: 14px;
+  --text-body-md--line-height: 1.6;
+  --text-body-md--font-weight: 400;
+
+  --text-headline-sm: 24px;
+  --text-headline-sm--line-height: 1.3;
+  --text-headline-sm--font-weight: 600;
+
+  --text-title-lg: 20px;
+  --text-title-lg--line-height: 1.4;
+  --text-title-lg--font-weight: 600;
+
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--font-weight: 400;
+
+  --text-headline-lg: 44px;
+  --text-headline-lg--line-height: 1.1;
+  --text-headline-lg--letter-spacing: -0.02em;
+  --text-headline-lg--font-weight: 800;
+
+  --text-description: 13px;
+  --text-description--line-height: 1.5;
+  --text-description--font-weight: 400;
+
+  --text-label-md: 14px;
+  --text-label-md--line-height: 1.2;
+  --text-label-md--font-weight: 500;
+
+  /* Spacing */
+  --spacing-horizontal_gap: 24px;
+  --spacing-vertical_gap: 32px;
+  --spacing-container_padding: 24px;
+  --spacing-page_padding: 40px;
 }

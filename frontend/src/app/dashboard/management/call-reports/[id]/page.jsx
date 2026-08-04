@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { useTelecallerCallLogs } from "@/features/callReports/hooks/useCallReports";
-import TelecallerSummary from "@/features/callReports/components/TelecallerSummary";
-import CallLogsTable from "@/features/callReports/components/CallLogsTable";
-import Button from "@/components/ui/Button";
-import { useMemo } from "react";
+import CallDetailsModal from "@/features/telecaller/voice/components/details/CallDetailsModal";
+
+// Stitch UI Components
+import "@/features/callReports/components/stitch/stitch-theme.css";
+import StitchHeader from "@/features/callReports/components/stitch/StitchHeader";
+import StitchKPISection from "@/features/callReports/components/stitch/StitchKPISection";
+import StitchFilterToolbar from "@/features/callReports/components/stitch/StitchFilterToolbar";
+import StitchCallReportTable from "@/features/callReports/components/stitch/StitchCallReportTable";
+import StitchPagination from "@/features/callReports/components/stitch/StitchPagination";
 
 export default function TelecallerCallLogsPage() {
   const { id: userId } = useParams();
@@ -19,6 +23,11 @@ export default function TelecallerCallLogsPage() {
     hasRecording: "",
     direction: "",
   });
+
+  // Table State
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [selectedCall, setSelectedCall] = useState(null);
 
   // Fetch all logs once
   const { data: rawData, isLoading, isError } = useTelecallerCallLogs(
@@ -97,41 +106,64 @@ export default function TelecallerCallLogsPage() {
     };
   }, [filteredCallLogs]);
 
+  // Pagination logic
+  const totalItems = filteredCallLogs.length;
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
+  const paginatedLogs = filteredCallLogs.slice(page * pageSize, (page + 1) * pageSize);
+
+  const handleFilterChange = (updater) => {
+    setFilters(updater);
+    setPage(0); // Reset pagination on filter change
+  };
+
+  const handleRowClick = (row) => {
+    if (row && row.callId) {
+      setSelectedCall(row);
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-6 flex-1 min-h-0">
-      {/* ── Page Header ──────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push("/dashboard/management/call-reports")}
-            >
-              <ArrowLeft size={16} className="mr-1" />
-              Back to Reports
-            </Button>
-          </div>
-          <h1 className="text-4xl font-bold font-outfit text-slate-900 mt-3">
-            {telecallerName}
-          </h1>
-          <p className="text-gray-500 mt-2">
-            Call logs and performance summary
-          </p>
-        </div>
-      </div>
-
-      {/* ── KPI Summary Strip ─────────────────────────────────────────── */}
-      <TelecallerSummary data={kpiData} isLoading={isLoading} />
-
-      {/* ── Call Logs Table ───────────────────────────────────────────── */}
-      <CallLogsTable 
-        data={filteredCallLogs}
-        isLoading={isLoading}
-        isError={isError}
-        filters={filters}
-        onFilterChange={setFilters}
+    <main className="stitch-call-report w-full max-w-container-max mx-auto px-page-padding py-10 flex flex-col gap-section-gap min-h-0 bg-background text-on-surface">
+      <StitchHeader 
+        title={telecallerName} 
+        subtitle="Call logs and performance summary" 
+        onBack={() => router.push("/dashboard/management/call-reports")}
       />
-    </div>
+      
+      <StitchKPISection data={kpiData} isLoading={isLoading} />
+      
+      <StitchFilterToolbar 
+        filters={filters} 
+        onFilterChange={handleFilterChange} 
+      />
+      
+      <StitchCallReportTable 
+        data={paginatedLogs} 
+        isLoading={isLoading} 
+        isError={isError}
+        onPlayRecording={handleRowClick}
+        startIndex={page * pageSize + 1}
+      />
+      
+      {!isLoading && !isError && totalItems > 0 && (
+        <StitchPagination 
+          currentPage={page}
+          pageSize={pageSize}
+          totalItems={totalItems}
+          totalPages={totalPages}
+          onPageChange={setPage}
+          onPageSizeChange={(s) => { setPageSize(s); setPage(0); }}
+        />
+      )}
+
+      {/* Call Details Modal */}
+      <CallDetailsModal
+        callId={selectedCall?.callId}
+        callData={selectedCall}
+        open={!!selectedCall}
+        onClose={() => setSelectedCall(null)}
+        showRecording={true}
+      />
+    </main>
   );
 }

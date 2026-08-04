@@ -7,9 +7,10 @@ import Select from "@/components/ui/Select";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { useCreateFollowup } from "@/features/telecaller/hooks/useFollowupMutations";
 import { useTelecallerLeads } from "@/features/telecaller/hooks/useMyLeads";
+import { toast } from "sonner";
 import { Clock } from "lucide-react";
 
-export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, existingFollowups = [] }) {
+export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, existingFollowups = [], allFollowups = [] }) {
   console.log("[ScheduleFollowupModal] render", { isOpen, defaultDate, existingFollowupsCount: existingFollowups.length });
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -41,37 +42,40 @@ export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, ex
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Format values to match backend contract exactly
     const selectedLead = leadOptions.find(l => l.value === leadId) || null;
     const enquiryNo = selectedLead ? selectedLead.enquiryId : null;
 
-    const props = { isOpen, defaultDate, existingFollowupsCount: existingFollowups?.length };
+    // Duplicate prevention: check for an existing active follow-up for this lead
+    const existingActive = allFollowups.find(
+      (f) =>
+        String(f.enquiryNo) === String(enquiryNo) &&
+        String(f.status || "").toLowerCase() !== "completed"
+    );
+
+    if (existingActive) {
+      toast.warning(
+        `This lead already has an active follow-up scheduled on ${existingActive.scheduledDate || "unknown date"} at ${existingActive.scheduledTime || "TBA"}. Please complete or reschedule the existing follow-up before creating another.`
+      );
+      return;
+    }
 
     const payload = {
       enquiryNo,
-      scheduledDate: date, // <input type="date"> returns YYYY-MM-DD
-      scheduledTime: time.length === 5 ? `${time}:00` : time, // <input type="time"> returns HH:mm
-      priority: priority.toUpperCase(),
+      scheduledDate: date,
+      scheduledTime: time.length === 5 ? `${time}:00` : time,
+      priority: priority,  // Send as title-case: "High", "Medium", "Low"
       remarks: notes
     };
-
-    console.log("========== FOLLOW-UP DEBUG ==========");
-    console.log("Lead:", JSON.stringify(selectedLead, null, 2));
-    console.log("Props:", JSON.stringify(props, null, 2));
-    console.log("Payload:", JSON.stringify(payload, null, 2));
-    console.log("====================================");
 
     createMutation.mutate(
       payload,
       {
         onSuccess: () => {
-          console.log("[ScheduleFollowupModal] createMutation success");
           onClose();
         },
         onError: (error) => {
           console.error("Follow-up Error:", error);
-          console.log("Status:", error.response?.status);
-          console.log("Response:", error.response?.data);
+          toast.error(error?.response?.data?.message || "Failed to schedule follow-up");
         }
       }
     );
@@ -83,7 +87,7 @@ export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, ex
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Schedule for ${formattedDate}`}>
-      <div className="flex flex-col max-h-[80vh]">
+      <div className="flex flex-col">
         
         {/* Existing Follow-ups Section */}
         {existingFollowups.length > 0 && (
@@ -94,10 +98,10 @@ export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, ex
                 <div key={f.id} className="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-lg">
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold text-gray-900 truncate max-w-[200px]">
-                      {f.student || f.leadName || "Unknown Lead"}
+                      {f.name || "Unknown Lead"}
                     </span>
                     <span className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                      <Clock size={10} /> {f.scheduledTime || f.time || "TBA"}
+                      <Clock size={10} /> {f.scheduledTime || "TBA"}
                     </span>
                   </div>
                   <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border ${
@@ -115,7 +119,7 @@ export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, ex
         )}
 
         {/* Schedule Form Section */}
-        <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto custom-scrollbar pr-1 pb-1">
+        <form onSubmit={handleSubmit} className="space-y-4">
           
           <h4 className="text-sm font-semibold text-gray-700">Schedule New Follow-up</h4>
 

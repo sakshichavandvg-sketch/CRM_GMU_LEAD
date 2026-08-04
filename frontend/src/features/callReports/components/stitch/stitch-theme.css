@@ -1,0 +1,558 @@
+.stitch-call-report {
+  --color-surface-tint: #b02c2f;
+  --color-on-primary-fixed: #410005;
+  --color-outline: #8d706e;
+  --color-on-primary-fixed-variant: #8e101b;
+  --color-primary-fixed-dim: #ffb3ae;
+  --color-surface-container-highest: #f6dddb;
+  --color-tertiary: #00344f;
+  --color-on-tertiary-fixed-variant: #004b6f;
+  --color-on-secondary-container: #5e6572;
+  --color-on-secondary-fixed: #151c27;
+  --color-on-tertiary: #ffffff;
+  --color-on-secondary-fixed-variant: #404754;
+  --color-surface-variant: #f6dddb;
+  --color-on-error-container: #93000a;
+  --color-surface-container-lowest: #ffffff;
+  --color-tertiary-container: #004c70;
+  --color-on-tertiary-container: #86bce5;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-secondary-container: #dce2f3;
+  --color-on-surface: #261817;
+  --color-inverse-primary: #ffb3ae;
+  --color-secondary-fixed: #dce2f3;
+  --color-surface-bright: #fff8f7;
+  --color-primary-container: #8f111b;
+  --color-surface-container-high: #fce2e0;
+  --color-on-surface-variant: #59413f;
+  --color-on-background: #261817;
+  --color-on-primary: #ffffff;
+  --color-secondary-fixed-dim: #c0c7d6;
+  --color-background: #FFFFFF;
+  --color-inverse-surface: #3c2d2c;
+  --color-surface-container-low: #fff0ef;
+  --color-tertiary-fixed-dim: #96cdf7;
+  --color-error: #ba1a1a;
+  --color-surface-container: #ffe9e7;
+  --color-secondary: #585f6c;
+  --color-on-tertiary-fixed: #001e2f;
+  --color-on-secondary: #ffffff;
+  --color-outline-variant: #e1bfbc;
+  --color-primary-fixed: #ffdad7;
+  --color-surface: #fff8f7;
+  --color-tertiary-fixed: #c9e6ff;
+  --color-surface-dim: #edd4d2;
+  --color-primary: #69000d;
+  --color-inverse-on-surface: #ffedeb;
+  --color-on-primary-container: #ff9a95;
+  --spacing-card-padding: 24px;
+  --spacing-grid-gutter: 16px;
+  --spacing-container-max: 1500px;
+  --spacing-page-padding: 40px;
+  --spacing-section-gap: 32px;
+  --radius-DEFAULT: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+  --font-subtitle: Outfit;
+  --font-headline-xl: Outfit;
+  --font-table-header: Outfit;
+  --font-kpi-value: Outfit;
+  --font-label-sm: Outfit;
+  --font-body-md: Outfit;
+  --font-headline-xl-mobile: Outfit;
+  --text-subtitle: 16px;
+  --leading-subtitle: 1.5;
+  --weight-subtitle: 400;
+  --text-headline-xl: 40px;
+  --leading-headline-xl: 1.2;
+  --tracking-headline-xl: -0.02em;
+  --weight-headline-xl: 700;
+  --text-table-header: 13px;
+  --leading-table-header: 1.2;
+  --tracking-table-header: 0.05em;
+  --weight-table-header: 600;
+  --text-kpi-value: 44px;
+  --leading-kpi-value: 1.1;
+  --weight-kpi-value: 600;
+  --text-label-sm: 12px;
+  --leading-label-sm: 1.2;
+  --weight-label-sm: 600;
+  --text-body-md: 15px;
+  --leading-body-md: 1.5;
+  --weight-body-md: 500;
+  --text-headline-xl-mobile: 32px;
+  --leading-headline-xl-mobile: 1.2;
+  --weight-headline-xl-mobile: 700;
+}
+
+.stitch-call-report .bg-surface-tint { background-color: var(--color-surface-tint); }
+.stitch-call-report .text-surface-tint { color: var(--color-surface-tint); }
+.stitch-call-report .border-surface-tint { border-color: var(--color-surface-tint); }
+.stitch-call-report .ring-surface-tint { --tw-ring-color: var(--color-surface-tint); }
+.stitch-call-report .shadow-surface-tint\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-surface-tint) 10%, transparent); }
+.stitch-call-report .bg-on-primary-fixed { background-color: var(--color-on-primary-fixed); }
+.stitch-call-report .text-on-primary-fixed { color: var(--color-on-primary-fixed); }
+.stitch-call-report .border-on-primary-fixed { border-color: var(--color-on-primary-fixed); }
+.stitch-call-report .ring-on-primary-fixed { --tw-ring-color: var(--color-on-primary-fixed); }
+.stitch-call-report .shadow-on-primary-fixed\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-primary-fixed) 10%, transparent); }
+.stitch-call-report .bg-outline { background-color: var(--color-outline); }
+.stitch-call-report .text-outline { color: var(--color-outline); }
+.stitch-call-report .border-outline { border-color: var(--color-outline); }
+.stitch-call-report .ring-outline { --tw-ring-color: var(--color-outline); }
+.stitch-call-report .shadow-outline\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-outline) 10%, transparent); }
+.stitch-call-report .bg-on-primary-fixed-variant { background-color: var(--color-on-primary-fixed-variant); }
+.stitch-call-report .text-on-primary-fixed-variant { color: var(--color-on-primary-fixed-variant); }
+.stitch-call-report .border-on-primary-fixed-variant { border-color: var(--color-on-primary-fixed-variant); }
+.stitch-call-report .ring-on-primary-fixed-variant { --tw-ring-color: var(--color-on-primary-fixed-variant); }
+.stitch-call-report .shadow-on-primary-fixed-variant\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-primary-fixed-variant) 10%, transparent); }
+.stitch-call-report .bg-primary-fixed-dim { background-color: var(--color-primary-fixed-dim); }
+.stitch-call-report .text-primary-fixed-dim { color: var(--color-primary-fixed-dim); }
+.stitch-call-report .border-primary-fixed-dim { border-color: var(--color-primary-fixed-dim); }
+.stitch-call-report .ring-primary-fixed-dim { --tw-ring-color: var(--color-primary-fixed-dim); }
+.stitch-call-report .shadow-primary-fixed-dim\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-primary-fixed-dim) 10%, transparent); }
+.stitch-call-report .bg-surface-container-highest { background-color: var(--color-surface-container-highest); }
+.stitch-call-report .text-surface-container-highest { color: var(--color-surface-container-highest); }
+.stitch-call-report .border-surface-container-highest { border-color: var(--color-surface-container-highest); }
+.stitch-call-report .ring-surface-container-highest { --tw-ring-color: var(--color-surface-container-highest); }
+.stitch-call-report .shadow-surface-container-highest\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-surface-container-highest) 10%, transparent); }
+.stitch-call-report .bg-tertiary { background-color: var(--color-tertiary); }
+.stitch-call-report .text-tertiary { color: var(--color-tertiary); }
+.stitch-call-report .border-tertiary { border-color: var(--color-tertiary); }
+.stitch-call-report .ring-tertiary { --tw-ring-color: var(--color-tertiary); }
+.stitch-call-report .shadow-tertiary\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-tertiary) 10%, transparent); }
+.stitch-call-report .bg-on-tertiary-fixed-variant { background-color: var(--color-on-tertiary-fixed-variant); }
+.stitch-call-report .text-on-tertiary-fixed-variant { color: var(--color-on-tertiary-fixed-variant); }
+.stitch-call-report .border-on-tertiary-fixed-variant { border-color: var(--color-on-tertiary-fixed-variant); }
+.stitch-call-report .ring-on-tertiary-fixed-variant { --tw-ring-color: var(--color-on-tertiary-fixed-variant); }
+.stitch-call-report .shadow-on-tertiary-fixed-variant\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-tertiary-fixed-variant) 10%, transparent); }
+.stitch-call-report .bg-on-secondary-container { background-color: var(--color-on-secondary-container); }
+.stitch-call-report .text-on-secondary-container { color: var(--color-on-secondary-container); }
+.stitch-call-report .border-on-secondary-container { border-color: var(--color-on-secondary-container); }
+.stitch-call-report .ring-on-secondary-container { --tw-ring-color: var(--color-on-secondary-container); }
+.stitch-call-report .shadow-on-secondary-container\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-secondary-container) 10%, transparent); }
+.stitch-call-report .bg-on-secondary-fixed { background-color: var(--color-on-secondary-fixed); }
+.stitch-call-report .text-on-secondary-fixed { color: var(--color-on-secondary-fixed); }
+.stitch-call-report .border-on-secondary-fixed { border-color: var(--color-on-secondary-fixed); }
+.stitch-call-report .ring-on-secondary-fixed { --tw-ring-color: var(--color-on-secondary-fixed); }
+.stitch-call-report .shadow-on-secondary-fixed\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-secondary-fixed) 10%, transparent); }
+.stitch-call-report .bg-on-tertiary { background-color: var(--color-on-tertiary); }
+.stitch-call-report .text-on-tertiary { color: var(--color-on-tertiary); }
+.stitch-call-report .border-on-tertiary { border-color: var(--color-on-tertiary); }
+.stitch-call-report .ring-on-tertiary { --tw-ring-color: var(--color-on-tertiary); }
+.stitch-call-report .shadow-on-tertiary\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-tertiary) 10%, transparent); }
+.stitch-call-report .bg-on-secondary-fixed-variant { background-color: var(--color-on-secondary-fixed-variant); }
+.stitch-call-report .text-on-secondary-fixed-variant { color: var(--color-on-secondary-fixed-variant); }
+.stitch-call-report .border-on-secondary-fixed-variant { border-color: var(--color-on-secondary-fixed-variant); }
+.stitch-call-report .ring-on-secondary-fixed-variant { --tw-ring-color: var(--color-on-secondary-fixed-variant); }
+.stitch-call-report .shadow-on-secondary-fixed-variant\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-secondary-fixed-variant) 10%, transparent); }
+.stitch-call-report .bg-surface-variant { background-color: var(--color-surface-variant); }
+.stitch-call-report .text-surface-variant { color: var(--color-surface-variant); }
+.stitch-call-report .border-surface-variant { border-color: var(--color-surface-variant); }
+.stitch-call-report .ring-surface-variant { --tw-ring-color: var(--color-surface-variant); }
+.stitch-call-report .shadow-surface-variant\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-surface-variant) 10%, transparent); }
+.stitch-call-report .bg-on-error-container { background-color: var(--color-on-error-container); }
+.stitch-call-report .text-on-error-container { color: var(--color-on-error-container); }
+.stitch-call-report .border-on-error-container { border-color: var(--color-on-error-container); }
+.stitch-call-report .ring-on-error-container { --tw-ring-color: var(--color-on-error-container); }
+.stitch-call-report .shadow-on-error-container\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-error-container) 10%, transparent); }
+.stitch-call-report .bg-surface-container-lowest { background-color: var(--color-surface-container-lowest); }
+.stitch-call-report .text-surface-container-lowest { color: var(--color-surface-container-lowest); }
+.stitch-call-report .border-surface-container-lowest { border-color: var(--color-surface-container-lowest); }
+.stitch-call-report .ring-surface-container-lowest { --tw-ring-color: var(--color-surface-container-lowest); }
+.stitch-call-report .shadow-surface-container-lowest\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-surface-container-lowest) 10%, transparent); }
+.stitch-call-report .bg-tertiary-container { background-color: var(--color-tertiary-container); }
+.stitch-call-report .text-tertiary-container { color: var(--color-tertiary-container); }
+.stitch-call-report .border-tertiary-container { border-color: var(--color-tertiary-container); }
+.stitch-call-report .ring-tertiary-container { --tw-ring-color: var(--color-tertiary-container); }
+.stitch-call-report .shadow-tertiary-container\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-tertiary-container) 10%, transparent); }
+.stitch-call-report .bg-on-tertiary-container { background-color: var(--color-on-tertiary-container); }
+.stitch-call-report .text-on-tertiary-container { color: var(--color-on-tertiary-container); }
+.stitch-call-report .border-on-tertiary-container { border-color: var(--color-on-tertiary-container); }
+.stitch-call-report .ring-on-tertiary-container { --tw-ring-color: var(--color-on-tertiary-container); }
+.stitch-call-report .shadow-on-tertiary-container\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-tertiary-container) 10%, transparent); }
+.stitch-call-report .bg-on-error { background-color: var(--color-on-error); }
+.stitch-call-report .text-on-error { color: var(--color-on-error); }
+.stitch-call-report .border-on-error { border-color: var(--color-on-error); }
+.stitch-call-report .ring-on-error { --tw-ring-color: var(--color-on-error); }
+.stitch-call-report .shadow-on-error\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-error) 10%, transparent); }
+.stitch-call-report .bg-error-container { background-color: var(--color-error-container); }
+.stitch-call-report .text-error-container { color: var(--color-error-container); }
+.stitch-call-report .border-error-container { border-color: var(--color-error-container); }
+.stitch-call-report .ring-error-container { --tw-ring-color: var(--color-error-container); }
+.stitch-call-report .shadow-error-container\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-error-container) 10%, transparent); }
+.stitch-call-report .bg-secondary-container { background-color: var(--color-secondary-container); }
+.stitch-call-report .text-secondary-container { color: var(--color-secondary-container); }
+.stitch-call-report .border-secondary-container { border-color: var(--color-secondary-container); }
+.stitch-call-report .ring-secondary-container { --tw-ring-color: var(--color-secondary-container); }
+.stitch-call-report .shadow-secondary-container\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-secondary-container) 10%, transparent); }
+.stitch-call-report .bg-on-surface { background-color: var(--color-on-surface); }
+.stitch-call-report .text-on-surface { color: var(--color-on-surface); }
+.stitch-call-report .border-on-surface { border-color: var(--color-on-surface); }
+.stitch-call-report .ring-on-surface { --tw-ring-color: var(--color-on-surface); }
+.stitch-call-report .shadow-on-surface\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-surface) 10%, transparent); }
+.stitch-call-report .bg-inverse-primary { background-color: var(--color-inverse-primary); }
+.stitch-call-report .text-inverse-primary { color: var(--color-inverse-primary); }
+.stitch-call-report .border-inverse-primary { border-color: var(--color-inverse-primary); }
+.stitch-call-report .ring-inverse-primary { --tw-ring-color: var(--color-inverse-primary); }
+.stitch-call-report .shadow-inverse-primary\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-inverse-primary) 10%, transparent); }
+.stitch-call-report .bg-secondary-fixed { background-color: var(--color-secondary-fixed); }
+.stitch-call-report .text-secondary-fixed { color: var(--color-secondary-fixed); }
+.stitch-call-report .border-secondary-fixed { border-color: var(--color-secondary-fixed); }
+.stitch-call-report .ring-secondary-fixed { --tw-ring-color: var(--color-secondary-fixed); }
+.stitch-call-report .shadow-secondary-fixed\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-secondary-fixed) 10%, transparent); }
+.stitch-call-report .bg-surface-bright { background-color: var(--color-surface-bright); }
+.stitch-call-report .text-surface-bright { color: var(--color-surface-bright); }
+.stitch-call-report .border-surface-bright { border-color: var(--color-surface-bright); }
+.stitch-call-report .ring-surface-bright { --tw-ring-color: var(--color-surface-bright); }
+.stitch-call-report .shadow-surface-bright\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-surface-bright) 10%, transparent); }
+.stitch-call-report .bg-primary-container { background-color: var(--color-primary-container); }
+.stitch-call-report .text-primary-container { color: var(--color-primary-container); }
+.stitch-call-report .border-primary-container { border-color: var(--color-primary-container); }
+.stitch-call-report .ring-primary-container { --tw-ring-color: var(--color-primary-container); }
+.stitch-call-report .shadow-primary-container\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-primary-container) 10%, transparent); }
+.stitch-call-report .bg-surface-container-high { background-color: var(--color-surface-container-high); }
+.stitch-call-report .text-surface-container-high { color: var(--color-surface-container-high); }
+.stitch-call-report .border-surface-container-high { border-color: var(--color-surface-container-high); }
+.stitch-call-report .ring-surface-container-high { --tw-ring-color: var(--color-surface-container-high); }
+.stitch-call-report .shadow-surface-container-high\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-surface-container-high) 10%, transparent); }
+.stitch-call-report .bg-on-surface-variant { background-color: var(--color-on-surface-variant); }
+.stitch-call-report .text-on-surface-variant { color: var(--color-on-surface-variant); }
+.stitch-call-report .border-on-surface-variant { border-color: var(--color-on-surface-variant); }
+.stitch-call-report .ring-on-surface-variant { --tw-ring-color: var(--color-on-surface-variant); }
+.stitch-call-report .shadow-on-surface-variant\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-surface-variant) 10%, transparent); }
+.stitch-call-report .bg-on-background { background-color: var(--color-on-background); }
+.stitch-call-report .text-on-background { color: var(--color-on-background); }
+.stitch-call-report .border-on-background { border-color: var(--color-on-background); }
+.stitch-call-report .ring-on-background { --tw-ring-color: var(--color-on-background); }
+.stitch-call-report .shadow-on-background\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-background) 10%, transparent); }
+.stitch-call-report .bg-on-primary { background-color: var(--color-on-primary); }
+.stitch-call-report .text-on-primary { color: var(--color-on-primary); }
+.stitch-call-report .border-on-primary { border-color: var(--color-on-primary); }
+.stitch-call-report .ring-on-primary { --tw-ring-color: var(--color-on-primary); }
+.stitch-call-report .shadow-on-primary\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-primary) 10%, transparent); }
+.stitch-call-report .bg-secondary-fixed-dim { background-color: var(--color-secondary-fixed-dim); }
+.stitch-call-report .text-secondary-fixed-dim { color: var(--color-secondary-fixed-dim); }
+.stitch-call-report .border-secondary-fixed-dim { border-color: var(--color-secondary-fixed-dim); }
+.stitch-call-report .ring-secondary-fixed-dim { --tw-ring-color: var(--color-secondary-fixed-dim); }
+.stitch-call-report .shadow-secondary-fixed-dim\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-secondary-fixed-dim) 10%, transparent); }
+.stitch-call-report .bg-background { background-color: var(--color-background); }
+.stitch-call-report .text-background { color: var(--color-background); }
+.stitch-call-report .border-background { border-color: var(--color-background); }
+.stitch-call-report .ring-background { --tw-ring-color: var(--color-background); }
+.stitch-call-report .shadow-background\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-background) 10%, transparent); }
+.stitch-call-report .bg-inverse-surface { background-color: var(--color-inverse-surface); }
+.stitch-call-report .text-inverse-surface { color: var(--color-inverse-surface); }
+.stitch-call-report .border-inverse-surface { border-color: var(--color-inverse-surface); }
+.stitch-call-report .ring-inverse-surface { --tw-ring-color: var(--color-inverse-surface); }
+.stitch-call-report .shadow-inverse-surface\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-inverse-surface) 10%, transparent); }
+.stitch-call-report .bg-surface-container-low { background-color: var(--color-surface-container-low); }
+.stitch-call-report .text-surface-container-low { color: var(--color-surface-container-low); }
+.stitch-call-report .border-surface-container-low { border-color: var(--color-surface-container-low); }
+.stitch-call-report .ring-surface-container-low { --tw-ring-color: var(--color-surface-container-low); }
+.stitch-call-report .shadow-surface-container-low\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-surface-container-low) 10%, transparent); }
+.stitch-call-report .bg-tertiary-fixed-dim { background-color: var(--color-tertiary-fixed-dim); }
+.stitch-call-report .text-tertiary-fixed-dim { color: var(--color-tertiary-fixed-dim); }
+.stitch-call-report .border-tertiary-fixed-dim { border-color: var(--color-tertiary-fixed-dim); }
+.stitch-call-report .ring-tertiary-fixed-dim { --tw-ring-color: var(--color-tertiary-fixed-dim); }
+.stitch-call-report .shadow-tertiary-fixed-dim\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-tertiary-fixed-dim) 10%, transparent); }
+.stitch-call-report .bg-error { background-color: var(--color-error); }
+.stitch-call-report .text-error { color: var(--color-error); }
+.stitch-call-report .border-error { border-color: var(--color-error); }
+.stitch-call-report .ring-error { --tw-ring-color: var(--color-error); }
+.stitch-call-report .shadow-error\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-error) 10%, transparent); }
+.stitch-call-report .bg-surface-container { background-color: var(--color-surface-container); }
+.stitch-call-report .text-surface-container { color: var(--color-surface-container); }
+.stitch-call-report .border-surface-container { border-color: var(--color-surface-container); }
+.stitch-call-report .ring-surface-container { --tw-ring-color: var(--color-surface-container); }
+.stitch-call-report .shadow-surface-container\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-surface-container) 10%, transparent); }
+.stitch-call-report .bg-secondary { background-color: var(--color-secondary); }
+.stitch-call-report .text-secondary { color: var(--color-secondary); }
+.stitch-call-report .border-secondary { border-color: var(--color-secondary); }
+.stitch-call-report .ring-secondary { --tw-ring-color: var(--color-secondary); }
+.stitch-call-report .shadow-secondary\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-secondary) 10%, transparent); }
+.stitch-call-report .bg-on-tertiary-fixed { background-color: var(--color-on-tertiary-fixed); }
+.stitch-call-report .text-on-tertiary-fixed { color: var(--color-on-tertiary-fixed); }
+.stitch-call-report .border-on-tertiary-fixed { border-color: var(--color-on-tertiary-fixed); }
+.stitch-call-report .ring-on-tertiary-fixed { --tw-ring-color: var(--color-on-tertiary-fixed); }
+.stitch-call-report .shadow-on-tertiary-fixed\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-tertiary-fixed) 10%, transparent); }
+.stitch-call-report .bg-on-secondary { background-color: var(--color-on-secondary); }
+.stitch-call-report .text-on-secondary { color: var(--color-on-secondary); }
+.stitch-call-report .border-on-secondary { border-color: var(--color-on-secondary); }
+.stitch-call-report .ring-on-secondary { --tw-ring-color: var(--color-on-secondary); }
+.stitch-call-report .shadow-on-secondary\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-secondary) 10%, transparent); }
+.stitch-call-report .bg-outline-variant { background-color: var(--color-outline-variant); }
+.stitch-call-report .text-outline-variant { color: var(--color-outline-variant); }
+.stitch-call-report .border-outline-variant { border-color: var(--color-outline-variant); }
+.stitch-call-report .ring-outline-variant { --tw-ring-color: var(--color-outline-variant); }
+.stitch-call-report .shadow-outline-variant\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-outline-variant) 10%, transparent); }
+.stitch-call-report .bg-primary-fixed { background-color: var(--color-primary-fixed); }
+.stitch-call-report .text-primary-fixed { color: var(--color-primary-fixed); }
+.stitch-call-report .border-primary-fixed { border-color: var(--color-primary-fixed); }
+.stitch-call-report .ring-primary-fixed { --tw-ring-color: var(--color-primary-fixed); }
+.stitch-call-report .shadow-primary-fixed\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-primary-fixed) 10%, transparent); }
+.stitch-call-report .bg-surface { background-color: var(--color-surface); }
+.stitch-call-report .text-surface { color: var(--color-surface); }
+.stitch-call-report .border-surface { border-color: var(--color-surface); }
+.stitch-call-report .ring-surface { --tw-ring-color: var(--color-surface); }
+.stitch-call-report .shadow-surface\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-surface) 10%, transparent); }
+.stitch-call-report .bg-tertiary-fixed { background-color: var(--color-tertiary-fixed); }
+.stitch-call-report .text-tertiary-fixed { color: var(--color-tertiary-fixed); }
+.stitch-call-report .border-tertiary-fixed { border-color: var(--color-tertiary-fixed); }
+.stitch-call-report .ring-tertiary-fixed { --tw-ring-color: var(--color-tertiary-fixed); }
+.stitch-call-report .shadow-tertiary-fixed\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-tertiary-fixed) 10%, transparent); }
+.stitch-call-report .bg-surface-dim { background-color: var(--color-surface-dim); }
+.stitch-call-report .text-surface-dim { color: var(--color-surface-dim); }
+.stitch-call-report .border-surface-dim { border-color: var(--color-surface-dim); }
+.stitch-call-report .ring-surface-dim { --tw-ring-color: var(--color-surface-dim); }
+.stitch-call-report .shadow-surface-dim\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-surface-dim) 10%, transparent); }
+.stitch-call-report .bg-primary { background-color: var(--color-primary); }
+.stitch-call-report .text-primary { color: var(--color-primary); }
+.stitch-call-report .border-primary { border-color: var(--color-primary); }
+.stitch-call-report .ring-primary { --tw-ring-color: var(--color-primary); }
+.stitch-call-report .shadow-primary\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-primary) 10%, transparent); }
+.stitch-call-report .bg-inverse-on-surface { background-color: var(--color-inverse-on-surface); }
+.stitch-call-report .text-inverse-on-surface { color: var(--color-inverse-on-surface); }
+.stitch-call-report .border-inverse-on-surface { border-color: var(--color-inverse-on-surface); }
+.stitch-call-report .ring-inverse-on-surface { --tw-ring-color: var(--color-inverse-on-surface); }
+.stitch-call-report .shadow-inverse-on-surface\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-inverse-on-surface) 10%, transparent); }
+.stitch-call-report .bg-on-primary-container { background-color: var(--color-on-primary-container); }
+.stitch-call-report .text-on-primary-container { color: var(--color-on-primary-container); }
+.stitch-call-report .border-on-primary-container { border-color: var(--color-on-primary-container); }
+.stitch-call-report .ring-on-primary-container { --tw-ring-color: var(--color-on-primary-container); }
+.stitch-call-report .shadow-on-primary-container\/10 { --tw-shadow-color: color-mix(in srgb, var(--color-on-primary-container) 10%, transparent); }
+.stitch-call-report .p-card-padding { padding: var(--spacing-card-padding); }
+.stitch-call-report .px-card-padding { padding-left: var(--spacing-card-padding); padding-right: var(--spacing-card-padding); }
+.stitch-call-report .gap-card-padding { gap: var(--spacing-card-padding); }
+.stitch-call-report .p-grid-gutter { padding: var(--spacing-grid-gutter); }
+.stitch-call-report .px-grid-gutter { padding-left: var(--spacing-grid-gutter); padding-right: var(--spacing-grid-gutter); }
+.stitch-call-report .gap-grid-gutter { gap: var(--spacing-grid-gutter); }
+.stitch-call-report .p-container-max { padding: var(--spacing-container-max); }
+.stitch-call-report .px-container-max { padding-left: var(--spacing-container-max); padding-right: var(--spacing-container-max); }
+.stitch-call-report .gap-container-max { gap: var(--spacing-container-max); }
+.stitch-call-report .p-page-padding { padding: var(--spacing-page-padding); }
+.stitch-call-report .px-page-padding { padding-left: var(--spacing-page-padding); padding-right: var(--spacing-page-padding); }
+.stitch-call-report .gap-page-padding { gap: var(--spacing-page-padding); }
+.stitch-call-report .p-section-gap { padding: var(--spacing-section-gap); }
+.stitch-call-report .px-section-gap { padding-left: var(--spacing-section-gap); padding-right: var(--spacing-section-gap); }
+.stitch-call-report .gap-section-gap { gap: var(--spacing-section-gap); }
+.stitch-call-report .rounded { border-radius: var(--radius-DEFAULT); }
+.stitch-call-report .rounded-lg { border-radius: var(--radius-lg); }
+.stitch-call-report .rounded-xl { border-radius: var(--radius-xl); }
+.stitch-call-report .rounded-full { border-radius: var(--radius-full); }
+.stitch-call-report .font-subtitle { font-family: var(--font-subtitle); }
+.stitch-call-report .font-headline-xl { font-family: var(--font-headline-xl); }
+.stitch-call-report .font-table-header { font-family: var(--font-table-header); }
+.stitch-call-report .font-kpi-value { font-family: var(--font-kpi-value); }
+.stitch-call-report .font-label-sm { font-family: var(--font-label-sm); }
+.stitch-call-report .font-body-md { font-family: var(--font-body-md); }
+.stitch-call-report .font-headline-xl-mobile { font-family: var(--font-headline-xl-mobile); }
+.stitch-call-report .text-subtitle { font-size: var(--text-subtitle); line-height: var(--leading-subtitle); font-weight: var(--weight-subtitle); letter-spacing: var(--tracking-subtitle); }
+.stitch-call-report .text-headline-xl { font-size: var(--text-headline-xl); line-height: var(--leading-headline-xl); font-weight: var(--weight-headline-xl); letter-spacing: var(--tracking-headline-xl); }
+.stitch-call-report .text-table-header { font-size: var(--text-table-header); line-height: var(--leading-table-header); font-weight: var(--weight-table-header); letter-spacing: var(--tracking-table-header); }
+.stitch-call-report .text-kpi-value { font-size: var(--text-kpi-value); line-height: var(--leading-kpi-value); font-weight: var(--weight-kpi-value); letter-spacing: var(--tracking-kpi-value); }
+.stitch-call-report .text-label-sm { font-size: var(--text-label-sm); line-height: var(--leading-label-sm); font-weight: var(--weight-label-sm); letter-spacing: var(--tracking-label-sm); }
+.stitch-call-report .text-body-md { font-size: var(--text-body-md); line-height: var(--leading-body-md); font-weight: var(--weight-body-md); letter-spacing: var(--tracking-body-md); }
+.stitch-call-report .text-headline-xl-mobile { font-size: var(--text-headline-xl-mobile); line-height: var(--leading-headline-xl-mobile); font-weight: var(--weight-headline-xl-mobile); letter-spacing: var(--tracking-headline-xl-mobile); }
+
+.stitch-call-report { font-family: 'Outfit', sans-serif; }
+.stitch-call-report .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+}
+.stitch-call-report .main-shadow { box-shadow: 0 8px 32px rgba(15,23,42,.05); }
+.stitch-call-report .table-row-hover:hover { background-color: #F9FAFB; }
+.stitch-call-report .transition-standard { transition: all 0.2s ease-in-out; }
+
+/* additional overrides to prevent bleed */
+.stitch-call-report button { outline: none; }
+.stitch-call-report .hover\:bg-surface-tint:hover { background-color: var(--color-surface-tint); }
+.stitch-call-report .focus\:border-surface-tint:focus { border-color: var(--color-surface-tint); }
+.stitch-call-report .focus\:ring-surface-tint:focus { --tw-ring-color: var(--color-surface-tint); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-primary-fixed:hover { background-color: var(--color-on-primary-fixed); }
+.stitch-call-report .focus\:border-on-primary-fixed:focus { border-color: var(--color-on-primary-fixed); }
+.stitch-call-report .focus\:ring-on-primary-fixed:focus { --tw-ring-color: var(--color-on-primary-fixed); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-outline:hover { background-color: var(--color-outline); }
+.stitch-call-report .focus\:border-outline:focus { border-color: var(--color-outline); }
+.stitch-call-report .focus\:ring-outline:focus { --tw-ring-color: var(--color-outline); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-primary-fixed-variant:hover { background-color: var(--color-on-primary-fixed-variant); }
+.stitch-call-report .focus\:border-on-primary-fixed-variant:focus { border-color: var(--color-on-primary-fixed-variant); }
+.stitch-call-report .focus\:ring-on-primary-fixed-variant:focus { --tw-ring-color: var(--color-on-primary-fixed-variant); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-primary-fixed-dim:hover { background-color: var(--color-primary-fixed-dim); }
+.stitch-call-report .focus\:border-primary-fixed-dim:focus { border-color: var(--color-primary-fixed-dim); }
+.stitch-call-report .focus\:ring-primary-fixed-dim:focus { --tw-ring-color: var(--color-primary-fixed-dim); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-surface-container-highest:hover { background-color: var(--color-surface-container-highest); }
+.stitch-call-report .focus\:border-surface-container-highest:focus { border-color: var(--color-surface-container-highest); }
+.stitch-call-report .focus\:ring-surface-container-highest:focus { --tw-ring-color: var(--color-surface-container-highest); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-tertiary:hover { background-color: var(--color-tertiary); }
+.stitch-call-report .focus\:border-tertiary:focus { border-color: var(--color-tertiary); }
+.stitch-call-report .focus\:ring-tertiary:focus { --tw-ring-color: var(--color-tertiary); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-tertiary-fixed-variant:hover { background-color: var(--color-on-tertiary-fixed-variant); }
+.stitch-call-report .focus\:border-on-tertiary-fixed-variant:focus { border-color: var(--color-on-tertiary-fixed-variant); }
+.stitch-call-report .focus\:ring-on-tertiary-fixed-variant:focus { --tw-ring-color: var(--color-on-tertiary-fixed-variant); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-secondary-container:hover { background-color: var(--color-on-secondary-container); }
+.stitch-call-report .focus\:border-on-secondary-container:focus { border-color: var(--color-on-secondary-container); }
+.stitch-call-report .focus\:ring-on-secondary-container:focus { --tw-ring-color: var(--color-on-secondary-container); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-secondary-fixed:hover { background-color: var(--color-on-secondary-fixed); }
+.stitch-call-report .focus\:border-on-secondary-fixed:focus { border-color: var(--color-on-secondary-fixed); }
+.stitch-call-report .focus\:ring-on-secondary-fixed:focus { --tw-ring-color: var(--color-on-secondary-fixed); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-tertiary:hover { background-color: var(--color-on-tertiary); }
+.stitch-call-report .focus\:border-on-tertiary:focus { border-color: var(--color-on-tertiary); }
+.stitch-call-report .focus\:ring-on-tertiary:focus { --tw-ring-color: var(--color-on-tertiary); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-secondary-fixed-variant:hover { background-color: var(--color-on-secondary-fixed-variant); }
+.stitch-call-report .focus\:border-on-secondary-fixed-variant:focus { border-color: var(--color-on-secondary-fixed-variant); }
+.stitch-call-report .focus\:ring-on-secondary-fixed-variant:focus { --tw-ring-color: var(--color-on-secondary-fixed-variant); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-surface-variant:hover { background-color: var(--color-surface-variant); }
+.stitch-call-report .focus\:border-surface-variant:focus { border-color: var(--color-surface-variant); }
+.stitch-call-report .focus\:ring-surface-variant:focus { --tw-ring-color: var(--color-surface-variant); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-error-container:hover { background-color: var(--color-on-error-container); }
+.stitch-call-report .focus\:border-on-error-container:focus { border-color: var(--color-on-error-container); }
+.stitch-call-report .focus\:ring-on-error-container:focus { --tw-ring-color: var(--color-on-error-container); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-surface-container-lowest:hover { background-color: var(--color-surface-container-lowest); }
+.stitch-call-report .focus\:border-surface-container-lowest:focus { border-color: var(--color-surface-container-lowest); }
+.stitch-call-report .focus\:ring-surface-container-lowest:focus { --tw-ring-color: var(--color-surface-container-lowest); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-tertiary-container:hover { background-color: var(--color-tertiary-container); }
+.stitch-call-report .focus\:border-tertiary-container:focus { border-color: var(--color-tertiary-container); }
+.stitch-call-report .focus\:ring-tertiary-container:focus { --tw-ring-color: var(--color-tertiary-container); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-tertiary-container:hover { background-color: var(--color-on-tertiary-container); }
+.stitch-call-report .focus\:border-on-tertiary-container:focus { border-color: var(--color-on-tertiary-container); }
+.stitch-call-report .focus\:ring-on-tertiary-container:focus { --tw-ring-color: var(--color-on-tertiary-container); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-error:hover { background-color: var(--color-on-error); }
+.stitch-call-report .focus\:border-on-error:focus { border-color: var(--color-on-error); }
+.stitch-call-report .focus\:ring-on-error:focus { --tw-ring-color: var(--color-on-error); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-error-container:hover { background-color: var(--color-error-container); }
+.stitch-call-report .focus\:border-error-container:focus { border-color: var(--color-error-container); }
+.stitch-call-report .focus\:ring-error-container:focus { --tw-ring-color: var(--color-error-container); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-secondary-container:hover { background-color: var(--color-secondary-container); }
+.stitch-call-report .focus\:border-secondary-container:focus { border-color: var(--color-secondary-container); }
+.stitch-call-report .focus\:ring-secondary-container:focus { --tw-ring-color: var(--color-secondary-container); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-surface:hover { background-color: var(--color-on-surface); }
+.stitch-call-report .focus\:border-on-surface:focus { border-color: var(--color-on-surface); }
+.stitch-call-report .focus\:ring-on-surface:focus { --tw-ring-color: var(--color-on-surface); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-inverse-primary:hover { background-color: var(--color-inverse-primary); }
+.stitch-call-report .focus\:border-inverse-primary:focus { border-color: var(--color-inverse-primary); }
+.stitch-call-report .focus\:ring-inverse-primary:focus { --tw-ring-color: var(--color-inverse-primary); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-secondary-fixed:hover { background-color: var(--color-secondary-fixed); }
+.stitch-call-report .focus\:border-secondary-fixed:focus { border-color: var(--color-secondary-fixed); }
+.stitch-call-report .focus\:ring-secondary-fixed:focus { --tw-ring-color: var(--color-secondary-fixed); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-surface-bright:hover { background-color: var(--color-surface-bright); }
+.stitch-call-report .focus\:border-surface-bright:focus { border-color: var(--color-surface-bright); }
+.stitch-call-report .focus\:ring-surface-bright:focus { --tw-ring-color: var(--color-surface-bright); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-primary-container:hover { background-color: var(--color-primary-container); }
+.stitch-call-report .focus\:border-primary-container:focus { border-color: var(--color-primary-container); }
+.stitch-call-report .focus\:ring-primary-container:focus { --tw-ring-color: var(--color-primary-container); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-surface-container-high:hover { background-color: var(--color-surface-container-high); }
+.stitch-call-report .focus\:border-surface-container-high:focus { border-color: var(--color-surface-container-high); }
+.stitch-call-report .focus\:ring-surface-container-high:focus { --tw-ring-color: var(--color-surface-container-high); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-surface-variant:hover { background-color: var(--color-on-surface-variant); }
+.stitch-call-report .focus\:border-on-surface-variant:focus { border-color: var(--color-on-surface-variant); }
+.stitch-call-report .focus\:ring-on-surface-variant:focus { --tw-ring-color: var(--color-on-surface-variant); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-background:hover { background-color: var(--color-on-background); }
+.stitch-call-report .focus\:border-on-background:focus { border-color: var(--color-on-background); }
+.stitch-call-report .focus\:ring-on-background:focus { --tw-ring-color: var(--color-on-background); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-primary:hover { background-color: var(--color-on-primary); }
+.stitch-call-report .focus\:border-on-primary:focus { border-color: var(--color-on-primary); }
+.stitch-call-report .focus\:ring-on-primary:focus { --tw-ring-color: var(--color-on-primary); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-secondary-fixed-dim:hover { background-color: var(--color-secondary-fixed-dim); }
+.stitch-call-report .focus\:border-secondary-fixed-dim:focus { border-color: var(--color-secondary-fixed-dim); }
+.stitch-call-report .focus\:ring-secondary-fixed-dim:focus { --tw-ring-color: var(--color-secondary-fixed-dim); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-background:hover { background-color: var(--color-background); }
+.stitch-call-report .focus\:border-background:focus { border-color: var(--color-background); }
+.stitch-call-report .focus\:ring-background:focus { --tw-ring-color: var(--color-background); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-inverse-surface:hover { background-color: var(--color-inverse-surface); }
+.stitch-call-report .focus\:border-inverse-surface:focus { border-color: var(--color-inverse-surface); }
+.stitch-call-report .focus\:ring-inverse-surface:focus { --tw-ring-color: var(--color-inverse-surface); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-surface-container-low:hover { background-color: var(--color-surface-container-low); }
+.stitch-call-report .focus\:border-surface-container-low:focus { border-color: var(--color-surface-container-low); }
+.stitch-call-report .focus\:ring-surface-container-low:focus { --tw-ring-color: var(--color-surface-container-low); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-tertiary-fixed-dim:hover { background-color: var(--color-tertiary-fixed-dim); }
+.stitch-call-report .focus\:border-tertiary-fixed-dim:focus { border-color: var(--color-tertiary-fixed-dim); }
+.stitch-call-report .focus\:ring-tertiary-fixed-dim:focus { --tw-ring-color: var(--color-tertiary-fixed-dim); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-error:hover { background-color: var(--color-error); }
+.stitch-call-report .focus\:border-error:focus { border-color: var(--color-error); }
+.stitch-call-report .focus\:ring-error:focus { --tw-ring-color: var(--color-error); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-surface-container:hover { background-color: var(--color-surface-container); }
+.stitch-call-report .focus\:border-surface-container:focus { border-color: var(--color-surface-container); }
+.stitch-call-report .focus\:ring-surface-container:focus { --tw-ring-color: var(--color-surface-container); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-secondary:hover { background-color: var(--color-secondary); }
+.stitch-call-report .focus\:border-secondary:focus { border-color: var(--color-secondary); }
+.stitch-call-report .focus\:ring-secondary:focus { --tw-ring-color: var(--color-secondary); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-tertiary-fixed:hover { background-color: var(--color-on-tertiary-fixed); }
+.stitch-call-report .focus\:border-on-tertiary-fixed:focus { border-color: var(--color-on-tertiary-fixed); }
+.stitch-call-report .focus\:ring-on-tertiary-fixed:focus { --tw-ring-color: var(--color-on-tertiary-fixed); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-secondary:hover { background-color: var(--color-on-secondary); }
+.stitch-call-report .focus\:border-on-secondary:focus { border-color: var(--color-on-secondary); }
+.stitch-call-report .focus\:ring-on-secondary:focus { --tw-ring-color: var(--color-on-secondary); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-outline-variant:hover { background-color: var(--color-outline-variant); }
+.stitch-call-report .focus\:border-outline-variant:focus { border-color: var(--color-outline-variant); }
+.stitch-call-report .focus\:ring-outline-variant:focus { --tw-ring-color: var(--color-outline-variant); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-primary-fixed:hover { background-color: var(--color-primary-fixed); }
+.stitch-call-report .focus\:border-primary-fixed:focus { border-color: var(--color-primary-fixed); }
+.stitch-call-report .focus\:ring-primary-fixed:focus { --tw-ring-color: var(--color-primary-fixed); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-surface:hover { background-color: var(--color-surface); }
+.stitch-call-report .focus\:border-surface:focus { border-color: var(--color-surface); }
+.stitch-call-report .focus\:ring-surface:focus { --tw-ring-color: var(--color-surface); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-tertiary-fixed:hover { background-color: var(--color-tertiary-fixed); }
+.stitch-call-report .focus\:border-tertiary-fixed:focus { border-color: var(--color-tertiary-fixed); }
+.stitch-call-report .focus\:ring-tertiary-fixed:focus { --tw-ring-color: var(--color-tertiary-fixed); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-surface-dim:hover { background-color: var(--color-surface-dim); }
+.stitch-call-report .focus\:border-surface-dim:focus { border-color: var(--color-surface-dim); }
+.stitch-call-report .focus\:ring-surface-dim:focus { --tw-ring-color: var(--color-surface-dim); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-primary:hover { background-color: var(--color-primary); }
+.stitch-call-report .focus\:border-primary:focus { border-color: var(--color-primary); }
+.stitch-call-report .focus\:ring-primary:focus { --tw-ring-color: var(--color-primary); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-inverse-on-surface:hover { background-color: var(--color-inverse-on-surface); }
+.stitch-call-report .focus\:border-inverse-on-surface:focus { border-color: var(--color-inverse-on-surface); }
+.stitch-call-report .focus\:ring-inverse-on-surface:focus { --tw-ring-color: var(--color-inverse-on-surface); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }
+.stitch-call-report .hover\:bg-on-primary-container:hover { background-color: var(--color-on-primary-container); }
+.stitch-call-report .focus\:border-on-primary-container:focus { border-color: var(--color-on-primary-container); }
+.stitch-call-report .focus\:ring-on-primary-container:focus { --tw-ring-color: var(--color-on-primary-container); }
+.stitch-call-report .active\:scale-95:active { transform: scale(0.95); }

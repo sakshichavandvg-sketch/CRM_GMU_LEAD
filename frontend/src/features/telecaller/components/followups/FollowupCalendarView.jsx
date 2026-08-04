@@ -1,30 +1,33 @@
-import React, { useMemo } from "react";
-// Calendar-only view: this component now renders only the month grid (no agenda panel)
+import React, { useState, useMemo } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function FollowupCalendarView({ 
-  followups, // This is the ALL filtered array for heatmap
+  followups,
   selectedDate, 
   onSelectDate, 
   onSchedule, 
   onReschedule 
 }) {
   const today = new Date();
+  const [monthOffset, setMonthOffset] = useState(0);
   
-  // Initialize calendar around the selected date or today
-  const viewDate = selectedDate ? new Date(selectedDate) : today;
+  // Compute the displayed month based on offset
+  const viewDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfMonth = new Date(year, month, 1).getDay();
 
-  // Create heatmap data map: YYYY-MM-DD -> count
+  // Heatmap: only count non-completed follow-ups
   const heatmap = useMemo(() => {
     const map = {};
     followups.forEach(f => {
-      const d = f.scheduledDate || f.date;
+      const isCompleted = String(f.status || "").toLowerCase() === "completed";
+      if (isCompleted) return;
+      const d = f.scheduledDate;
       if (d) {
         map[d] = (map[d] || 0) + 1;
       }
@@ -35,7 +38,7 @@ export default function FollowupCalendarView({
   // Generate grid days
   const calendarDays = [];
   for (let i = 0; i < firstDayOfMonth; i++) {
-    calendarDays.push(null); // Empty slots before the 1st
+    calendarDays.push(null);
   }
   for (let i = 1; i <= daysInMonth; i++) {
     const d = new Date(year, month, i);
@@ -44,21 +47,35 @@ export default function FollowupCalendarView({
     calendarDays.push(_d.toISOString().split("T")[0]);
   }
 
-  // Followups for the currently selected day
-  const selectedDayFollowups = useMemo(() => {
-    if (!selectedDate) return [];
-    return followups.filter(f => (f.scheduledDate || f.date) === selectedDate);
-  }, [followups, selectedDate]);
+  // Today string for highlighting
+  const tOffset = today.getTimezoneOffset();
+  const _t = new Date(today.getTime() - (tOffset*60*1000));
+  const todayStr = _t.toISOString().split("T")[0];
 
-  console.log("[FollowupCalendarView] render", { selectedDate, followupsCount: followups.length });
+  const monthLabel = viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
   return (
     <div className="flex flex-col border border-transparent rounded-2xl w-full">
       <div className="w-full">
+        {/* Month header with navigation */}
         <div className="flex items-center justify-between mb-3">
+          <button
+            onClick={() => setMonthOffset(prev => prev - 1)}
+            className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors text-slate-600"
+            aria-label="Previous month"
+          >
+            <ChevronLeft size={18} />
+          </button>
           <h2 className="text-lg font-[700] text-gray-900">
-            {viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            {monthLabel}
           </h2>
+          <button
+            onClick={() => setMonthOffset(prev => prev + 1)}
+            className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors text-slate-600"
+            aria-label="Next month"
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
 
         <div className="grid grid-cols-7 gap-1 mb-2">
@@ -74,17 +91,13 @@ export default function FollowupCalendarView({
             if (!dateStr) return <div key={`empty-${idx}`} className="aspect-square"></div>;
 
             const isSelected = selectedDate === dateStr;
-            const t = new Date();
-            const tOffset = t.getTimezoneOffset();
-            const _t = new Date(t.getTime() - (tOffset*60*1000));
-            const isToday = dateStr === _t.toISOString().split("T")[0];
+            const isToday = dateStr === todayStr;
             const count = heatmap[dateStr] || 0;
 
             return (
               <button
                 key={dateStr}
                 onClick={() => {
-                  console.log("[FollowupCalendarView] calendar day click", { dateStr, count, selectedDate });
                   onSelectDate(dateStr);
                   if (count === 0) {
                     onSchedule && onSchedule(dateStr);

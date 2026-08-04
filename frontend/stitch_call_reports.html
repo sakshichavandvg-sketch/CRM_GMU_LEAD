@@ -1,0 +1,528 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Call Reports - GM University</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e1e2e6",
+                    "surface-bright": "#f8f9fd",
+                    "on-primary-container": "#ff9a95",
+                    "surface-tint": "#b02c2f",
+                    "on-tertiary-container": "#aeb5c5",
+                    "on-secondary-fixed": "#1b1b1d",
+                    "secondary-fixed": "#e4e2e4",
+                    "inverse-surface": "#2e3134",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#dce2f3",
+                    "surface-container-high": "#e7e8ec",
+                    "on-background": "#191c1f",
+                    "secondary": "#5f5e60",
+                    "surface-dim": "#d9dade",
+                    "primary-container": "#8f111b",
+                    "outline": "#8d706e",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#c0c7d6",
+                    "on-primary-fixed": "#410005",
+                    "on-tertiary-fixed": "#151c27",
+                    "on-surface": "#191c1f",
+                    "inverse-on-surface": "#eff1f5",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#e1bfbc",
+                    "primary-fixed": "#ffdad7",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#59413f",
+                    "on-secondary-fixed-variant": "#474649",
+                    "inverse-primary": "#ffb3ae",
+                    "background": "#f8f9fd",
+                    "surface-container": "#edeef2",
+                    "surface-variant": "#e1e2e6",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#404754",
+                    "on-secondary-container": "#636264",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#2a313d",
+                    "surface": "#f8f9fd",
+                    "on-primary-fixed-variant": "#8e101b",
+                    "secondary-container": "#e2dfe1",
+                    "secondary-fixed-dim": "#c8c6c8",
+                    "surface-container-low": "#f2f3f7",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#ffb3ae",
+                    "on-tertiary-fixed-variant": "#404754",
+                    "on-primary": "#ffffff",
+                    "primary": "#69000d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "max_width": "1800px",
+                    "horizontal_gap": "24px",
+                    "vertical_gap": "32px",
+                    "container_padding": "24px",
+                    "page_padding": "40px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Outfit"],
+                    "body-md": ["Outfit"],
+                    "headline-sm": ["Outfit"],
+                    "title-lg": ["Outfit"],
+                    "body-lg": ["Outfit"],
+                    "headline-lg": ["Outfit"],
+                    "description": ["Outfit"],
+                    "label-md": ["Outfit"]
+            },
+            "fontSize": {
+                    "headline-md": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "title-lg": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg": ["44px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "description": ["13px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "1.2", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(15, 23, 42, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e1e2e6;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-surface selection:bg-primary-fixed selection:text-primary">
+<main class="min-h-screen p-page_padding max-w-max_width mx-auto">
+<!-- Header -->
+<header class="flex flex-col md:flex-row md:items-center justify-between gap-vertical_gap mb-vertical_gap">
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 bg-primary-container rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-2xl" style="font-variation-settings: &quot;FILL&quot; 1;">school</span>
+</div>
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-background">Call Reports</h1>
+<p class="font-body-lg text-secondary mt-1">Monitor telecaller activity and call performance across the university</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+
+
+</div>
+</header>
+<!-- Stats Grid -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-horizontal_gap mb-vertical_gap">
+<!-- Total Calls -->
+<div class="bg-surface-container-lowest p-6 rounded-[24px] glass-card flex flex-col gap-4 relative overflow-hidden group" style="transform: translateY(0px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined filled-icon">call</span>
+</div>
+<span class="bg-green-100 text-green-700 font-label-md py-1 px-3 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> 12.5%
+                </span>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant tracking-wider uppercase">TOTAL CALLS</p>
+<h2 class="font-headline-md text-headline-md mt-1">4,258</h2>
+<p class="font-description text-secondary mt-1">vs last month</p>
+</div>
+</div>
+<!-- Connected -->
+<div class="bg-surface-container-lowest p-6 rounded-[24px] glass-card flex flex-col gap-4 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined filled-icon">call_made</span>
+</div>
+<span class="bg-surface-container text-on-surface-variant font-label-md py-1 px-3 rounded-full">64%</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant tracking-wider uppercase">CONNECTED</p>
+<h2 class="font-headline-md text-headline-md mt-1">2,731</h2>
+<p class="font-description text-secondary mt-1">Success rate</p>
+</div>
+</div>
+<!-- Avg Duration -->
+<div class="bg-surface-container-lowest p-6 rounded-[24px] glass-card flex flex-col gap-4 relative overflow-hidden group" style="transform: translateY(0px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined filled-icon">timer</span>
+</div>
+<span class="bg-orange-50 text-orange-700 font-label-md py-1 px-3 rounded-full">+8s</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant tracking-wider uppercase">AVG DURATION</p>
+<h2 class="font-headline-md text-headline-md mt-1">02:45</h2>
+<p class="font-description text-secondary mt-1">Per call avg</p>
+</div>
+</div>
+<!-- Recordings -->
+<div class="bg-surface-container-lowest p-6 rounded-[24px] glass-card flex flex-col gap-4 relative overflow-hidden group" style="transform: translateY(0px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined filled-icon">mic</span>
+</div>
+<span class="bg-purple-50 text-purple-700 font-label-md py-1 px-3 rounded-full">+18</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant tracking-wider uppercase">RECORDINGS</p>
+<h2 class="font-headline-md text-headline-md mt-1">1,289</h2>
+<p class="font-description text-secondary mt-1">Available files</p>
+</div>
+</div>
+<!-- Success Rate -->
+<div class="bg-surface-container-lowest p-6 rounded-[24px] glass-card flex flex-col gap-4 relative overflow-hidden group" style="transform: translateY(0px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-sky-600">
+<span class="material-symbols-outlined filled-icon">trending_up</span>
+</div>
+<span class="bg-sky-50 text-sky-700 font-label-md py-1 px-3 rounded-full">+8.7%</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant tracking-wider uppercase">SUCCESS RATE</p>
+<h2 class="font-headline-md text-headline-md mt-1">64.1%</h2>
+<p class="font-description text-secondary mt-1">Conversion</p>
+</div>
+</div>
+<!-- Today's Calls -->
+<div class="bg-surface-container-lowest p-6 rounded-[24px] glass-card flex flex-col gap-4 relative overflow-hidden group" style="transform: translateY(0px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+<span class="material-symbols-outlined filled-icon">calendar_today</span>
+</div>
+<span class="bg-red-50 text-red-700 font-label-md py-1 px-3 rounded-full">+15</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant tracking-wider uppercase">TODAY'S CALLS</p>
+<h2 class="font-headline-md text-headline-md mt-1">128</h2>
+<p class="font-description text-secondary mt-1">vs yesterday</p>
+</div>
+</div>
+</section>
+<!-- Filter Toolbar -->
+<section class="bg-surface-container-lowest p-4 rounded-[24px] glass-card mb-vertical_gap flex flex-wrap items-center gap-4" style="transform: translateY(0px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+<div class="flex-1 min-w-[300px] relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary">search</span>
+<input class="w-full h-[52px] pl-12 pr-4 bg-background border-none rounded-[18px] focus:ring-2 focus:ring-primary-container text-on-surface font-body-md transition-all" placeholder="Search by Lead, Mobile, or EMP ID..." type="text">
+</div>
+<div class="flex items-center gap-2">
+<div class="relative group">
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-secondary group-focus-within:text-primary transition-colors">calendar_month</span>
+<input class="h-[52px] w-[160px] pl-4 pr-10 bg-background border-none rounded-[18px] focus:ring-2 focus:ring-primary-container text-on-surface font-body-md" type="text" value="01 Jul 2026">
+</div>
+<span class="text-secondary">—</span>
+<div class="relative group">
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-secondary group-focus-within:text-primary transition-colors">calendar_month</span>
+<input class="h-[52px] w-[160px] pl-4 pr-10 bg-background border-none rounded-[18px] focus:ring-2 focus:ring-primary-container text-on-surface font-body-md" type="text" value="20 Jul 2026">
+</div>
+</div>
+<button class="h-[52px] px-8 bg-primary-container text-white font-label-md rounded-[18px] hover:opacity-95 transition-opacity active:scale-95 whitespace-nowrap">
+            APPLY FILTERS
+        </button>
+</section>
+<!-- Table Container -->
+<section class="bg-surface-container-lowest rounded-[24px] glass-card overflow-hidden" style="transform: translateY(0px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse min-w-[1200px]">
+<thead class="bg-[#FFF6F5] sticky top-0 z-10">
+<tr>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap">TELECALLER</th>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap">STATUS</th>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap">TOTAL CALLS</th>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap">CONNECTED</th>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap">MISSED / BUSY</th>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap">TOTAL TALK TIME</th>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap">AVG DURATION</th>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap">CONVERSIONS</th>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap">RECORDINGS</th>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap">LAST ACTIVE</th>
+<th class="px-6 py-4 font-label-md text-[12px] uppercase tracking-wider text-primary-container whitespace-nowrap text-right">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center font-bold text-red-700">S</div>
+<div>
+<p class="font-label-md text-on-surface font-bold">Sakshi</p>
+<p class="font-description text-secondary">sakshi@company.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-green-50 text-green-700 font-label-md text-[13px]">
+<span class="w-2 h-2 rounded-full bg-green-600"></span> Online
+                            </span>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface font-bold">48</td>
+<td class="px-6 py-5">
+<p class="font-label-md text-on-surface font-bold">30</p>
+<p class="font-description text-green-600">63% rate</p>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface font-bold">18</td>
+<td class="px-6 py-5 font-label-md text-on-surface">1h 42m</td>
+<td class="px-6 py-5 font-label-md text-on-surface">03m 24s</td>
+<td class="px-6 py-5">
+<p class="font-label-md text-on-surface font-bold">6</p>
+<p class="font-description text-green-600">20% rate</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+</div>
+<span class="font-label-md font-bold">4</span>
+</div>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface">Today, 04:30 PM</td>
+<td class="px-6 py-5 text-right">
+<button class="inline-flex items-center gap-2 px-4 py-2 border border-primary-container text-primary-container rounded-lg font-label-md hover:bg-primary-container hover:text-white transition-all group/btn">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+                                View Logs
+                                <span class="material-symbols-outlined text-[16px] group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center font-bold text-orange-700">R</div>
+<div>
+<p class="font-label-md text-on-surface font-bold">Rahul Sharma</p>
+<p class="font-description text-secondary">rahul@company.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-orange-50 text-orange-700 font-label-md text-[13px]">
+<span class="w-2 h-2 rounded-full bg-orange-600"></span> Idle
+                            </span>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface font-bold">65</td>
+<td class="px-6 py-5">
+<p class="font-label-md text-on-surface font-bold">42</p>
+<p class="font-description text-green-600">64% rate</p>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface font-bold">23</td>
+<td class="px-6 py-5 font-label-md text-on-surface">2h 15m</td>
+<td class="px-6 py-5 font-label-md text-on-surface">03m 12s</td>
+<td class="px-6 py-5">
+<p class="font-label-md text-on-surface font-bold">9</p>
+<p class="font-description text-green-600">21.4% rate</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+</div>
+<span class="font-label-md font-bold">8</span>
+</div>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface">Today, 04:12 PM</td>
+<td class="px-6 py-5 text-right">
+<button class="inline-flex items-center gap-2 px-4 py-2 border border-primary-container text-primary-container rounded-lg font-label-md hover:bg-primary-container hover:text-white transition-all group/btn">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+                                View Logs
+                                <span class="material-symbols-outlined text-[16px] group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center font-bold text-blue-700">A</div>
+<div>
+<p class="font-label-md text-on-surface font-bold">Ananya Roy</p>
+<p class="font-description text-secondary">ananya@company.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-blue-50 text-blue-700 font-label-md text-[13px]">
+<span class="w-2 h-2 rounded-full bg-blue-600"></span> In Call
+                            </span>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface font-bold">52</td>
+<td class="px-6 py-5">
+<p class="font-label-md text-on-surface font-bold">38</p>
+<p class="font-description text-green-600">73% rate</p>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface font-bold">14</td>
+<td class="px-6 py-5 font-label-md text-on-surface">2h 05m</td>
+<td class="px-6 py-5 font-label-md text-on-surface">03m 17s</td>
+<td class="px-6 py-5">
+<p class="font-label-md text-on-surface font-bold">11</p>
+<p class="font-description text-green-600">28.9% rate</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+</div>
+<span class="font-label-md font-bold">12</span>
+</div>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface">Just now</td>
+<td class="px-6 py-5 text-right">
+<button class="inline-flex items-center gap-2 px-4 py-2 border border-primary-container text-primary-container rounded-lg font-label-md hover:bg-primary-container hover:text-white transition-all group/btn">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+                                View Logs
+                                <span class="material-symbols-outlined text-[16px] group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-700">V</div>
+<div>
+<p class="font-label-md text-on-surface font-bold">Vikram Patel</p>
+<p class="font-description text-secondary">vikram@company.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-slate-100 text-slate-700 font-label-md text-[13px]">
+<span class="w-2 h-2 rounded-full bg-slate-600"></span> Offline
+                            </span>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface font-bold">22</td>
+<td class="px-6 py-5">
+<p class="font-label-md text-on-surface font-bold">10</p>
+<p class="font-description text-green-600">45% rate</p>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface font-bold">12</td>
+<td class="px-6 py-5 font-label-md text-on-surface">0h 30m</td>
+<td class="px-6 py-5 font-label-md text-on-surface">03m 00s</td>
+<td class="px-6 py-5">
+<p class="font-label-md text-on-surface font-bold">1</p>
+<p class="font-description text-green-600">10% rate</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+</div>
+<span class="font-label-md font-bold">1</span>
+</div>
+</td>
+<td class="px-6 py-5 font-label-md text-on-surface">Yesterday, 06:00 PM</td>
+<td class="px-6 py-5 text-right">
+<button class="inline-flex items-center gap-2 px-4 py-2 border border-primary-container text-primary-container rounded-lg font-label-md hover:bg-primary-container hover:text-white transition-all group/btn">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+                                View Logs
+                                <span class="material-symbols-outlined text-[16px] group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer Pagination -->
+<div class="px-6 py-6 border-t border-outline-variant flex flex-col sm:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">list_alt</span>
+<p class="font-description">Showing 1 to 20 of 428 results</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 mr-4">
+<span class="font-description text-secondary">Rows per page:</span>
+<div class="relative">
+<select class="appearance-none bg-background border-none rounded-lg font-label-md py-1.5 pl-3 pr-8 focus:ring-1 focus:ring-primary-container">
+<option>10 per page</option>
+<option>20 per page</option>
+<option>50 per page</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-secondary pointer-events-none text-[16px]">expand_more</span>
+</div>
+</div>
+<nav class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:bg-surface transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center bg-primary-container text-white font-label-md">1</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface font-label-md hover:bg-surface transition-colors">2</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface font-label-md hover:bg-surface transition-colors">3</button>
+<span class="px-1 text-secondary">...</span>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface font-label-md hover:bg-surface transition-colors">22</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:bg-surface transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</nav>
+</div>
+</div>
+</section>
+<!-- Global Footer -->
+<footer class="mt-vertical_gap py-8 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4 text-secondary font-description">
+<p class="">© 2024 GM University Admissions Management System</p>
+<div class="flex items-center gap-6">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Support</a>
+</div>
+</footer>
+</main>
+<script>
+    // Micro-interactions for table rows
+    document.querySelectorAll('tbody tr').forEach(row => {
+        row.addEventListener('click', () => {
+            // Potential row expansion or navigation logic
+        });
+    });
+
+    // Hover effect for stats cards to lift them slightly
+    document.querySelectorAll('.glass-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-4px)';
+            card.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0px)';
+        });
+    });
+</script>
+
+
+</body></html>

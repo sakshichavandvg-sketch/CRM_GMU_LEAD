@@ -1,0 +1,479 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Leads Management | GM University CRM</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#003052",
+                      "surface-container-low": "#fff0ef",
+                      "primary-fixed-dim": "#ffb3ad",
+                      "background": "#FAFBFD",
+                      "surface-container": "#ffe9e7",
+                      "secondary-fixed-dim": "#ffb3ad",
+                      "secondary-fixed": "#ffdad7",
+                      "tertiary-container": "#004775",
+                      "surface-container-highest": "#f6ddda",
+                      "on-background": "#261817",
+                      "inverse-surface": "#3c2d2b",
+                      "on-surface-variant": "#59413f",
+                      "on-tertiary-fixed-variant": "#064a78",
+                      "on-error": "#ffffff",
+                      "primary-fixed": "#ffdad7",
+                      "surface-tint": "#b02c2c",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "outline-variant": "#e1bfbb",
+                      "inverse-primary": "#ffb3ad",
+                      "surface-bright": "#fff8f7",
+                      "surface-container-high": "#fce2e0",
+                      "on-tertiary-fixed": "#001d34",
+                      "error": "#ba1a1a",
+                      "inverse-on-surface": "#ffedeb",
+                      "primary-container": "#8B0D16",
+                      "on-secondary-container": "#783430",
+                      "on-surface": "#261817",
+                      "on-secondary-fixed": "#3c0607",
+                      "primary": "#640009",
+                      "outline": "#8d706e",
+                      "on-primary-fixed": "#410004",
+                      "surface-dim": "#edd4d2",
+                      "on-primary-container": "#ff948d",
+                      "secondary-container": "#fe9f98",
+                      "tertiary-fixed": "#d0e4ff",
+                      "error-container": "#ffdad6",
+                      "surface-variant": "#f6ddda",
+                      "tertiary-fixed-dim": "#9acbff",
+                      "secondary": "#934844",
+                      "on-primary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "surface": "#ffffff",
+                      "on-secondary-fixed-variant": "#75312e",
+                      "on-primary-fixed-variant": "#8e1018",
+                      "on-tertiary-container": "#84b6ea",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "2xl": "1.5rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "grid_margin": "32px",
+                      "grid_gutter": "20px",
+                      "sm": "8px",
+                      "2xl": "48px",
+                      "md": "16px",
+                      "xs": "4px",
+                      "lg": "24px",
+                      "base": "4px",
+                      "xl": "32px"
+              },
+              "fontFamily": {
+                      "display-lg-mobile": ["Outfit"],
+                      "headline-sm": ["Outfit"],
+                      "body-sm": ["Outfit"],
+                      "display-lg": ["Outfit"],
+                      "label-md": ["Outfit"],
+                      "display-md": ["Outfit"],
+                      "body-lg": ["Outfit"],
+                      "body-md": ["Outfit"],
+                      "label-sm": ["Outfit"]
+              },
+              "fontSize": {
+                      "display-lg-mobile": ["26px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                      "display-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body { font-family: 'Outfit', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .filled-icon { font-variation-settings: 'FILL' 1; }
+        .standard-shadow { box-shadow: 0 10px 40px rgba(15,23,42,0.05); }
+        .premium-border { border: 1px solid #EAECEF; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #EAECEF; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface flex min-h-screen">
+<!-- Sidebar (Shared Component Blueprint) -->
+
+<main class="flex-1 flex flex-col overflow-x-hidden">
+<!-- TopNavBar -->
+
+<div class="p-grid_margin space-y-xl max-w-[1440px] mx-auto w-full">
+<!-- Header Section -->
+<section class="flex justify-between items-end">
+<div class="space-y-xs">
+<h1 class="font-display-lg text-[48px] font-bold text-on-surface leading-tight">Leads Management</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">View and manage all system leads</p>
+</div>
+<div class="flex items-center gap-md">
+<button class="flex items-center gap-sm px-lg py-sm bg-white premium-border text-on-surface rounded-xl font-label-md text-label-md hover:bg-surface-container-low transition-all active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">upload</span>
+<span class="">Import CSV</span>
+</button>
+<button class="flex items-center gap-sm px-lg py-sm bg-[#8B0D16] text-white rounded-xl font-label-md text-label-md hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-primary-container/20">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span class="">Add Lead</span>
+</button>
+<button class="flex items-center gap-sm px-lg py-sm bg-white premium-border text-on-surface rounded-xl font-label-md text-label-md hover:bg-surface-container-low transition-all active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span class="">Export</span>
+</button>
+</div>
+</section>
+<!-- KPI Cards Row -->
+<section class="grid grid-cols-6 gap-grid_gutter">
+<!-- Card 1 -->
+<div class="bg-white p-lg rounded-2xl premium-border standard-shadow flex flex-col gap-md transition-transform hover:-translate-y-1">
+<div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined filled-icon">group</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-xs">All Leads</p>
+<h3 class="font-display-md text-display-md text-on-surface">1,284</h3>
+</div>
+<div class="flex items-center gap-xs text-green-600 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span class="">12% vs last month</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white p-lg rounded-2xl premium-border standard-shadow flex flex-col gap-md transition-transform hover:-translate-y-1">
+<div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined filled-icon">notifications_active</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-xs">New Leads</p>
+<h3 class="font-display-md text-display-md text-on-surface">42</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Requires immediate action</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-white p-lg rounded-2xl premium-border standard-shadow flex flex-col gap-md transition-transform hover:-translate-y-1">
+<div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined filled-icon">pending_actions</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-xs">In Progress</p>
+<h3 class="font-display-md text-display-md text-on-surface">315</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Active nurturing phase</p>
+</div>
+<!-- Card 4 -->
+<div class="bg-white p-lg rounded-2xl premium-border standard-shadow flex flex-col gap-md transition-transform hover:-translate-y-1">
+<div class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined filled-icon">check_circle</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-xs">Converted</p>
+<h3 class="font-display-md text-display-md text-on-surface">156</h3>
+</div>
+<div class="flex items-center gap-xs text-green-600 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span class="">24% Conversion Rate</span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="bg-white p-lg rounded-2xl premium-border standard-shadow flex flex-col gap-md transition-transform hover:-translate-y-1">
+<div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-red-600">
+<span class="material-symbols-outlined filled-icon">call_missed</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-xs">Not Consulted</p>
+<h3 class="font-display-md text-display-md text-on-surface">18</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Overdue follow-ups</p>
+</div>
+<!-- Card 6 -->
+<div class="bg-white p-lg rounded-2xl premium-border standard-shadow flex flex-col gap-md transition-transform hover:-translate-y-1">
+<div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+<span class="material-symbols-outlined filled-icon">sync_alt</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-xs">Opinion Reassign</p>
+<h3 class="font-display-md text-display-md text-on-surface">05</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pending verification</p>
+</div>
+</section>
+<!-- Filter Chips Row -->
+<section class="flex flex-wrap items-center gap-md">
+<button class="px-md py-sm bg-[#8B0D16]/5 border border-[#8B0D16] text-[#8B0D16] rounded-full flex items-center gap-sm font-label-md text-label-md transition-colors shadow-sm">
+<span class="">All Leads</span>
+<span class="bg-[#8B0D16] text-white w-7 h-5 rounded-full flex items-center justify-center text-[11px]">133</span>
+</button>
+<button class="px-md py-sm bg-white premium-border text-on-surface-variant rounded-full flex items-center gap-sm font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-orange-500 filled-icon">local_fire_department</span>
+<span class="">Hot Leads</span>
+<span class="bg-surface-container-high w-7 h-5 rounded-full flex items-center justify-center text-[11px]">1</span>
+</button>
+<button class="px-md py-sm bg-white premium-border text-on-surface-variant rounded-full flex items-center gap-sm font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-blue-400">ac_unit</span>
+<span class="">Cold Leads</span>
+<span class="bg-surface-container-high w-7 h-5 rounded-full flex items-center justify-center text-[11px]">0</span>
+</button>
+<button class="px-md py-sm bg-white premium-border text-on-surface-variant rounded-full flex items-center gap-sm font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="">Alloted</span>
+<span class="bg-surface-container-high w-7 h-5 rounded-full flex items-center justify-center text-[11px]">17</span>
+</button>
+<button class="px-md py-sm bg-white premium-border text-on-surface-variant rounded-full flex items-center gap-sm font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="">Not Alloted</span>
+<span class="bg-surface-container-high w-7 h-5 rounded-full flex items-center justify-center text-[11px]">116</span>
+</button>
+<button class="px-md py-sm bg-white premium-border text-on-surface-variant rounded-full flex items-center gap-sm font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-red-500">schedule</span>
+<span class="">Not Consulted</span>
+<span class="bg-surface-container-high w-7 h-5 rounded-full flex items-center justify-center text-[11px]">0</span>
+</button>
+<button class="px-md py-sm bg-white premium-border text-on-surface-variant rounded-full flex items-center gap-sm font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-purple-500">sync</span>
+<span class="">Opinion Reassign</span>
+<span class="bg-surface-container-high w-7 h-5 rounded-full flex items-center justify-center text-[11px]">0</span>
+</button>
+</section>
+<!-- Table Section -->
+<section class="bg-white rounded-2xl premium-border standard-shadow overflow-hidden">
+<div class="px-xl py-lg flex justify-between items-center border-b border-outline-variant bg-surface-container-lowest">
+<h4 class="font-display-md text-display-md text-on-surface">2 Leads Found</h4>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-sm">
+<span class="font-body-md text-body-md text-on-surface-variant">Sort by:</span>
+<div class="flex items-center gap-sm bg-surface rounded-lg border border-outline-variant px-md py-sm cursor-pointer hover:bg-surface-container-low transition-all">
+<span class="font-label-md text-label-md text-on-surface">Newest First</span>
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<div class="flex bg-surface-container-high p-xs rounded-xl border border-outline-variant">
+<button class="p-sm bg-white text-primary-container rounded-lg shadow-sm">
+<span class="material-symbols-outlined">format_list_bulleted</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-[#FAFBFD] border-b border-outline-variant">
+<tr>
+<th class="py-md px-xl w-10">
+<input class="w-4 h-4 rounded border-outline focus:ring-primary text-primary-container" type="checkbox">
+</th>
+<th class="py-md px-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Enquiry No</th>
+<th class="py-md px-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Student</th>
+<th class="py-md px-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Mobile</th>
+<th class="py-md px-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Course</th>
+<th class="py-md px-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Source</th>
+<th class="py-md px-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="py-md px-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Assigned To</th>
+<th class="py-md px-md font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Created On</th>
+<th class="py-md px-xl font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-background transition-colors group">
+<td class="py-lg px-xl">
+<input class="w-4 h-4 rounded border-outline focus:ring-primary text-primary-container" type="checkbox">
+</td>
+<td class="py-lg px-md">
+<span class="font-label-md text-label-md text-[#8B0D16]">#ENQ-2024-001</span>
+</td>
+<td class="py-lg px-md">
+<div class="flex items-center gap-md">
+<img class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A youthful portrait of a male student with short black hair and a friendly, optimistic expression. He is wearing a modern casual denim shirt against a soft neutral background. The lighting is diffused and natural, conveying a fresh academic beginning. High quality DSLR capture style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXBQCuCP02vQvwOmJ922X4dj_UFoZVzTw5PHMvl0XcfOluby0KE8RcaeGlWkqawROZpA-imurrgGT_CIjWVMXFSs-jlABK5dHeJOUXSdNgOxt_rArxM6h_fL0j407sD4JMHp_kagrw2EY3tcW8zB52py3psd6Bb8bLfq0U40-RCL9clfxIgGT0u9oKrb1tyoG7wLhi22DUAf_Z3kxyotbCTTTampJE5K1_dhvHl55HNGHX7M3DFgu1">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Arjun Sharma</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">arjun.s@outlook.com</span>
+</div>
+</div>
+</td>
+<td class="py-lg px-md">
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface">+91 98765</span>
+<span class="font-body-sm text-body-sm">43210</span>
+</div>
+</div>
+</td>
+<td class="py-lg px-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">B.Tech - Comp Science</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Session 2024-25</span>
+</div>
+</td>
+<td class="py-lg px-md">
+<div class="flex items-center gap-sm text-on-surface-variant bg-surface-container-low px-sm py-xs rounded-lg w-fit">
+<span class="material-symbols-outlined text-[18px] text-blue-500">language</span>
+<span class="font-body-sm text-body-sm">Web Form</span>
+</div>
+</td>
+<td class="py-lg px-md">
+<span class="px-md py-base bg-blue-50 text-blue-600 rounded-full font-label-sm text-label-sm uppercase tracking-wider font-bold">NEW</span>
+</td>
+<td class="py-lg px-md">
+<div class="flex items-center gap-md">
+<img class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A portrait of a professional female education counselor with glasses and long dark hair tied back, wearing a modest beige business suit. She has a warm, confident smile that suggests experience and empathy. The office background has blurry books and award certificates. High-end photography with warm lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEQFzDMl4hmgDmz5ncbZM4AoP_N9aiMiXskQfe3vR2kdVUw8WEN9xQZxmd2x-t9wzZsezRhuWhxpd5MIDTmbUBshem9-EvvlfpKeXExGLA0Pxr9TaSIuMTxixX7M6FkjC5lPIep465daea28yEj7VE174HKhqoLbedx7kH3Ajjy3iwvhi3a4kZy-ezFfuvPcQDzoKJhUhsfKJTKodn2xNcC-h-XFZz4EmBdOTdzYr0GxP5EPwVZZHW">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Dr. Meera Rao</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sr. Counselor</span>
+</div>
+</div>
+</td>
+<td class="py-lg px-md">
+<div class="flex flex-col text-on-surface-variant">
+<span class="font-body-md text-body-md">May 15, 2024</span>
+<span class="font-body-sm text-body-sm">10:45 AM</span>
+</div>
+</td>
+<td class="py-lg px-xl text-right">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-background transition-colors group bg-primary-container/5">
+<td class="py-lg px-xl">
+<input class="w-4 h-4 rounded border-outline focus:ring-primary text-primary-container" type="checkbox">
+</td>
+<td class="py-lg px-md">
+<span class="font-label-md text-label-md text-[#8B0D16]">#ENQ-2024-002</span>
+</td>
+<td class="py-lg px-md">
+<div class="flex items-center gap-md">
+<img class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A close-up headshot of a young male student with styled hair and a clean-shaven face. He is wearing a smart polo shirt in navy blue. His expression is focused and ambitious. Soft side lighting highlights his features against a minimal light grey studio background. Professional corporate portrait style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj7BB0kiIIiblUy0YiNRXJvF4JtbPn5Y86Yp3QPGIjZlO7-HOBlsaHFLv4migXkc3R01wxOm1ghORbERayx3X2uuPsyYM4vcFKsKvPZ5ke1NZOt8TD2vmhqatW8i9b31GuzaQT0kw339zIs_jyA2bQVPSKcW9ALhR4xXjkHSXhJOA4fbq0o1_qYZj_hTOc5PPVaNsaOEy_JbPuS8l8PVQpb6HUjCGjdCJwjaaqJsEz_67tKdQGBp1o">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Rohan Gupta</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">rohan.g@gmail.com</span>
+</div>
+</div>
+</td>
+<td class="py-lg px-md">
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface">+91 88822</span>
+<span class="font-body-sm text-body-sm">11004</span>
+</div>
+</div>
+</td>
+<td class="py-lg px-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">MBA - Marketing</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Session 2024-25</span>
+</div>
+</td>
+<td class="py-lg px-md">
+<div class="flex items-center gap-sm text-on-surface-variant bg-surface-container-low px-sm py-xs rounded-lg w-fit">
+<span class="material-symbols-outlined text-[18px] text-orange-500">campaign</span>
+<span class="font-body-sm text-body-sm">Social Media</span>
+</div>
+</td>
+<td class="py-lg px-md">
+<span class="px-md py-base bg-orange-50 text-orange-600 rounded-full font-label-sm text-label-sm uppercase tracking-wider font-bold">IN PROGRESS</span>
+</td>
+<td class="py-lg px-md">
+<div class="flex items-center gap-md">
+<img class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A portrait of a male admissions officer in his 30s with a sharp haircut, wearing a crisp light blue shirt and tie. He has a welcoming and professional demeanor. He is sitting at a desk with a laptop and a university emblem in the background. High contrast, clean corporate lighting style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDu-xmLG2CkObvrsigJJ2p0jQ_d_RsKdM04mMLd_DPBK2kjbISPfYulJCsK25MX3u5XIwnMACjVzaSA98dau7fFycPh0USJCz5lBdTayJKBjQYIW_yINPsucJlOVjz3fENX2-_eElcENSO7y280pYmzRqW0SMadFVje78H-JSS7cVeg4CznOuxZr3Vj8jeKoFzx7gFxWIh_e_GT69bTCDTW0uCQFGZCbEYn_eu6hFZOe5xkboNYQNHw">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Kevin Smith</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Admissions Officer</span>
+</div>
+</div>
+</td>
+<td class="py-lg px-md">
+<div class="flex flex-col text-on-surface-variant">
+<span class="font-body-md text-body-md">May 14, 2024</span>
+<span class="font-body-sm text-body-sm">02:15 PM</span>
+</div>
+</td>
+<td class="py-lg px-xl text-right">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-xl py-lg flex justify-between items-center border-t border-outline-variant bg-surface-container-lowest">
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-sm">
+<span class="font-body-md text-body-md text-on-surface-variant">Entries per page:</span>
+<div class="flex items-center gap-sm bg-surface rounded-lg border border-outline-variant px-md py-sm cursor-pointer hover:bg-surface-container-low transition-all">
+<span class="font-label-md text-label-md text-on-surface">10</span>
+<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant">Showing 1 to 2 of 2 results</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#8B0D16] text-white font-label-md text-label-md shadow-sm">
+                            1
+                        </button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-all">
+                            2
+                        </button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer (Shared Component Blueprint) -->
+
+</main>
+<script>
+        // Simple interaction script for better UX feel
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+                    const checkbox = row.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    row.classList.toggle('bg-primary-container/5', checkbox.checked);
+                }
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('shadow-md');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('shadow-md');
+        });
+    </script>
+
+
+</body></html>
