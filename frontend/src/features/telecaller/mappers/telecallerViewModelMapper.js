@@ -74,6 +74,23 @@ export const mapLeadDetail = (rawLead) => {
       discipline: rawLead.discipline || "N/A",
       college: rawLead.collegeStudied || "N/A",
     },
+    assignment: rawLead.assignment ? {
+      telecaller: rawLead.assignment.telecaller || "Unassigned",
+      assignee: rawLead.assignment.assignee || "Unassigned",
+      phone: rawLead.assignment.phone || "",
+      email: rawLead.assignment.email || "",
+      assignedDate: rawLead.assignment.assignedDate || "N/A",
+      assignedBy: rawLead.assignment.assignedBy || "System",
+      status: rawLead.assignment.status || "ACTIVE"
+    } : {
+      telecaller: rawLead?.lead?.assignedTo?.name || rawLead?.telecallerName || rawLead?.assignee || "Unassigned",
+      assignee: rawLead?.lead?.assignedTo?.name || rawLead?.assignee || rawLead?.telecallerName || "Unassigned",
+      phone: rawLead?.lead?.assignedTo?.mobile || rawLead?.lead?.assignedTo?.phone || rawLead?.telecallerPhone || "",
+      email: rawLead?.lead?.assignedTo?.email || rawLead?.telecallerEmail || "",
+      assignedDate: rawLead?.lead?.assignedAt || rawLead?.assignedDate || "N/A",
+      assignedBy: rawLead?.lead?.assignedBy?.name || rawLead?.assignedBy || "System",
+      status: "ACTIVE"
+    },
     timeline: Array.isArray(rawLead.timeline) ? rawLead.timeline : [],
     notes: Array.isArray(rawLead.notes) ? rawLead.notes : [],
   };

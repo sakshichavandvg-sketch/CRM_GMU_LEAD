@@ -44,6 +44,11 @@ export const telecallerLeadService = {
     return response.data.data;
   },
 
+  updateLeadNote: async (enquiryNo, noteId, content) => {
+    const response = await axiosInstance.patch(`${API_ENDPOINTS.TELECALLER.LEAD_NOTES(enquiryNo)}/${noteId}`, { content });
+    return response.data.data;
+  },
+
   getFilterOptions: async () => {
     const response = await axiosInstance.get(API_ENDPOINTS.TELECALLER.LEAD_FILTER_OPTIONS);
     return response.data.data;

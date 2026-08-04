@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, PhoneCall, AlertTriangle, CalendarPlus } from "lucide-react";
 import { useLeadDetails } from "@/features/telecaller/hooks/useLeadDetails";
+import { useFollowups } from "@/features/telecaller/hooks/useFollowups";
 import LeadDetailsView from "@/features/leads/components/details/LeadDetailsView";
 import LogCallModal from "@/features/telecaller/components/LogCallModal";
+import ScheduleFollowupModal from "@/features/telecaller/components/followups/ScheduleFollowupModal";
 import Button from "@/components/ui/Button";
 import { TELECALLER_TABS_CONFIG } from "@/features/telecaller/constants/telecallerDetailsConfig";
 import CallButton from "@/features/telecaller/voice/components/CallButton";
@@ -15,7 +17,12 @@ import { useVoice } from "@/features/telecaller/voice/context/VoiceProvider";
 export default function TelecallerLeadDetailsClient({ enquiryNo }) {
   const router = useRouter();
   const [isLogCallOpen, setIsLogCallOpen] = useState(false);
+  const [isScheduleFollowupOpen, setIsScheduleFollowupOpen] = useState(false);
   const { postCallEnquiryNo, setPostCallEnquiryNo } = useVoice();
+
+  // Fetch all followups to pass to modal for duplicate validation
+  const { data: allFollowupsData } = useFollowups("all");
+  const allFollowups = Array.isArray(allFollowupsData) ? allFollowupsData : [];
 
   // If a call just ended for this enquiry, open the log call modal automatically
   useEffect(() => {
@@ -73,16 +80,8 @@ export default function TelecallerLeadDetailsClient({ enquiryNo }) {
       <Button
         variant="outline"
         className="justify-center w-fit whitespace-nowrap bg-white border-slate-300 text-gray-800 hover:bg-slate-50 font-semibold rounded-lg shadow-sm px-4 py-2 text-sm"
-        icon={<PhoneCall size={14} />}
-        onClick={() => setIsLogCallOpen(true)}
-      >
-        Log Call
-      </Button>
-
-      <Button
-        variant="outline"
-        className="justify-center w-fit whitespace-nowrap bg-white border-slate-300 text-gray-800 hover:bg-slate-50 font-semibold rounded-lg shadow-sm px-4 py-2 text-sm"
         icon={<CalendarPlus size={14} />}
+        onClick={() => setIsScheduleFollowupOpen(true)}
       >
         Add Follow-up
       </Button>
@@ -101,6 +100,7 @@ export default function TelecallerLeadDetailsClient({ enquiryNo }) {
         actions={actions}
         tabsConfig={TELECALLER_TABS_CONFIG}
         showStats={true}
+        canEdit={false}
       />
 
       {/* Log Call Modal */}
@@ -109,6 +109,16 @@ export default function TelecallerLeadDetailsClient({ enquiryNo }) {
           open={isLogCallOpen}
           onClose={() => setIsLogCallOpen(false)}
           enquiryNo={enquiryNo}
+        />
+      )}
+
+      {/* Schedule Followup Modal */}
+      {isScheduleFollowupOpen && (
+        <ScheduleFollowupModal
+          isOpen={isScheduleFollowupOpen}
+          onClose={() => setIsScheduleFollowupOpen(false)}
+          initialLeadId={enquiryNo}
+          allFollowups={allFollowups}
         />
       )}
     </div>

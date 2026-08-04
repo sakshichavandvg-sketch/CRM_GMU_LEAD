@@ -18,6 +18,8 @@ export default function LeadDetailsView({
   error,
   isDeleting,
   onDelete,
+  onEdit,
+  canEdit = true,
   actions,
   tabsConfig,
   showStats = true,
@@ -54,7 +56,7 @@ export default function LeadDetailsView({
         rawData={rawData}
         actions={actions}
         onDelete={onDelete}
-        onEdit={() => setIsEditModalOpen(true)}
+        onEdit={canEdit ? (onEdit || (() => setIsEditModalOpen(true))) : undefined}
       />
 
       {isEditModalOpen && (
@@ -69,24 +71,34 @@ export default function LeadDetailsView({
       {showStats && <LeadStatisticsSection viewModel={viewModel} rawData={rawData} />}
 
       {/* ── Tabs Navigation ─────────────────────────────────────────────────────── */}
-      <div className="flex border-b border-outline-variant mt-4">
-        {resolvedTabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-8 py-4 flex items-center gap-2 transition-colors ${
-              activeTab === tab.id
-                ? "border-b-4 border-primary text-primary font-bold"
-                : "text-on-surface-variant hover:text-primary"
-            }`}
-          >
-            <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: activeTab === tab.id ? "'FILL' 1" : "'FILL' 0" }}>
-              {tab.id === 'info' ? 'visibility' : tab.id === 'timeline' ? 'history' : tab.id === 'notes' ? 'edit_note' : 'folder'}
-            </span>
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      <nav className="flex border-b border-outline-variant overflow-x-auto hide-scrollbar">
+        {resolvedTabs.map((tab) => {
+          const isActive = activeTab === tab.id;
+          const getIcon = (id) => {
+            if (id === "info" || id === "overview") return "overview";
+            if (id === "notes") return "notes";
+            if (id === "timeline" || id === "activity") return "history";
+            return "folder";
+          };
+
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-4 flex items-center gap-2 font-label-lg whitespace-nowrap transition-colors ${
+                isActive
+                  ? "border-b-[3px] border-primary text-primary active-tab font-semibold"
+                  : "text-on-surface-variant hover:text-primary"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[20px]">
+                {getIcon(tab.id)}
+              </span>
+              {tab.label}
+            </button>
+          );
+        })}
+      </nav>
 
       {/* ── Active Tab Content ─────────────────────────────────────────────────── */}
       <ActiveTabComponent data={viewModel} rawData={rawData} leadId={leadId} />

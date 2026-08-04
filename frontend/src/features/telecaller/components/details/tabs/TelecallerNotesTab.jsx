@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import NoteCard from "@/features/leads/components/details/notes/NoteCard";
-import { useTelecallerLeadNotes } from "../../../hooks/useTelecallerLeadNotes";
+import { useTelecallerLeadNotes, useUpdateTelecallerLeadNote } from "../../../hooks/useTelecallerLeadNotes";
 import { FormSkeleton } from "@/components/ui/Skeletons";
 
 const MemoizedNoteCard = React.memo(NoteCard);
 
 export default function TelecallerNotesTab({ leadId }) {
   const { data, isLoading, isError, error } = useTelecallerLeadNotes(leadId);
+  const updateNoteMutation = useUpdateTelecallerLeadNote(leadId);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const handleUpdateNote = async (noteId, content) => {
+    await updateNoteMutation.mutateAsync({ noteId, content });
+  };
 
   if (isLoading) {
     return (
@@ -56,7 +61,11 @@ export default function TelecallerNotesTab({ leadId }) {
       ) : (
         <div className="space-y-4">
           {filteredNotes.map(note => (
-            <MemoizedNoteCard key={note.id} note={note} />
+            <MemoizedNoteCard 
+              key={note.id || note._id} 
+              note={note} 
+              onEditNote={handleUpdateNote} 
+            />
           ))}
         </div>
       )}

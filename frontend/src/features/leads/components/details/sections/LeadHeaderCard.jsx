@@ -20,84 +20,88 @@ export default function LeadHeaderCard({ viewModel, rawData, actions, onDelete, 
   const initials = leadName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 
   return (
-    <section className="premium-card rounded-lg p-6 flex flex-col gap-6">
-      <div className="flex justify-between items-start">
-        <div className="flex gap-6">
-          <div className="relative">
-            <div className="w-24 h-24 rounded-full bg-primary-container flex items-center justify-center text-on-primary text-display-lg font-bold border-4 border-surface-container shadow-md">
-              {initials}
-            </div>
-            <div className="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-[#FFD700] border-2 border-surface flex items-center justify-center">
-              <span className="material-symbols-outlined text-on-surface text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+    <section className="premium-card rounded-[22px] p-[28px]" style={{ transform: 'translateY(0px)', transition: '0.3s' }}>
+      <div className="flex flex-col md:flex-row md:items-start gap-6">
+        <div className="relative w-20 h-20 md:w-24 md:h-24 mx-auto md:mx-0">
+          <div className="w-full h-full rounded-[16px] bg-primary-container flex items-center justify-center text-on-primary text-display-lg font-bold border-4 border-surface-container-lowest shadow-md">
+            {initials}
+          </div>
+          <div className="absolute -bottom-1 -right-1 bg-yellow-400 p-1 rounded-full border-2 border-white flex items-center justify-center">
+            <span className="material-symbols-outlined text-[16px] text-white" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+          </div>
+        </div>
+
+        <div className="flex-1 text-center md:text-left space-y-2">
+          <div className="flex flex-col md:flex-row md:items-center gap-2">
+            <h2 className="font-headline-lg text-headline-lg">{leadName}</h2>
+            <div className="flex items-center justify-center gap-2">
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-error-container text-primary border border-outline-variant">LEAD ID: {enquiryNo}</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700 uppercase">{qualificationStatus}</span>
             </div>
           </div>
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-4">
-              <h2 className="font-headline-lg text-headline-lg text-on-surface">{leadName}</h2>
-              <span className="px-4 py-1 bg-primary-fixed text-on-primary-fixed rounded-full text-label-sm font-bold">LEAD ID: {enquiryNo}</span>
-              <span className="px-4 py-1 bg-[#E6F4EA] text-[#137333] rounded-full text-label-sm font-bold">{qualificationStatus}</span>
+          <p className="text-on-surface-variant font-body-md">{course}</p>
+          <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2 text-on-surface-variant text-label-md">
+            <div className="flex items-center gap-1">
+              <span className="material-symbols-outlined text-[18px]">mail</span>
+              <span>{email}</span>
             </div>
-            <p className="font-body-lg text-body-lg text-on-surface-variant">{course}</p>
-            <div className="flex gap-6 mt-2 text-body-sm text-on-surface-variant">
-              <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm">mail</span> {email}</span>
-              <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm">call</span> {phone}</span>
-              <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm">location_on</span> {locationStr}</span>
+            <div className="flex items-center gap-1">
+              <span className="material-symbols-outlined text-[18px]">call</span>
+              <span>{phone}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="material-symbols-outlined text-[18px]">location_on</span>
+              <span>{locationStr}</span>
             </div>
           </div>
         </div>
+
         {(actions || onDelete || onEdit) && (
-        <div className="flex flex-wrap gap-2">
-          {actions}
-          {onDelete && (
-            <button onClick={onDelete} className="border-2 border-error text-error px-8 py-4 rounded-full font-label-md hover:bg-error-container/20 transition-all flex items-center gap-2">
-              <span className="material-symbols-outlined text-sm">delete</span>
-              Delete
-            </button>
-          )}
-          {onEdit && (
-            <button onClick={onEdit} className="border border-outline px-8 py-4 rounded-full font-label-md hover:bg-surface-container-high transition-all flex items-center gap-2">
-              More Actions
-              <span className="material-symbols-outlined text-sm">expand_more</span>
-            </button>
-          )}
-        </div>
-      )}
+          <div className="flex flex-row flex-wrap gap-2 w-full md:w-auto">
+            {actions}
+            {onDelete && (
+              <button onClick={onDelete} className="flex-1 bg-white text-error border border-error font-label-lg px-4 py-3 rounded-[12px] flex items-center justify-center gap-2 hover:bg-error-container active:scale-95 transition-all">
+                <span className="material-symbols-outlined text-[20px]">delete</span>
+                <span className="whitespace-nowrap">Delete</span>
+              </button>
+            )}
+            {onEdit && (
+              <button onClick={onEdit} className="flex-1 bg-white text-primary border border-primary font-label-lg px-4 py-3 rounded-[12px] flex items-center justify-center gap-2 hover:bg-surface-container-low active:scale-95 transition-all">
+                <span className="material-symbols-outlined text-[20px]">expand_more</span>
+                <span className="whitespace-nowrap">More Actions</span>
+              </button>
+            )}
+          </div>
+        )}
       </div>
-      <div className="grid grid-cols-4 gap-8 pt-6 border-t border-outline-variant">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-outline">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>public</span>
-          </div>
-          <div>
-            <p className="text-label-sm text-on-surface-variant uppercase tracking-wider">Source</p>
-            <p className="font-label-md text-on-surface">{source}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-outline">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_today</span>
-          </div>
-          <div>
-            <p className="text-label-sm text-on-surface-variant uppercase tracking-wider">Created on</p>
-            <p className="font-label-md text-on-surface">{createdAt}</p>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-8 border-t border-outline-variant">
+        <div className="space-y-1">
+          <p className="text-on-surface-variant text-[11px] uppercase tracking-wider font-bold">Source</p>
+          <div className="flex items-center gap-2 font-body-md font-medium">
+            <span className="material-symbols-outlined text-primary">language</span>
+            {source}
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-outline">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>history</span>
-          </div>
-          <div>
-            <p className="text-label-sm text-on-surface-variant uppercase tracking-wider">Last Contact</p>
-            <p className="font-label-md text-on-surface">{lastContactAt}</p>
+        <div className="space-y-1">
+          <p className="text-on-surface-variant text-[11px] uppercase tracking-wider font-bold">Created on</p>
+          <div className="flex items-center gap-2 font-body-md font-medium">
+            <span className="material-symbols-outlined text-primary">calendar_today</span>
+            {createdAt}
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-outline">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>account_circle</span>
+        <div className="space-y-1">
+          <p className="text-on-surface-variant text-[11px] uppercase tracking-wider font-bold">Last Contact</p>
+          <div className="flex items-center gap-2 font-body-md font-medium">
+            <span className="material-symbols-outlined text-primary">history</span>
+            {lastContactAt}
           </div>
-          <div>
-            <p className="text-label-sm text-on-surface-variant uppercase tracking-wider">Assigned to</p>
-            <p className="font-label-md text-on-surface">{assignedTo}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="text-on-surface-variant text-[11px] uppercase tracking-wider font-bold">Assigned to</p>
+          <div className="flex items-center gap-2 font-body-md font-medium">
+            <span className="material-symbols-outlined text-primary">person</span>
+            {assignedTo}
           </div>
         </div>
       </div>

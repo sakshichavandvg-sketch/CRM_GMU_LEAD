@@ -10,8 +10,8 @@ import { useTelecallerLeads } from "@/features/telecaller/hooks/useMyLeads";
 import { toast } from "sonner";
 import { Clock } from "lucide-react";
 
-export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, existingFollowups = [], allFollowups = [] }) {
-  console.log("[ScheduleFollowupModal] render", { isOpen, defaultDate, existingFollowupsCount: existingFollowups.length });
+export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, existingFollowups = [], allFollowups = [], initialLeadId = "" }) {
+  console.log("[ScheduleFollowupModal] render", { isOpen, defaultDate, existingFollowupsCount: existingFollowups.length, initialLeadId });
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
@@ -36,14 +36,14 @@ export default function ScheduleFollowupModal({ isOpen, onClose, defaultDate, ex
       setTime("");
       setNotes("");
       setPriority("Medium");
-      setLeadId("");
+      setLeadId(initialLeadId ? String(initialLeadId) : "");
     }
-  }, [isOpen, defaultDate]);
+  }, [isOpen, defaultDate, initialLeadId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const selectedLead = leadOptions.find(l => l.value === leadId) || null;
-    const enquiryNo = selectedLead ? selectedLead.enquiryId : null;
+    const enquiryNo = selectedLead ? selectedLead.enquiryId : (initialLeadId ? parseInt(initialLeadId, 10) : null);
 
     // Duplicate prevention: check for an existing active follow-up for this lead
     const existingActive = allFollowups.find(

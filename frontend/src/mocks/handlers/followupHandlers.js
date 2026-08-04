@@ -27,10 +27,19 @@ export const setupFollowupHandlers = (mock) => {
   // POST Create Followup
   mock.onPost(API_ENDPOINTS.TELECALLER.FOLLOWUPS).reply((config) => {
     const payload = JSON.parse(config.data);
+    const newFollowup = {
+      id: Math.floor(Math.random() * 1000),
+      ...payload,
+      leadId: payload.enquiryNo,
+      leadName: telecallerData.leads.find(l => l.enquiryNo === payload.enquiryNo)?.name || "Unknown Lead",
+      status: "Pending",
+      createdAt: new Date().toISOString()
+    };
+    telecallerData.followups.push(newFollowup);
     return getScenarioResponse({
       success: true,
       message: "Followup created successfully",
-      data: { id: Math.floor(Math.random() * 1000), ...payload }
+      data: newFollowup
     });
   });
 

@@ -19,5 +19,9 @@ export const telecallerData = {
   interactions: [
     { id: 601, leadId: 1001, type: "Call", action: "Answered", remarks: "Requested syllabus", time: "2026-07-31T10:00:00Z" },
     { id: 602, leadId: 1003, type: "Call", action: "Missed", remarks: "No answer", time: "2026-07-30T14:30:00Z" }
+  ],
+  notes: [
+    { id: 201, leadId: 1001, content: "Student expressed strong interest in B.Tech Computer Science.", createdBy: "Senior Telecaller", createdAt: "2026-07-31T10:00:00Z" },
+    { id: 202, leadId: 1003, content: "Discussed course fees and hostel facilities.", createdBy: "Senior Telecaller", createdAt: "2026-07-29T11:00:00Z" }
   ]
 };
