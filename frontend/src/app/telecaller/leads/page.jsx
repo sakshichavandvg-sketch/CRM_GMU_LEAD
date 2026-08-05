@@ -22,7 +22,7 @@ import MyLeadsHeader from "@/features/telecaller/components/leads/stitch/MyLeads
 import MyLeadsKPISection from "@/features/telecaller/components/leads/stitch/MyLeadsKPISection";
 import MyLeadsFilterToolbar from "@/features/telecaller/components/leads/stitch/MyLeadsFilterToolbar";
 import MyLeadsTable from "@/features/telecaller/components/leads/stitch/MyLeadsTable";
-import MyLeadsPagination from "@/features/telecaller/components/leads/stitch/MyLeadsPagination";
+import TablePagination from "@/components/table/TablePagination";
 
 export default function TelecallerLeadsPage() {
   const router = useRouter();
@@ -64,32 +64,7 @@ export default function TelecallerLeadsPage() {
 
   let allLeads = data?.leads || [];
   
-  // Apply Search
-  if (searchTerm && allLeads.length > 0) {
-    const lowerSearch = searchTerm.toLowerCase();
-    allLeads = allLeads.filter(l => 
-      l.name?.toLowerCase().includes(lowerSearch) || 
-      l.mobileNo?.includes(lowerSearch) ||
-      l.enquiryNo?.toString().includes(lowerSearch)
-    );
-  }
-
-  // Apply Local Filters
-  if (hasActiveFilters && allLeads.length > 0) {
-    activeFilterKeys.forEach(key => {
-      const val = filters[key];
-      if (!val) return;
-      allLeads = allLeads.filter(l => {
-        if (key === 'status') return l.status === val;
-        if (key === 'course') return l.course === val;
-        if (key === 'source') return l.source === val;
-        if (key === 'opinion') return l.opinion === val;
-        if (key === 'location') return (l.city === val || l.district === val);
-        if (key === 'calls') return (l.callCount || 0).toString() === val;
-        return true;
-      });
-    });
-  }
+  // Note: Filtering is handled entirely by the backend via useTelecallerLeads.
 
   const totalItems = data?.totalItems || allLeads.length;
   const totalPages = data?.totalPages || Math.ceil(allLeads.length / size);
@@ -128,15 +103,14 @@ export default function TelecallerLeadsPage() {
         <MyLeadsHeader 
           assignedLeadsCount={totalItems}
           lastSynced="just now"
-          hasActiveFilters={hasActiveFilters}
-          activeFiltersCount={activeFilterKeys.length}
-          onOpenFilters={() => setIsFilterOpen(true)}
         />
 
         <MyLeadsKPISection kpiData={kpiData} />
 
         <MyLeadsFilterToolbar 
-          onApplyFilters={() => {}}
+          hasActiveFilters={hasActiveFilters}
+          activeFiltersCount={activeFilterKeys.length}
+          onOpenFilters={() => setIsFilterOpen(true)}
         />
 
         <div className="bg-surface-container-lowest premium-shadow rounded-xl overflow-hidden flex flex-col mb-12">
@@ -147,7 +121,8 @@ export default function TelecallerLeadsPage() {
           />
 
           {!isLoading && allLeads.length > 0 && (
-            <MyLeadsPagination 
+            <TablePagination
+              mode="page"
               currentPage={page}
               pageSize={size}
               totalItems={totalItems}

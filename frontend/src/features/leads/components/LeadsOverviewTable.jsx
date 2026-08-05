@@ -74,21 +74,42 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
   const { data: bucketCounts = {} } = useLeadCounts();
 
   // Drawer Handlers
+  const handleOpenDrawer = useCallback(() => {
+    const initialDraft = {};
+    FILTER_CONFIG.forEach(c => {
+       if (filters[c.key]) initialDraft[c.key] = filters[c.key];
+    });
+    SPECIAL_FILTER_KEYS.forEach(k => {
+       if (filters[k]) initialDraft[k] = filters[k];
+    });
+    setDraftFilters(initialDraft);
+    setIsDrawerOpen(true);
+  }, [filters]);
+
   const handleCloseDrawer = useCallback(() => {
     setIsDrawerOpen(false);
     setTimeout(() => refineButtonRef.current?.focus(), 100);
   }, []);
 
   const handleApplyFilters = useCallback(() => {
+    const validUpdates = {};
+    
+    // Explicitly set all known filters to empty to clear any removed ones
+    FILTER_CONFIG.forEach(c => { validUpdates[c.key] = ""; });
+    SPECIAL_FILTER_KEYS.forEach(k => { validUpdates[k] = ""; });
+
     Object.entries(draftFilters).forEach(([key, val]) => {
       const isConfigured = FILTER_CONFIG.some(c => c.key === key);
       const isSpecial = SPECIAL_FILTER_KEYS.includes(key);
 
       if (isConfigured || isSpecial) {
-        const actionName = `set${key.charAt(0).toUpperCase()}${key.slice(1)}`;
-        if (actions[actionName]) actions[actionName](val);
+        validUpdates[key] = val;
       }
     });
+    
+    if (actions.setFilters) {
+      actions.setFilters(validUpdates);
+    }
     handleCloseDrawer();
   }, [draftFilters, actions, handleCloseDrawer]);
 
@@ -169,6 +190,7 @@ export default function LeadsOverviewTable({ filters, actions, search }) {
           onPageSizeChange: actions.setSize,
         }}
         onRetry={() => query.refetch()}
+        onOpenFilters={handleOpenDrawer}
       />
 
       <ReusableFilterDrawer 

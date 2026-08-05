@@ -35,7 +35,7 @@ const callReportsService = {
    * @param {Object} params - { page, size, search, status, dateFrom, dateTo }
    */
   getTelecallerCallLogs: async (userId, params = {}) => {
-    const { page = 0, size = 10, search = "", status = "", date = "", direction = "", hasRecording = "" } = params;
+    const { page = 0, size = 10, search = "", status = "", dateFrom = "", dateTo = "", direction = "", hasRecording = "" } = params;
 
     const queryParams = new URLSearchParams({
       empId: userId.toString(),
@@ -45,9 +45,13 @@ const callReportsService = {
 
     if (search) queryParams.append("search", search);
     if (status) queryParams.append("status", status.toUpperCase().replace(" ", "_"));
-    if (date) {
-      queryParams.append("dateFrom", `${date}T00:00:00`);
-      queryParams.append("dateTo", `${date}T23:59:59`);
+    if (dateFrom && dateTo) {
+      queryParams.append("dateFrom", `${dateFrom}T00:00:00`);
+      queryParams.append("dateTo", `${dateTo}T23:59:59`);
+    } else if (dateFrom) {
+      queryParams.append("dateFrom", `${dateFrom}T00:00:00`);
+    } else if (dateTo) {
+      queryParams.append("dateTo", `${dateTo}T23:59:59`);
     }
     if (direction) queryParams.append("direction", direction.toUpperCase());
     if (hasRecording) queryParams.append("hasRecording", hasRecording);

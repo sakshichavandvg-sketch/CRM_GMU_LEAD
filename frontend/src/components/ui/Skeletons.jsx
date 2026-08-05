@@ -16,14 +16,14 @@ function SkeletonBlock({ className = "" }) {
 
 // ─── Table Skeleton ──────────────────────────────────────────
 
-export function TableSkeleton({ rows = 5, columns = 5 }) {
+export function TableSkeleton({ rows = 6, columns = 5 }) {
   return (
     <div className="overflow-hidden rounded-[22px] border border-gray-200 bg-white shadow-sm">
       {/* Header */}
-      <div className="flex items-center gap-4 bg-gray-50 px-7 py-5">
+      <div className="flex items-center gap-6 bg-gray-50/80 px-6 py-3.5">
         <SkeletonBlock className="h-4 w-4 rounded" />
         {Array.from({ length: columns }).map((_, i) => (
-          <SkeletonBlock key={i} className="h-3 w-24" />
+          <SkeletonBlock key={i} className="h-3 w-20" />
         ))}
       </div>
 
@@ -31,17 +31,28 @@ export function TableSkeleton({ rows = 5, columns = 5 }) {
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
-          className="flex items-center gap-4 border-t border-gray-100 px-7 py-6"
+          className="flex items-center gap-6 border-t border-gray-100 px-6 py-4"
         >
           <SkeletonBlock className="h-4 w-4 rounded" />
           {Array.from({ length: columns }).map((_, colIndex) => (
             <SkeletonBlock
               key={colIndex}
-              className={`h-4 ${colIndex === 0 ? "w-20" : "w-28"}`}
+              className={`h-4 ${colIndex === 0 ? "w-28" : colIndex === 1 ? "w-32" : "w-20"}`}
             />
           ))}
         </div>
       ))}
+
+      {/* Pagination skeleton */}
+      <div className="flex items-center justify-between px-6 py-3.5 border-t border-gray-200 bg-gray-50/50">
+        <SkeletonBlock className="h-3 w-40" />
+        <div className="flex items-center gap-2">
+          <SkeletonBlock className="h-8 w-20 rounded-lg" />
+          <SkeletonBlock className="h-8 w-8 rounded-lg" />
+          <SkeletonBlock className="h-8 w-8 rounded-lg" />
+          <SkeletonBlock className="h-8 w-20 rounded-lg" />
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,32 +1,35 @@
 import React from "react";
-import { TableSkeleton } from "@/components/ui/Skeletons";
-import ErrorState from "@/components/ui/ErrorState";
-import { EmptyState } from "@/components/dashboard-ui/EmptyState";
-import { PhoneOff } from "lucide-react";
+import DataTable from "@/components/table/DataTable";
+import Badge from "@/components/ui/Badge";
+import { Play, PhoneOff } from "lucide-react";
 
-const getStatusBadge = (status) => {
+const getStatusVariant = (status) => {
   const s = (status || "Unknown").toLowerCase();
   
-  if (s === "connected") {
-    return { bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-600" };
-  } else if (s === "no answer") {
-    return { bg: "bg-red-50", text: "text-red-700", dot: "bg-red-600" };
-  } else if (s === "busy") {
-    return { bg: "bg-orange-50", text: "text-orange-700", dot: "bg-orange-600" };
-  } else if (s === "voicemail") {
-    return { bg: "bg-slate-50", text: "text-slate-600", dot: "bg-slate-400" };
-  } else if (s === "call back") {
-    return { bg: "bg-yellow-50", text: "text-yellow-800", dot: "bg-yellow-600" };
-  } else if (s === "interested") {
-    return { bg: "bg-cyan-50", text: "text-cyan-700", dot: "bg-cyan-600" };
-  }
+  if (s === "answered" || s === "connected") return "success";
+  if (s === "missed" || s === "no answer") return "danger";
+  if (s === "busy") return "orange";
+  if (s === "voicemail") return "neutral";
+  if (s === "call back") return "yellow";
+  if (s === "interested") return "blue";
   
-  // Default fallback
-  return { bg: "bg-gray-50", text: "text-gray-600", dot: "bg-gray-400" };
+  return "neutral";
 };
 
-function formatDuration(seconds) {
+function parseDurationToSeconds(dur) {
+  if (typeof dur === "number") return dur;
+  if (typeof dur !== "string" || !dur) return 0;
+  const parts = dur.split(":").map(Number);
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return 0;
+}
+
+function formatDuration(val) {
+  if (!val && val !== 0) return "—";
+  const seconds = parseDurationToSeconds(val);
   if (!seconds && seconds !== 0) return "—";
+  
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m}:${s < 10 ? "0" : ""}${s}`;
@@ -38,93 +41,136 @@ function formatDate(dateStr) {
     day: "2-digit",
     month: "short",
     year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
   });
 }
 
+const getColumns = (startIndex, onPlayRecording) => [
+  {
+    key: "slNo",
+    label: "SL NO",
+    width: "70px",
+    render: (_, row) => (
+      <span className="text-sm text-gray-500 font-medium">{startIndex + (row._index || 0)}</span>
+    ),
+  },
+  {
+    key: "callDate",
+    label: "Call Date",
+    width: "160px",
+    render: (_, row) => (
+      <span className="text-sm font-medium text-gray-900">{formatDate(row.createdAt || row.date || row.time || row.callDateTime)}</span>
+    ),
+  },
+  {
+    key: "leadName",
+    label: "Lead Name",
+    width: "200px",
+    render: (_, row) => (
+      <span className="text-sm font-bold text-gray-900">{row.name || row.leadName || row.contactName || "Unknown"}</span>
+    ),
+  },
+  {
+    key: "mobileNo",
+    label: "Mobile No",
+    width: "140px",
+    render: (_, row) => (
+      <span className="text-sm text-gray-600 font-mono">{row.phone || row.leadPhone || row.mobileNo || row.mobile || row.contactPhone || "—"}</span>
+    ),
+  },
+  {
+    key: "callCount",
+    label: "Call Count",
+    width: "110px",
+    headerClassName: "text-center",
+    cellClassName: "text-center",
+    render: (_, row) => (
+      <span className="text-sm font-bold text-gray-900">{row.callCount || 1}</span>
+    ),
+  },
+  {
+    key: "duration",
+    label: "Duration",
+    width: "110px",
+    render: (_, row) => (
+      <span className="text-sm font-mono text-gray-700">{formatDuration(row.callDuration || row.duration)}</span>
+    ),
+  },
+  {
+    key: "status",
+    label: "Status",
+    width: "140px",
+    render: (_, row) => {
+      const outcome = row.callOutcome || row.outcome || row.status || "Unknown";
+      return (
+        <Badge variant={getStatusVariant(outcome)} dot>
+          {outcome}
+        </Badge>
+      );
+    },
+  },
+  {
+    key: "course",
+    label: "Course",
+    width: "120px",
+    render: (_, row) => (
+      <span className="text-sm text-gray-700">{row.course || row.courseName || "—"}</span>
+    ),
+  },
+  {
+    key: "district",
+    label: "District",
+    width: "140px",
+    render: (_, row) => (
+      <span className="text-sm text-gray-700">{row.district || row.districtName || "—"}</span>
+    ),
+  },
+  {
+    key: "recordingUrl",
+    label: "Recording",
+    width: "100px",
+    headerClassName: "text-center",
+    cellClassName: "flex justify-center",
+    render: (_, row) => {
+      const hasRecording = Boolean(row.recordingUrl || row.hasRecording || row.recording);
+      return hasRecording ? (
+        <button 
+          onClick={(e) => { e.stopPropagation(); onPlayRecording(row); }}
+          className="w-8 h-8 inline-flex rounded-full bg-[#7A1F2B]/5 text-[#7A1F2B] items-center justify-center hover:bg-[#7A1F2B]/10 transition-colors"
+          title="Play Recording"
+        >
+          <Play size={14} className="ml-0.5" />
+        </button>
+      ) : (
+        <span className="text-gray-300 text-sm">—</span>
+      );
+    },
+  },
+];
+
 export default function StitchCallReportTable({ data = [], isLoading, isError, onPlayRecording, startIndex = 1 }) {
-  if (isLoading) {
-    return (
-      <section className="bg-white rounded-[24px] main-shadow border border-outline-variant/50 overflow-hidden flex flex-col p-6">
-        <TableSkeleton rows={8} />
-      </section>
-    );
-  }
-
-  if (isError) {
-    return (
-      <section className="bg-white rounded-[24px] main-shadow border border-outline-variant/50 overflow-hidden flex flex-col p-6">
-        <ErrorState title="Failed to load call logs" message="Check your connection and try again" />
-      </section>
-    );
-  }
-
-  if (data.length === 0) {
-    return (
-      <section className="bg-white rounded-[24px] main-shadow border border-outline-variant/50 overflow-hidden flex flex-col p-6 min-h-[300px] justify-center">
-        <EmptyState title="No Call Logs Found" description="No calls available." icon={PhoneOff} />
-      </section>
-    );
-  }
+  // Inject _index for Sl No rendering based on actual array index
+  const indexedData = data.map((item, idx) => ({ ...item, _index: idx }));
+  const columns = getColumns(startIndex, onPlayRecording);
 
   return (
-    <section className="bg-white rounded-[24px] main-shadow border border-outline-variant/50 overflow-hidden flex flex-col flex-1">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-[#FFF6F5] border-b border-outline-variant">
-              <th className="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">SL NO</th>
-              <th className="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">CALL DATE</th>
-              <th className="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">LEAD NAME</th>
-              <th className="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">MOBILE NO</th>
-              <th className="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider text-center">CALL COUNT</th>
-              <th className="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">DURATION</th>
-              <th className="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">STATUS</th>
-              <th className="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">COURSE</th>
-              <th className="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider">DISTRICT</th>
-              <th className="px-6 py-5 font-table-header text-table-header text-on-surface-variant uppercase tracking-wider text-right">RECORDING</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#EEF1F5]">
-            {data.map((row, index) => {
-              const outcome = row.callOutcome || row.outcome || "Unknown";
-              const badge = getStatusBadge(outcome);
-              const hasRecording = Boolean(row.recordingUrl || row.hasRecording);
-              
-              return (
-                <tr key={row.callId || index} className="h-[72px] table-row-hover transition-standard">
-                  <td className="px-6 text-body-md text-on-surface-variant">{startIndex + index}</td>
-                  <td className="px-6 text-body-md font-medium">{formatDate(row.createdAt || row.date)}</td>
-                  <td className="px-6 text-body-md font-bold text-on-surface">{row.name || row.leadName || "Unknown"}</td>
-                  <td className="px-6 text-body-md text-on-surface-variant">{row.phone || row.leadPhone || "—"}</td>
-                  <td className="px-6 text-body-md text-center font-bold">{row.callCount || 1}</td>
-                  <td className="px-6 text-body-md">{formatDuration(row.callDuration || row.duration)}</td>
-                  <td className="px-6">
-                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${badge.bg} ${badge.text} text-[12px] font-bold`}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`}></span>
-                      {outcome}
-                    </span>
-                  </td>
-                  <td className="px-6 text-body-md">{row.course || "—"}</td>
-                  <td className="px-6 text-body-md">{row.district || "—"}</td>
-                  <td className="px-6 text-right">
-                    {hasRecording ? (
-                      <button 
-                        onClick={() => onPlayRecording(row)}
-                        className="w-10 h-10 inline-flex rounded-full border border-primary text-primary items-center justify-center hover:bg-primary-fixed transition-standard focus:ring-2 focus:ring-primary"
-                        aria-label="Play Recording"
-                      >
-                        <span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>play_arrow</span>
-                      </button>
-                    ) : (
-                      <span className="mr-4 text-on-surface-variant text-body-md">—</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </section>
+    <div className="flex flex-col flex-1 bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden min-h-0">
+      <DataTable
+        columns={columns}
+        data={indexedData}
+        rowKey={(row) => row.callId || row._index}
+        selectable={false}
+        loading={isLoading}
+        onRowClick={onPlayRecording}
+        emptyState={
+          <div className="flex flex-col items-center justify-center text-gray-500 py-12">
+            <PhoneOff size={48} className="mb-2 text-gray-300" strokeWidth={1.5} />
+            <p className="font-semibold text-gray-900">No Call Logs Found</p>
+            <p className="text-sm text-gray-500">No calls available for this period.</p>
+          </div>
+        }
+      />
+    </div>
   );
 }

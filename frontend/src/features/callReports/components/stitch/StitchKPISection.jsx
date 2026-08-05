@@ -1,5 +1,6 @@
 import React from "react";
-import { KPICardSkeleton } from "@/components/dashboard-ui/KPICard";
+import { KPICard, KPICardSkeleton } from "@/components/dashboard-ui/KPICard";
+import { Phone, PhoneCall, Clock, Mic } from "lucide-react";
 
 function formatAvgDuration(seconds) {
   if (!seconds && seconds !== 0) return "—";
@@ -29,50 +30,34 @@ export default function StitchKPISection({ data, isLoading }) {
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-4 gap-grid-gutter">
-      {/* Total Calls */}
-      <div className="bg-white p-card-padding rounded-[24px] main-shadow border border-outline-variant/50 flex items-center gap-5">
-        <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center">
-          <span className="material-symbols-outlined text-blue-600 text-3xl">call</span>
-        </div>
-        <div>
-          <p className="text-on-surface-variant font-label-sm text-label-sm mb-1 uppercase tracking-wider">Total Calls</p>
-          <h2 className="font-kpi-value text-kpi-value text-on-surface">{totalCalls}</h2>
-          <p className="text-on-surface-variant text-[11px]">Total calls</p>
-        </div>
-      </div>
-      {/* Connected Rate */}
-      <div className="bg-white p-card-padding rounded-[24px] main-shadow border border-outline-variant/50 flex items-center gap-5">
-        <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center">
-          <span className="material-symbols-outlined text-emerald-600 text-3xl">phone_enabled</span>
-        </div>
-        <div>
-          <p className="text-on-surface-variant font-label-sm text-label-sm mb-1 uppercase tracking-wider">Connected Rate</p>
-          <h2 className="font-kpi-value text-kpi-value text-on-surface">{calcConnectedRate(connectedCalls, totalCalls)}</h2>
-          <p className="text-on-surface-variant text-[11px]">{connectedCalls} / {totalCalls} Connected</p>
-        </div>
-      </div>
-      {/* Avg Duration */}
-      <div className="bg-white p-card-padding rounded-[24px] main-shadow border border-outline-variant/50 flex items-center gap-5">
-        <div className="w-14 h-14 rounded-full bg-orange-50 flex items-center justify-center">
-          <span className="material-symbols-outlined text-orange-500 text-3xl">timer</span>
-        </div>
-        <div>
-          <p className="text-on-surface-variant font-label-sm text-label-sm mb-1 uppercase tracking-wider">Avg Duration</p>
-          <h2 className="font-kpi-value text-kpi-value text-on-surface">{formatAvgDuration(avgDuration)}</h2>
-          <p className="text-on-surface-variant text-[11px]">Per call average</p>
-        </div>
-      </div>
-      {/* Recordings */}
-      <div className="bg-white p-card-padding rounded-[24px] main-shadow border border-outline-variant/50 flex items-center gap-5">
-        <div className="w-14 h-14 rounded-full bg-purple-50 flex items-center justify-center">
-          <span className="material-symbols-outlined text-purple-600 text-3xl">mic</span>
-        </div>
-        <div>
-          <p className="text-on-surface-variant font-label-sm text-label-sm mb-1 uppercase tracking-wider">Recordings</p>
-          <h2 className="font-kpi-value text-kpi-value text-on-surface">{recordingsCount}</h2>
-          <p className="text-on-surface-variant text-[11px]">Available recordings</p>
-        </div>
-      </div>
+      <KPICard
+        title="Total Calls"
+        value={totalCalls}
+        subtitle="Total calls"
+        icon={Phone}
+        variant="blue"
+      />
+      <KPICard
+        title="Connected Rate"
+        value={calcConnectedRate(connectedCalls, totalCalls)}
+        subtitle={`${connectedCalls} / ${totalCalls} Connected`}
+        icon={PhoneCall}
+        variant="success"
+      />
+      <KPICard
+        title="Avg Duration"
+        value={formatAvgDuration(avgDuration)}
+        subtitle="Per call average"
+        icon={Clock}
+        variant="warning"
+      />
+      <KPICard
+        title="Recordings"
+        value={recordingsCount}
+        subtitle="Available recordings"
+        icon={Mic}
+        variant="purple"
+      />
     </section>
   );
 }

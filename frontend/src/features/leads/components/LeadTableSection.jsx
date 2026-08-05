@@ -1,5 +1,7 @@
 import React, { useMemo } from "react";
 import LeadsDataTable from "./LeadsDataTable";
+import TableCard from "@/components/table/TableCard";
+import TablePagination from "@/components/table/TablePagination";
 import { TableSkeleton } from "@/components/ui/Skeletons";
 import { AlertCircle, RefreshCw } from "lucide-react";
 
@@ -13,7 +15,8 @@ export default function LeadTableSection({
   error,
   isFetching,
   pagination,
-  onRetry
+  onRetry,
+  onOpenFilters
 }) {
   const memoizedData = useMemo(() => data, [data]);
 
@@ -39,36 +42,46 @@ export default function LeadTableSection({
   }
 
   return (
-    <section className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden relative">
-      {/* Table toolbar */}
-      <div className="px-6 py-4 flex justify-between items-center border-b border-gray-100 bg-white">
+    <section className="relative">
+      {/* Table toolbar — page context, outside the table card */}
+      <div className="px-1 pb-4 flex justify-between items-center">
         <h4 className="text-xl font-semibold text-gray-900">
           {pagination?.totalItems || 0} Leads Found
         </h4>
         <div className="flex items-center gap-4">
-          {/* Sort dropdown (cosmetic for now) */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">Sort by:</span>
-            <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-lg px-3 py-1.5 cursor-pointer hover:bg-gray-50 transition-all">
-              <span className="text-sm font-medium text-gray-700">Newest First</span>
-              <span className="material-symbols-outlined text-gray-400 text-[18px]">expand_more</span>
-            </div>
-          </div>
-
+          <button
+            onClick={onOpenFilters}
+            className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-4 py-2 hover:bg-gray-50 hover:text-[#6F1D28] transition-all text-sm font-medium text-gray-700 shadow-sm"
+          >
+            Refine Filters
+            <span className="material-symbols-outlined text-[18px] text-gray-500">tune</span>
+          </button>
         </div>
       </div>
 
-      <LeadsDataTable
-        data={memoizedData}
-        selectedRows={selectedRows}
-        setSelectedRows={setSelectedRows}
-        onRowClick={onRowClick}
-        pagination={pagination}
-      />
+      {/* Table Card: DataTable + TablePagination */}
+      <TableCard>
+        <LeadsDataTable
+          data={memoizedData}
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
+          onRowClick={onRowClick}
+        />
+
+        <TablePagination
+          mode="page"
+          currentPage={pagination?.currentPage || 0}
+          pageSize={pagination?.pageSize || 10}
+          totalPages={pagination?.totalPages || 1}
+          totalItems={pagination?.totalItems || 0}
+          onPageChange={pagination?.onPageChange}
+          onPageSizeChange={pagination?.onPageSizeChange}
+        />
+      </TableCard>
 
       {/* Fetching overlay (background page transitions) */}
       {isFetching && !isLoading && !isError && (
-        <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] z-30 flex items-center justify-center pointer-events-none rounded-2xl">
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] z-30 flex items-center justify-center pointer-events-none rounded-[22px]">
           <div className="bg-white p-3 rounded-full shadow-lg border border-gray-100 flex items-center justify-center">
             <div className="w-6 h-6 border-2 border-gray-200 border-t-[#6F1D28] rounded-full animate-spin" />
           </div>
@@ -77,7 +90,7 @@ export default function LeadTableSection({
 
       {/* Error overlay (stale data present but page refetch failed) */}
       {isError && data?.length > 0 && (
-        <div className="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-30 flex items-center justify-center rounded-2xl">
+        <div className="absolute inset-0 bg-white/70 backdrop-blur-[1px] z-30 flex items-center justify-center rounded-[22px]">
           <div className="bg-white p-6 rounded-xl shadow-xl border border-red-100 flex flex-col items-center max-w-sm text-center">
             <AlertCircle className="w-10 h-10 text-red-500 mb-3" />
             <h3 className="text-lg font-semibold text-gray-900 mb-1">Failed to load page</h3>

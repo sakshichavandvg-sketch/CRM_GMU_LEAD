@@ -24,24 +24,13 @@ export default function CallReportsFilters({
       </div>
       <div className="flex items-center gap-2">
         <div className="relative group">
-          <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-secondary group-focus-within:text-primary transition-colors pointer-events-none">
-            calendar_month
-          </span>
           <input
-            className="h-[52px] w-[180px] pl-4 pr-10 bg-background border-none rounded-[18px] focus:ring-2 focus:ring-primary-container text-on-surface font-body-md outline-none"
+            className="h-[52px] w-[180px] px-4 bg-background border-none rounded-[18px] focus:ring-2 focus:ring-primary-container text-on-surface font-body-md outline-none [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:w-6 [&::-webkit-calendar-picker-indicator]:h-6"
             type="date"
             value={selectedDate}
             onChange={(e) => onDateChange(e.target.value)}
           />
         </div>
-        
-        {/* We keep the "APPLY FILTERS" button as a visual element, or it can be a clear button */}
-        <button 
-          onClick={() => { onSearchChange(""); onDateChange(""); }}
-          className="h-[52px] px-8 bg-primary-container text-white font-label-md rounded-[18px] hover:opacity-95 transition-opacity active:scale-95 whitespace-nowrap"
-        >
-          CLEAR FILTERS
-        </button>
       </div>
     </section>
   );

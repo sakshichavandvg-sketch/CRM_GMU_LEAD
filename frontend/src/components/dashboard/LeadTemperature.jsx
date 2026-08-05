@@ -1,4 +1,4 @@
-import { MetricCard } from "../dashboard-ui/MetricCard";
+import { KPICard } from "../dashboard-ui/KPICard";
 import { Flame, Snowflake } from "lucide-react";
 
 export default function LeadTemperature({ temperature }) {
@@ -7,23 +7,23 @@ export default function LeadTemperature({ temperature }) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <MetricCard
+      <KPICard
         value={hot}
         title="Hot Leads"
         subtitle="Score ≥ 75"
-        trend={12}
-        trendLabel="Today"
+        trend="+12 Today"
+        trendDirection="up"
         icon={Flame}
-        variant="orange"
+        variant="danger"
       />
-      <MetricCard
+      <KPICard
         value={cold}
         title="Cold Leads"
         subtitle="Score < 75"
-        trend={-5}
-        trendLabel="Today"
+        trend="-5 Today"
+        trendDirection="down"
         icon={Snowflake}
-        variant="blue"
+        variant="cyan"
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
-export default function MyLeadsFilterToolbar({ onApplyFilters }) {
+export default function MyLeadsFilterToolbar({ hasActiveFilters = false, activeFiltersCount = 0, onOpenFilters }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -24,9 +24,6 @@ export default function MyLeadsFilterToolbar({ onApplyFilters }) {
     
     // Update the URL to trigger the search (matches existing logic pattern)
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
-    
-    // Also trigger any local apply actions if needed
-    if (onApplyFilters) onApplyFilters();
   };
 
   const handleKeyDown = (e) => {
@@ -50,11 +47,14 @@ export default function MyLeadsFilterToolbar({ onApplyFilters }) {
       </div>
       <div className="flex flex-wrap gap-3">
         <button 
-          onClick={handleApply}
-          className="bg-primary text-white px-8 py-2.5 rounded-lg font-title-sm font-semibold hover:bg-primary-container transition-all active:scale-95 flex items-center gap-2 shadow-lg shadow-primary/20"
+          onClick={onOpenFilters}
+          className="flex items-center justify-center gap-2 px-6 py-2.5 border-2 border-primary text-primary font-title-sm font-semibold rounded-lg hover:bg-primary hover:text-white transition-all relative h-full"
         >
-          <span className="material-symbols-outlined">done_all</span>
-          Apply Filters
+          <span className="material-symbols-outlined">filter_list</span>
+          Filters {hasActiveFilters && activeFiltersCount > 0 ? `(${activeFiltersCount})` : ""}
+          {hasActiveFilters && (
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-error rounded-full border-2 border-surface"></span>
+          )}
         </button>
       </div>
     </div>

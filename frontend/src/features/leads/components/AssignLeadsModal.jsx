@@ -93,7 +93,7 @@ export default function AssignLeadsModal({
                       });
                       
                       if (isConfirmed) {
-                        onAssign(tc.id);
+                        onAssign(tc.empId || tc.id);
                       }
                     }}
                     disabled={isAssigning}

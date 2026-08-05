@@ -4,7 +4,7 @@
 
 .stitch-myleads {
   font-family: 'Outfit', sans-serif;
-  background-color: #f9f9ff;
+  background-color: #ffffff;
   color: #151c27;
 
   /* Colors */
@@ -22,7 +22,7 @@
   --color-on-surface-variant: #59413f;
   --color-outline: #8d706e;
   --color-outline-variant: #e1bfbc;
-  --color-background: #f9f9ff;
+  --color-background: #ffffff;
   --color-error: #ba1a1a;
   --color-tertiary: #003914;
 

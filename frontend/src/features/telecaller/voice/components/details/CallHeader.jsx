@@ -43,7 +43,12 @@ export default function CallHeader({ call }) {
           size="sm"
           onClick={() => {
             if (call.enquiryNo) {
-              window.location.href = `/telecaller/leads/${call.enquiryNo}`;
+              const currentPath = window.location.pathname;
+              if (currentPath.startsWith("/dashboard")) {
+                window.location.href = `/dashboard/management/leads/${call.enquiryNo}`;
+              } else {
+                window.location.href = `/telecaller/leads/${call.enquiryNo}`;
+              }
             }
           }}
         >

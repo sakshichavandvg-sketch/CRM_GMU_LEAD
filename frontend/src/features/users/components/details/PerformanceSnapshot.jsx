@@ -11,43 +11,37 @@ export default function PerformanceSnapshot({ kpi }) {
       title: "Assigned Leads",
       value: kpi.assignedLeads,
       icon: Users,
-      colorClass: "bg-blue-50",
-      iconColorClass: "text-blue-600",
+      variant: "blue",
     },
     {
       title: "Converted Leads",
       value: kpi.convertedLeads,
       icon: TrendingUp,
-      colorClass: "bg-emerald-50",
-      iconColorClass: "text-emerald-600",
+      variant: "success",
     },
     {
       title: "Calls Today",
       value: kpi.callsToday,
       icon: Phone,
-      colorClass: "bg-amber-50",
-      iconColorClass: "text-amber-600",
+      variant: "warning",
     },
     {
       title: "Calls This Month",
       value: kpi.callsThisMonth,
       icon: CalendarDays,
-      colorClass: "bg-purple-50",
-      iconColorClass: "text-purple-600",
+      variant: "purple",
     },
     {
       title: "Conversion Rate",
       value: `${kpi.conversionRate}%`,
       icon: Target,
-      colorClass: "bg-rose-50",
-      iconColorClass: "text-[#6F1D28]",
+      variant: "danger",
     },
     {
       title: "Pending Follow-ups",
       value: kpi.pendingFollowUps,
       icon: Clock,
-      colorClass: "bg-red-50",
-      iconColorClass: "text-red-600",
+      variant: "primary",
     },
   ];
 
@@ -59,8 +53,7 @@ export default function PerformanceSnapshot({ kpi }) {
           title={metric.title}
           value={metric.value}
           icon={metric.icon}
-          colorClass={metric.colorClass}
-          iconColorClass={metric.iconColorClass}
+          variant={metric.variant}
         />
       ))}
     </div>

@@ -2,6 +2,9 @@
 
 import { Download, Trash2, UserPlus, X } from "lucide-react";
 
+/**
+ * BulkActionBar — standardized bar shown when rows are selected.
+ */
 export default function BulkActionBar({
   selectedCount,
   onClear,
@@ -14,68 +17,58 @@ export default function BulkActionBar({
   return (
     <div
       className="
-        mb-5
-        flex
-        flex-col
-        gap-3
-        sm:flex-row
-        sm:items-center
-        sm:justify-between
-        rounded-2xl
-        border
-        border-gray-200
-        bg-white
-        px-4
-        py-3
-        sm:px-6
-        sm:py-4
+        flex flex-col gap-3
+        sm:flex-row sm:items-center sm:justify-between
+        rounded-xl
+        bg-[#8B0D16]/[0.05]
+        border border-[#8B0D16]/20
+        px-5 py-3
         shadow-sm
       "
     >
-      <p className="font-medium text-slate-700">
-        {selectedCount} selected
+      <p className="text-sm font-semibold text-[#8B0D16]">
+        {selectedCount} {selectedCount === 1 ? "item" : "items"} selected
       </p>
 
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+      <div className="flex flex-wrap items-center gap-2">
         {onAssign && (
-          <button 
+          <button
             onClick={onAssign}
-            className="flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm hover:bg-gray-50"
+            className="flex items-center gap-2 rounded-lg border border-[#8B0D16]/30 bg-white px-4 py-2 text-sm font-medium text-[#8B0D16] hover:bg-[#8B0D16]/10 transition-colors"
           >
-            <UserPlus size={16} />
+            <UserPlus size={15} />
             Assign
           </button>
         )}
 
         {onExport && (
-          <button 
+          <button
             onClick={onExport}
-            className="flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm hover:bg-gray-50"
+            className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            <Download size={16} />
+            <Download size={15} />
             Export
           </button>
         )}
 
         {onDelete && (
-          <button 
+          <button
             onClick={onDelete}
-            className="flex items-center gap-2 rounded-xl border border-red-200 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+            className="flex items-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
           >
-            <Trash2 size={16} />
+            <Trash2 size={15} />
             Delete
           </button>
         )}
 
         <button
           onClick={onClear}
-          className="flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm hover:bg-gray-50"
+          className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors"
         >
-          <X size={16} />
+          <X size={15} />
           Clear
         </button>
-
       </div>
     </div>
   );
-}
+}

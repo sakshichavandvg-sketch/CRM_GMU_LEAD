@@ -35,8 +35,7 @@ export default function TelecallerSummary({ data, isLoading }) {
       title: "Total Calls",
       value: totalCalls,
       icon: Phone,
-      colorClass: "bg-blue-50",
-      iconColorClass: "text-blue-600",
+      variant: "blue",
       trend: data?.callsTrend ?? null,
       trendDirection: "up",
     },
@@ -44,24 +43,21 @@ export default function TelecallerSummary({ data, isLoading }) {
       title: "Connected Rate",
       value: calcConnectedRate(connectedCalls, totalCalls),
       icon: PhoneCall,
-      colorClass: "bg-emerald-50",
-      iconColorClass: "text-emerald-600",
+      variant: "success",
       trend: null,
     },
     {
       title: "Avg Duration",
       value: formatAvgDuration(avgDuration),
       icon: Clock,
-      colorClass: "bg-amber-50",
-      iconColorClass: "text-amber-600",
+      variant: "warning",
       trend: null,
     },
     {
       title: "Recordings",
       value: recordingsCount,
       icon: Mic,
-      colorClass: "bg-purple-50",
-      iconColorClass: "text-purple-600",
+      variant: "purple",
       trend: null,
     },
   ];
@@ -74,8 +70,7 @@ export default function TelecallerSummary({ data, isLoading }) {
           title={kpi.title}
           value={kpi.value}
           icon={kpi.icon}
-          colorClass={kpi.colorClass}
-          iconColorClass={kpi.iconColorClass}
+          variant={kpi.variant}
           trend={kpi.trend}
           trendDirection={kpi.trendDirection}
         />

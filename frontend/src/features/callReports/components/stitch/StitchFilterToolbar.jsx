@@ -1,13 +1,28 @@
 import React, { useState } from "react";
 
-export default function StitchFilterToolbar({ filters, onFilterChange, onApplyFilters }) {
+export default function StitchFilterToolbar({ filters, onFilterChange, onApplyFilters, isLoading }) {
   // Local state for the inputs to match the Stitch design without breaking parent logic
-  const [localSearch, setLocalSearch] = useState("");
-  const [localDate, setLocalDate] = useState(filters.date || "");
+  const [localSearch, setLocalSearch] = useState(filters?.search || "");
+  const [localDateFrom, setLocalDateFrom] = useState(filters?.dateFrom || "");
+  const [localDateTo, setLocalDateTo] = useState(filters?.dateTo || "");
 
   const handleApply = () => {
-    // Only pass back the date, since parent filtering logic only supports 'date' currently
-    onFilterChange(prev => ({ ...prev, date: localDate }));
+    // Validate date range
+    if (localDateFrom && localDateTo) {
+      if (new Date(localDateFrom) > new Date(localDateTo)) {
+        alert("From Date cannot be later than To Date.");
+        return;
+      }
+    }
+
+    // Merge updated values into the existing filter state
+    onFilterChange(prev => ({ 
+      ...prev, 
+      search: localSearch,
+      dateFrom: localDateFrom,
+      dateTo: localDateTo
+    }));
+    
     if (onApplyFilters) onApplyFilters();
   };
 
@@ -30,10 +45,10 @@ export default function StitchFilterToolbar({ filters, onFilterChange, onApplyFi
         <div className="flex flex-col gap-1">
           <div className="relative">
             <input 
-              className="pl-4 pr-10 py-3 rounded-[18px] border border-outline-variant focus:ring-primary focus:border-primary text-body-md w-40" 
+              className="pl-4 pr-10 py-3 rounded-[18px] border border-outline-variant focus:ring-primary focus:border-primary text-body-md w-40 [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:w-6 [&::-webkit-calendar-picker-indicator]:h-6" 
               type="date" 
-              value={localDate}
-              onChange={(e) => setLocalDate(e.target.value)}
+              value={localDateFrom}
+              onChange={(e) => setLocalDateFrom(e.target.value)}
             />
           </div>
         </div>
@@ -41,10 +56,10 @@ export default function StitchFilterToolbar({ filters, onFilterChange, onApplyFi
         <div className="flex flex-col gap-1">
           <div className="relative">
             <input 
-              className="pl-4 pr-10 py-3 rounded-[18px] border border-outline-variant focus:ring-primary focus:border-primary text-body-md w-40 opacity-50 bg-gray-50 cursor-not-allowed" 
+              className="pl-4 pr-10 py-3 rounded-[18px] border border-outline-variant focus:ring-primary focus:border-primary text-body-md w-40 [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:w-6 [&::-webkit-calendar-picker-indicator]:h-6" 
               type="date" 
-              disabled
-              title="To Date (Not supported in current logic)"
+              value={localDateTo}
+              onChange={(e) => setLocalDateTo(e.target.value)}
             />
           </div>
         </div>
@@ -53,9 +68,12 @@ export default function StitchFilterToolbar({ filters, onFilterChange, onApplyFi
       {/* Apply button */}
       <button 
         onClick={handleApply}
-        className="bg-primary px-8 py-3.5 rounded-[18px] text-white font-bold hover:bg-surface-tint transition-standard active:scale-95 shadow-lg shadow-primary/10 whitespace-nowrap"
+        disabled={isLoading}
+        className={`px-8 py-3.5 rounded-[18px] text-white font-bold transition-standard whitespace-nowrap shadow-lg ${
+          isLoading ? 'bg-gray-400 cursor-not-allowed shadow-none' : 'bg-primary hover:bg-surface-tint active:scale-95 shadow-primary/10'
+        }`}
       >
-        APPLY FILTERS
+        {isLoading ? "APPLYING..." : "APPLY FILTERS"}
       </button>
     </section>
   );

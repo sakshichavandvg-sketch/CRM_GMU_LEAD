@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Play, PhoneIncoming, PhoneOutgoing } from "lucide-react";
 import { useTelecallerCallLogs } from "../hooks/useCallReports";
 import DataTable from "@/components/table/DataTable";
+import TableCard from "@/components/table/TableCard";
+import TablePagination from "@/components/table/TablePagination";
 import SearchBar from "@/components/management/SearchBar";
 import CallDetailsModal from "@/features/telecaller/voice/components/details/CallDetailsModal";
 import { TableSkeleton } from "@/components/ui/Skeletons";
@@ -44,6 +46,7 @@ const COLUMNS = [
   {
     key: "leadName",
     label: "Lead",
+    width: "260px",
     render: (value, row) => (
       <div className="flex flex-col">
         <span className="font-[600] text-gray-900">{value || row.name || "Unknown"}</span>
@@ -56,6 +59,7 @@ const COLUMNS = [
   {
     key: "callDirection",
     label: "Direction",
+    width: "120px",
     render: (value, row) => {
       const dir = value || (row.direction === "inbound" ? "Inbound" : "Outbound");
       return (
@@ -71,6 +75,7 @@ const COLUMNS = [
   {
     key: "callDateTime",
     label: "Date & Time",
+    width: "160px",
     render: (value, row) => (
       <span className="text-sm text-gray-600">
         {formatDate(value || row.createdAt || row.date)}
@@ -80,6 +85,7 @@ const COLUMNS = [
   {
     key: "callDurationSeconds",
     label: "Duration",
+    width: "120px",
     render: (value, row) => (
       <span className="font-mono text-gray-700">
         {formatDuration(value || row.callDuration || row.duration)}
@@ -89,6 +95,7 @@ const COLUMNS = [
   {
     key: "outcome",
     label: "Outcome",
+    width: "140px",
     render: (value, row) => {
       const outcome = value || row.callOutcome || "Unknown";
       const style = OUTCOME_STYLES[outcome] || defaultOutcomeStyle;
@@ -105,6 +112,9 @@ const COLUMNS = [
   {
     key: "recordingUrl",
     label: "Recording",
+    width: "90px",
+    headerClassName: "text-center",
+    cellClassName: "flex justify-center",
     render: (value) =>
       value ? (
         <div className="text-[#7A1F2B] w-fit p-1 bg-[#7A1F2B]/5 rounded-md" title="Has Recording">
@@ -240,22 +250,24 @@ export default function CallLogsTable({ data = [], isLoading, isError, filters, 
           />
         </div>
       ) : (
-        <DataTable
-          columns={COLUMNS}
-          data={rows}
-          rowKey="callId"
-          selectable={false}
-          density="compact"
-          onRowClick={handleRowClick}
-          pagination={{
-            currentPage: page,
-            pageSize,
-            totalPages,
-            totalItems,
-            onPageChange: setPage,
-            onPageSizeChange: (s) => { setPageSize(s); setPage(0); },
-          }}
-        />
+        <TableCard>
+          <DataTable
+            columns={COLUMNS}
+            data={rows}
+            rowKey="callId"
+            selectable={false}
+            onRowClick={handleRowClick}
+          />
+          <TablePagination
+            mode="page"
+            currentPage={page}
+            pageSize={pageSize}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            onPageChange={setPage}
+            onPageSizeChange={(s) => { setPageSize(s); setPage(0); }}
+          />
+        </TableCard>
       )}
 
       {/* Call Details Modal — admin sees Recording tab */}

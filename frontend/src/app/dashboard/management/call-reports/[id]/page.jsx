@@ -11,14 +11,16 @@ import StitchHeader from "@/features/callReports/components/stitch/StitchHeader"
 import StitchKPISection from "@/features/callReports/components/stitch/StitchKPISection";
 import StitchFilterToolbar from "@/features/callReports/components/stitch/StitchFilterToolbar";
 import StitchCallReportTable from "@/features/callReports/components/stitch/StitchCallReportTable";
-import StitchPagination from "@/features/callReports/components/stitch/StitchPagination";
+import TablePagination from "@/components/table/TablePagination";
 
 export default function TelecallerCallLogsPage() {
   const { id: userId } = useParams();
   const router = useRouter();
 
   const [filters, setFilters] = useState({
-    date: "",
+    search: "",
+    dateFrom: "",
+    dateTo: "",
     status: "",
     hasRecording: "",
     direction: "",
@@ -29,12 +31,12 @@ export default function TelecallerCallLogsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [selectedCall, setSelectedCall] = useState(null);
 
-  // Fetch all logs once
+  // Fetch paginated and filtered logs from backend
   const { data: rawData, isLoading, isError } = useTelecallerCallLogs(
     userId,
-    {}, // no server-side filters
-    0,
-    1000 // get all
+    filters, // Backend filters
+    page,
+    pageSize // Backend pagination
   );
 
   const allCallLogs = Array.isArray(rawData?.content)
@@ -47,53 +49,30 @@ export default function TelecallerCallLogsPage() {
 
   const telecallerName = allCallLogs[0]?.name || "Telecaller";
 
-  const filteredCallLogs = useMemo(() => {
-    let rows = [...allCallLogs];
-
-    if (filters.date) {
-      rows = rows.filter(call => {
-        const callDate = call.createdAt || call.date;
-        if (!callDate) return false;
-        return callDate.startsWith(filters.date) || new Date(callDate).toISOString().startsWith(filters.date);
-      });
-    }
-
-    if (filters.status) {
-      rows = rows.filter(call => {
-        const out = call.callOutcome || call.outcome || "Unknown";
-        return out.toLowerCase() === filters.status.toLowerCase();
-      });
-    }
-
-    if (filters.direction) {
-      rows = rows.filter(call => {
-        const dir = (call.direction || "Outbound").toLowerCase() === "inbound" ? "Inbound" : "Outbound";
-        return dir.toLowerCase() === filters.direction.toLowerCase();
-      });
-    }
-
-    if (filters.hasRecording) {
-      rows = rows.filter(call => {
-        const hasRec = Boolean(call.recordingUrl || call.hasRecording);
-        if (filters.hasRecording === "true") return hasRec;
-        if (filters.hasRecording === "false") return !hasRec;
-        return true;
-      });
-    }
-
-    return rows;
-  }, [allCallLogs, filters]);
-
+  // Derive KPI stats from the currently fetched dataset (as instructed)
   const kpiData = useMemo(() => {
-    const totalCalls = filteredCallLogs.length;
-    const connectedCalls = filteredCallLogs.filter(
-      c => (c.callOutcome || c.outcome || "").toLowerCase() === "connected"
+    // In a real scenario, KPI stats would be fetched via a separate summary API, 
+    // but per instructions we compute it from the fetched dataset for now.
+    const totalCalls = allCallLogs.length;
+    const connectedCalls = allCallLogs.filter(
+      c => (c.callOutcome || c.outcome || c.status || "").toLowerCase() === "connected" || 
+           (c.callOutcome || c.outcome || c.status || "").toLowerCase() === "answered"
     ).length;
-    const recordingsCount = filteredCallLogs.filter(
-      c => Boolean(c.recordingUrl || c.hasRecording)
+    const recordingsCount = allCallLogs.filter(
+      c => Boolean(c.recordingUrl || c.hasRecording || c.recording)
     ).length;
     
-    const validDurations = filteredCallLogs.map(c => c.callDuration || c.duration).filter(Boolean);
+    // Parse durations to seconds
+    const parseDur = (dur) => {
+      if (typeof dur === "number") return dur;
+      if (typeof dur !== "string" || !dur) return 0;
+      const parts = dur.split(":").map(Number);
+      if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+      if (parts.length === 2) return parts[0] * 60 + parts[1];
+      return 0;
+    };
+
+    const validDurations = allCallLogs.map(c => parseDur(c.callDuration || c.duration)).filter(d => d > 0);
     const avgDuration = validDurations.length > 0 
       ? Math.round(validDurations.reduce((a, b) => a + b, 0) / validDurations.length)
       : 0;
@@ -104,12 +83,12 @@ export default function TelecallerCallLogsPage() {
       recordingsCount,
       avgDuration
     };
-  }, [filteredCallLogs]);
+  }, [allCallLogs]);
 
-  // Pagination logic
-  const totalItems = filteredCallLogs.length;
-  const totalPages = Math.ceil(totalItems / pageSize) || 1;
-  const paginatedLogs = filteredCallLogs.slice(page * pageSize, (page + 1) * pageSize);
+  // Pagination logic mapped from backend response
+  const totalItems = rawData?.totalElements ?? rawData?.totalItems ?? (rawData?.length > pageSize ? rawData.length : allCallLogs.length);
+  const totalPages = rawData?.totalPages ?? Math.max(1, Math.ceil(totalItems / pageSize));
+  const paginatedLogs = allCallLogs;
 
   const handleFilterChange = (updater) => {
     setFilters(updater);
@@ -123,7 +102,7 @@ export default function TelecallerCallLogsPage() {
   };
 
   return (
-    <main className="stitch-call-report w-full max-w-container-max mx-auto px-page-padding py-10 flex flex-col gap-section-gap min-h-0 bg-background text-on-surface">
+    <main className="stitch-call-report w-full max-w-container-max mx-auto px-page-padding py-10 flex flex-col gap-section-gap min-h-0 bg-white text-on-surface">
       <StitchHeader 
         title={telecallerName} 
         subtitle="Call logs and performance summary" 
@@ -135,6 +114,7 @@ export default function TelecallerCallLogsPage() {
       <StitchFilterToolbar 
         filters={filters} 
         onFilterChange={handleFilterChange} 
+        isLoading={isLoading}
       />
       
       <StitchCallReportTable 
@@ -146,7 +126,8 @@ export default function TelecallerCallLogsPage() {
       />
       
       {!isLoading && !isError && totalItems > 0 && (
-        <StitchPagination 
+        <TablePagination 
+          mode="page"
           currentPage={page}
           pageSize={pageSize}
           totalItems={totalItems}

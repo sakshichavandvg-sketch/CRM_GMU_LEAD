@@ -83,12 +83,12 @@ export const mapLeadDetail = (rawLead) => {
       assignedBy: rawLead.assignment.assignedBy || "System",
       status: rawLead.assignment.status || "ACTIVE"
     } : {
-      telecaller: rawLead?.lead?.assignedTo?.name || rawLead?.telecallerName || rawLead?.assignee || "Unassigned",
-      assignee: rawLead?.lead?.assignedTo?.name || rawLead?.assignee || rawLead?.telecallerName || "Unassigned",
-      phone: rawLead?.lead?.assignedTo?.mobile || rawLead?.lead?.assignedTo?.phone || rawLead?.telecallerPhone || "",
-      email: rawLead?.lead?.assignedTo?.email || rawLead?.telecallerEmail || "",
-      assignedDate: rawLead?.lead?.assignedAt || rawLead?.assignedDate || "N/A",
-      assignedBy: rawLead?.lead?.assignedBy?.name || rawLead?.assignedBy || "System",
+      telecaller: "Unassigned",
+      assignee: "Unassigned",
+      phone: "",
+      email: "",
+      assignedDate: "N/A",
+      assignedBy: "System",
       status: "ACTIVE"
     },
     timeline: Array.isArray(rawLead.timeline) ? rawLead.timeline : [],

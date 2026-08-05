@@ -13,7 +13,7 @@ const normalizeAvatarPath = (avatarPath) => {
 // Normalize a single user from the backend response to the shape
 // the UI components expect. Field name changes only need updating here.
 const normalizeUser = (raw) => ({
-  id: raw.slNo ?? raw.id ?? raw.empId ?? "",
+  id: raw.slNo ?? raw.id ?? raw.userId ?? raw.empId ?? "",
   slNo: raw.slNo ?? raw.id,
   empId: raw.empId ?? raw.employeeId ?? "",
   username: raw.username ?? "",
@@ -28,7 +28,7 @@ const normalizeUser = (raw) => ({
   course: raw.course ?? "",
   discipline: raw.discipline ?? "",
   status: raw.status ?? "ACTIVE",
-  activeLeads: raw.activeLeads ?? 0,
+  activeLeads: raw.activeLeads ?? raw.activeLeadCount ?? raw.assignedLeadsCount ?? raw.activeAssignedLeads ?? 0,
   defaultPassword: raw.defaultPassword ?? null,
 });
 

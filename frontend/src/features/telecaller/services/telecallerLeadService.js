@@ -3,10 +3,10 @@ import API_ENDPOINTS from "@/utils/apiEndpoints";
 
 export const telecallerLeadService = {
   getMyLeads: async (params) => {
-    const { pageParam = 0, size = 10, search = "", ...filters } = params;
+    const { page = 0, size = 10, search = "", ...filters } = params;
     
     const queryParams = new URLSearchParams({
-      page: pageParam.toString(),
+      page: page.toString(),
       size: size.toString(),
     });
 

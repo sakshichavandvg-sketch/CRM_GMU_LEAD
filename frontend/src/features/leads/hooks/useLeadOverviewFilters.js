@@ -63,6 +63,7 @@ export const useLeadOverviewFilters = (initialType = "") => {
   };
 
   const actions = {
+    setFilters: (updates) => updateUrl(updates, true),
     setPage: (v) => updateUrl({ page: v }, false), // Changing page doesn't reset page
     setSize: (v) => updateUrl({ size: v }, true),
     setSort: (v) => updateUrl({ sort: v }, true),

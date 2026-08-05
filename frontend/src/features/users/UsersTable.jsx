@@ -2,45 +2,12 @@
 
 import { useState, useMemo } from "react";
 
-import Button from "@/components/ui/Button";
-
-import SearchBar from "@/components/management/SearchBar";
-
-import BulkActionBar from "@/components/table/BulkActionBar";
-import DataTable from "@/components/table/DataTable";
-import StatusBadge from "@/components/table/StatusBadge";
 import { TableSkeleton } from "@/components/ui/Skeletons";
+import TableCard from "@/components/table/TableCard";
 
 import { useRouter } from "next/navigation";
 
 import useInfiniteUsers from "./useInfiniteUsers";
-import { useInfiniteScrollObserver } from "@/hooks/useInfiniteScrollObserver";
-
-const columns = [
-  {
-    key: "empId",
-    label: "Employee ID",
-  },
-  {
-    key: "name",
-    label: "Name",
-  },
-  {
-    key: "username",
-    label: "Username",
-  },
-  {
-    key: "phoneNo",
-    label: "Phone",
-  },
-  {
-    key: "status",
-    label: "Status",
-    render: (value) => (
-      <StatusBadge status={value} />
-    ),
-  },
-];
 
 import UserKPICards from "./components/UserKPICards";
 import UserToolbar from "./components/UserToolbar";
@@ -88,17 +55,13 @@ export default function UsersTable() {
       
       <UserToolbar search={search} onSearchChange={setSearch} />
       
-      <div className="flex flex-col">
+      <TableCard>
         <UserDirectoryTable 
           users={usersData} 
           onView={(user) => router.push(`/dashboard/management/user-directory/${user.empId}`)} 
         />
         
-        {totalResults === 0 ? (
-          <div className="py-16 text-center text-gray-500 bg-white rounded-b-card shadow-sm border border-t-0 border-[#E8EAF2]">
-            <p className="text-lg font-medium">No Telecallers Found</p>
-          </div>
-        ) : (
+        {totalResults > 0 && (
           <UserPagination 
             totalResults={totalResults}
             currentCount={usersData.length}
@@ -107,10 +70,10 @@ export default function UsersTable() {
             isFetchingNextPage={isFetchingNextPage}
           />
         )}
-      </div>
+      </TableCard>
       
       {/* Bottom Space for Scroll Breathability */}
       <div className="h-10"></div>
     </div>
   );
-}
+}

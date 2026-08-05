@@ -17,7 +17,7 @@ function makeRequest(path, method = 'GET', data = null, headers = {}) {
     if (reqData) console.log(`Payload: ${reqData}`);
 
     const req = http.request({
-      hostname: '192.168.1.8',
+      hostname: '192.168.1.33',
       port: 3000,
       path: path,
       method: method,

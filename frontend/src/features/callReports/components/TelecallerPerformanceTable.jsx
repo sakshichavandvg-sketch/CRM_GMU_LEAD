@@ -13,6 +13,24 @@ import CallReportsStats from "./ui/CallReportsStats";
 import CallReportsFilters from "./ui/CallReportsFilters";
 import CallReportsTable from "./ui/CallReportsTable";
 
+function parseDurationToSeconds(dur) {
+  if (typeof dur === "number") return dur;
+  if (typeof dur !== "string" || !dur) return 0;
+  const parts = dur.split(":").map(Number);
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return 0;
+}
+
+function formatDuration(s) {
+  if (!s) return "—";
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m ${sec}s`;
+}
+
 export default function TelecallerPerformanceTable() {
   const router = useRouter();
   const [selectedDate, setSelectedDate] = useState("");
@@ -37,6 +55,29 @@ export default function TelecallerPerformanceTable() {
   const totalPages = data?.totalPages ?? (rows.length > 0 ? 1 : 0);
   const totalItems = data?.totalElements ?? data?.totalItems ?? rows.length;
 
+  const stats = React.useMemo(() => {
+    let totalCalls = 0;
+    let connectedCalls = 0;
+    let durationSecs = 0;
+    
+    rows.forEach(row => {
+      totalCalls += (row.calls || row.totalCalls || 0);
+      connectedCalls += (row.connectedCalls || 0);
+      durationSecs += parseDurationToSeconds(row.duration || row.avgDuration);
+    });
+
+    const avgSecs = rows.length > 0 ? Math.round(durationSecs / rows.length) : 0;
+
+    return {
+      totalCalls: totalCalls > 0 ? totalCalls : "—",
+      connectedCalls: connectedCalls > 0 ? connectedCalls : "—",
+      avgDuration: avgSecs > 0 ? formatDuration(avgSecs) : "—",
+      recordings: "—", // Missing from backend
+      successRate: totalCalls > 0 && connectedCalls > 0 ? Math.round((connectedCalls / totalCalls) * 100) : null,
+      todaysCalls: "—" // Missing from backend
+    };
+  }, [rows]);
+
   const handleRowClick = (row) => {
     const id = row.userId ?? row.slNo ?? row.id ?? row.empId;
     if (id) {
@@ -55,9 +96,9 @@ export default function TelecallerPerformanceTable() {
 
   if (isLoading) {
     return (
-      <div className="call-reports-theme flex flex-col gap-0 flex-1 min-h-0 bg-background font-body-md text-on-surface">
+      <div className="flex flex-col gap-0 flex-1 min-h-0 bg-white font-body-md text-on-surface pb-8">
         <CallReportsHeader />
-        <CallReportsStats />
+        <CallReportsStats stats={{}} />
         <TableSkeleton rows={8} />
       </div>
     );
@@ -65,9 +106,9 @@ export default function TelecallerPerformanceTable() {
 
   if (isError) {
     return (
-      <div className="call-reports-theme flex flex-col gap-0 flex-1 min-h-0 bg-background font-body-md text-on-surface">
+      <div className="flex flex-col gap-0 flex-1 min-h-0 bg-white font-body-md text-on-surface pb-8">
         <CallReportsHeader />
-        <CallReportsStats />
+        <CallReportsStats stats={{}} />
         <ErrorState 
           title="Failed to load call reports"
           message="Check your connection and try again"
@@ -78,9 +119,9 @@ export default function TelecallerPerformanceTable() {
   }
 
   return (
-    <div className="call-reports-theme flex flex-col gap-0 flex-1 min-h-0 bg-background font-body-md text-on-surface selection:bg-primary-fixed selection:text-primary pb-8">
+    <div className="flex flex-col gap-0 flex-1 min-h-0 bg-white font-body-md text-on-surface pb-8 px-4">
       <CallReportsHeader />
-      <CallReportsStats />
+      <CallReportsStats stats={stats} />
       
       <CallReportsFilters 
         search={search}

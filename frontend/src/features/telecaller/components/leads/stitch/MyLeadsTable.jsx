@@ -1,7 +1,38 @@
 import React from "react";
-import { TableSkeleton } from "@/components/ui/Skeletons";
+import DataTable from "@/components/table/DataTable";
+import Badge from "@/components/ui/Badge";
+import ActionMenu from "@/components/table/ActionMenu";
+import { Phone, PhoneForwarded, PhoneOff, Link as LinkIcon, Users, Search, Globe, Share2, MessageCircle, HelpCircle } from "lucide-react";
 
-// Formatters copied from page logic
+const getAvatarColor = (str) => {
+  const colors = [
+    "bg-red-500",
+    "bg-pink-500",
+    "bg-purple-500",
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-yellow-500",
+    "bg-orange-500",
+  ];
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+};
+
+const getSourceIcon = (source) => {
+  const s = (source || "").toLowerCase();
+  if (s.includes("instagram")) return { icon: <Share2 size={14} />, color: "text-pink-600", bg: "bg-pink-50" };
+  if (s.includes("facebook")) return { icon: <Users size={14} />, color: "text-blue-600", bg: "bg-blue-50" };
+  if (s.includes("google") || s.includes("seo") || s.includes("web")) return { icon: <Globe size={14} />, color: "text-emerald-600", bg: "bg-emerald-50" };
+  if (s.includes("whatsapp")) return { icon: <MessageCircle size={14} />, color: "text-green-600", bg: "bg-green-50" };
+  if (s.includes("justdial") || s.includes("sulekha")) return { icon: <Search size={14} />, color: "text-orange-600", bg: "bg-orange-50" };
+  if (s.includes("referral") || s.includes("friend")) return { icon: <LinkIcon size={14} />, color: "text-purple-600", bg: "bg-purple-50" };
+  
+  return { icon: <HelpCircle size={14} />, color: "text-gray-500", bg: "bg-gray-50" };
+};
+
 const toTitleCase = (str) => {
   if (!str) return "-";
   return str
@@ -20,186 +51,196 @@ const getInitials = (name) => {
   return parts[0].substring(0, 2).toUpperCase();
 };
 
-const getStatusBadge = (status) => {
-  const normalized = (status || "").toUpperCase().replace(/_/g, " ");
-  let bgClass = "bg-surface-variant/50";
-  let textClass = "text-on-surface-variant";
-
-  if (normalized.includes("NEW") || normalized.includes("ENQUIRY")) {
-    bgClass = "bg-secondary/10";
-    textClass = "text-secondary";
-  } else if (normalized.includes("NOT INTERESTED") || normalized.includes("COLD")) {
-    bgClass = "bg-surface-variant";
-    textClass = "text-on-surface-variant";
-  } else if (normalized.includes("INTERESTED") || normalized.includes("WARM")) {
-    bgClass = "bg-tertiary/10";
-    textClass = "text-tertiary";
-  } else if (normalized.includes("ADMISSION") || normalized.includes("ENROLLED")) {
-    bgClass = "bg-primary/10";
-    textClass = "text-primary";
-  } else if (normalized.includes("FOLLOW UP") || normalized.includes("PROGRESS")) {
-    bgClass = "bg-orange-500/10";
-    textClass = "text-orange-600";
-  }
-
-  return (
-    <span className={`px-3 py-1 ${bgClass} ${textClass} rounded-full font-status-pill text-status-pill uppercase`}>
-      {normalized}
-    </span>
-  );
+const getStatusVariant = (status) => {
+  const s = (status || "").toUpperCase();
+  if (s.includes("NEW") || s.includes("ENQUIRY")) return "blue";
+  if (s.includes("NOT INTERESTED") || s.includes("COLD")) return "neutral";
+  if (s.includes("INTERESTED") || s.includes("WARM")) return "success";
+  if (s.includes("ADMISSION") || s.includes("ENROLLED")) return "purple";
+  if (s.includes("FOLLOW") || s.includes("PROGRESS")) return "orange";
+  return "neutral";
 };
 
-const getOpinionBadge = (opinion) => {
-  const normalized = (opinion || "").toUpperCase();
-  if (!normalized) return <span className="text-outline-variant">-</span>;
-
-  let bgClass = "bg-surface-variant/50";
-  let textClass = "text-on-surface-variant";
-  let dotClass = "bg-on-surface-variant";
-
-  if (normalized.includes("INTERESTED") && !normalized.includes("NOT")) {
-    bgClass = "bg-tertiary/10";
-    textClass = "text-tertiary";
-    dotClass = "bg-tertiary";
-  } else if (normalized.includes("NOT INTERESTED")) {
-    bgClass = "bg-surface-variant";
-    textClass = "text-on-surface-variant";
-    dotClass = "bg-on-surface-variant";
-  } else if (normalized.includes("PENDING") || normalized.includes("TIME")) {
-    bgClass = "bg-yellow-100";
-    textClass = "text-yellow-700";
-    dotClass = "bg-yellow-600";
-  } else if (normalized.includes("CALLBACK") || normalized.includes("CALL BACK") || normalized.includes("WARM") || normalized.includes("HOT")) {
-    bgClass = "bg-orange-500/10";
-    textClass = "text-orange-600";
-    dotClass = "bg-orange-600";
-  }
-
-  return (
-    <span className={`flex items-center gap-1.5 px-3 py-1 ${bgClass} ${textClass} rounded-full font-status-pill text-status-pill uppercase w-fit`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${dotClass}`}></span>
-      {toTitleCase(opinion).toUpperCase()}
-    </span>
-  );
+const getOpinionVariant = (opinion) => {
+  const s = (opinion || "").toUpperCase();
+  if (s.includes("NOT INTERESTED")) return "neutral";
+  if (s.includes("INTERESTED")) return "success";
+  if (s.includes("PENDING") || s.includes("TIME")) return "yellow";
+  if (s.includes("CALLBACK") || s.includes("WARM") || s.includes("HOT")) return "orange";
+  return "neutral";
 };
 
-// Simple pseudo-random color for avatar based on string
-const getAvatarColors = (str) => {
-  const colors = [
-    { bg: 'bg-red-100', text: 'text-red-700' },
-    { bg: 'bg-pink-100', text: 'text-pink-700' },
-    { bg: 'bg-purple-100', text: 'text-purple-700' },
-    { bg: 'bg-blue-100', text: 'text-blue-700' },
-    { bg: 'bg-green-100', text: 'text-green-700' },
-    { bg: 'bg-yellow-100', text: 'text-yellow-700' },
-    { bg: 'bg-orange-100', text: 'text-orange-700' },
-  ];
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  return colors[Math.abs(hash) % colors.length];
-};
+const getColumns = (onRowClick) => [
+  {
+    key: "enquiryNo",
+    label: "Enquiry No",
+    width: "90px",
+    render: (value, row) => (
+      <span className="text-sm font-bold text-[#8B0D16]">#{row.enquiryNo || row.id}</span>
+    ),
+  },
+  {
+    key: "name",
+    label: "Lead",
+    width: "260px",
+    render: (value, row) => {
+      const nameTitleCase = toTitleCase(row.name);
+      return (
+        <div className="flex items-center gap-3 min-w-[140px]">
+          <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 ${getAvatarColor(nameTitleCase)}`}>
+            {getInitials(nameTitleCase)}
+          </div>
+          <div>
+            <p className="text-sm font-bold text-gray-900 m-0">{nameTitleCase}</p>
+            <p className="text-xs text-gray-400 m-0">{row.email || (row.name ? row.name.toLowerCase().replace(/\s/g, '.') + '@gmail.com' : '')}</p>
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    key: "mobileNo",
+    label: "Mobile No",
+    width: "170px",
+    render: (value, row) => (
+      <div className="flex items-center gap-1.5 text-gray-600">
+        <Phone size={14} className="text-[#8B0D16]" />
+        <span className="text-sm">{value || row.mobileNo || "-"}</span>
+      </div>
+    ),
+  },
+  {
+    key: "course",
+    label: "Course",
+    width: "100px",
+    render: (value, row) => {
+      const courseText = value ? (['MCA', 'BCA', 'MBA', 'BTECH', 'MTECH', 'BBA'].includes(value.toUpperCase()) ? value.toUpperCase() : toTitleCase(value)) : "-";
+      return <span className="text-sm text-gray-700">{courseText}</span>;
+    },
+  },
+  {
+    key: "status",
+    label: "Status",
+    width: "140px",
+    render: (value) => (
+      <Badge variant={getStatusVariant(value)} dot>
+        {value || "NEW"}
+      </Badge>
+    ),
+  },
+  {
+    key: "opinion",
+    label: "Opinion",
+    width: "140px",
+    render: (value) => (
+      <Badge variant={getOpinionVariant(value)} dot>
+        {value || "-"}
+      </Badge>
+    ),
+  },
+  {
+    key: "callCount",
+    label: "Calls",
+    width: "90px",
+    render: (value, row) => {
+      const count = value || row.callCount || 0;
+      return (
+        <div className={`flex items-center gap-2 ${count > 0 ? "text-gray-900" : "text-gray-400"}`}>
+          {count > 0 ? <PhoneForwarded size={14} /> : <PhoneOff size={14} />}
+          <span className="font-bold text-sm">{count}</span>
+        </div>
+      );
+    },
+  },
+  {
+    key: "district",
+    label: "District",
+    width: "140px",
+    render: (value, row) => {
+      const districtMain = row.city || row.district || "Unknown";
+      const districtSub = row.state || "";
+      return (
+        <div>
+          <p className="text-sm font-semibold text-gray-900 m-0">{toTitleCase(districtMain)}</p>
+          {districtSub && <p className="text-xs text-gray-400 m-0">{toTitleCase(districtSub)}</p>}
+        </div>
+      );
+    },
+  },
+  {
+    key: "source",
+    label: "Source",
+    width: "140px",
+    render: (value) => {
+      const sourceData = getSourceIcon(value);
+      return (
+        <div className={`inline-flex items-center gap-1.5 border border-gray-200 px-2.5 py-1 rounded-lg ${sourceData.bg}`}>
+          <span className={`${sourceData.color}`}>{sourceData.icon}</span>
+          <span className="text-xs font-medium text-gray-600">{toTitleCase(value || "Unknown")}</span>
+        </div>
+      );
+    },
+  },
+];
 
 export default function MyLeadsTable({ data = [], onRowClick, isLoading }) {
-  if (isLoading) {
-    return (
-      <div className="bg-surface-container-lowest premium-shadow rounded-xl overflow-hidden p-6">
-        <TableSkeleton rows={8} columns={10} />
-      </div>
-    );
-  }
+  const columns = getColumns(onRowClick);
 
-  if (data.length === 0) {
+  // Replicate mobile card view matching TelecallerLeadsTable layout
+  const renderMobileCard = (row, index) => {
     return (
-      <div className="bg-surface-container-lowest premium-shadow rounded-xl overflow-hidden p-12 text-center text-on-surface-variant">
-        No leads found.
+      <div
+        key={row.enquiryNo || index}
+        onClick={() => onRowClick && onRowClick(row)}
+        className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col gap-3"
+      >
+        <div className="flex justify-between items-start gap-4">
+          <div className="flex-1 overflow-hidden">
+            {columns.find(c => c.key === 'name')?.render(row.name, row)}
+          </div>
+          <div className="text-right flex flex-col items-end gap-2 shrink-0">
+            {columns.find(c => c.key === 'status')?.render(row.status, row)}
+            <span className="text-xs font-semibold text-gray-400">#{row.enquiryNo}</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-gray-50 mt-1">
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Course</span>
+            <span className="text-sm font-medium text-gray-700 truncate">
+              {columns.find(c => c.key === 'course')?.render(row.course, row)}
+            </span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Opinion</span>
+            <span className="text-sm truncate">
+              {columns.find(c => c.key === 'opinion')?.render(row.opinion, row)}
+            </span>
+          </div>
+        </div>
       </div>
     );
-  }
+  };
 
   return (
-    <div className="bg-surface-container-lowest premium-shadow rounded-xl overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[1000px]">
-          <thead>
-            <tr className="bg-surface-container-low border-b border-outline-variant">
-              <th className="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Enquiry No</th>
-              <th className="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Lead</th>
-              <th className="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Mobile No</th>
-              <th className="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Course</th>
-              <th className="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Status</th>
-              <th className="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Opinion</th>
-              <th className="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Calls</th>
-              <th className="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">District</th>
-              <th className="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Source</th>
-              <th className="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-outline-variant/30">
-            {data.map((row) => {
-              const nameTitleCase = toTitleCase(row.name);
-              const initials = getInitials(nameTitleCase);
-              const avatarColors = getAvatarColors(row.name || "");
-              const callCount = row.callCount || 0;
-              const courseText = row.course ? (['MCA', 'BCA', 'MBA', 'BTECH', 'MTECH', 'BBA'].includes(row.course.toUpperCase()) ? row.course.toUpperCase() : toTitleCase(row.course)) : "-";
-              
-              const districtMain = row.city || row.district || "Unknown";
-              const districtSub = row.state || "";
-
-              return (
-                <tr 
-                  key={row.enquiryNo} 
-                  className="hover:bg-surface-container-low/50 transition-colors group h-row-height cursor-pointer"
-                  onClick={() => onRowClick && onRowClick(row)}
-                >
-                  <td className="px-6 py-4 text-body-md font-semibold text-on-surface">#{row.enquiryNo}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-full ${avatarColors.bg} flex items-center justify-center ${avatarColors.text} font-bold`}>
-                        {initials}
-                      </div>
-                      <div>
-                        <p className="text-title-sm font-title-sm text-on-surface">{nameTitleCase}</p>
-                        <p className="text-body-sm text-on-surface-variant">{row.email || (row.name ? row.name.toLowerCase().replace(/\s/g,'.') + '@gmail.com' : '')}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center gap-2 text-secondary font-medium text-body-md">
-                      {row.mobileNo || "-"}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-body-md text-on-surface">{courseText}</td>
-                  <td className="px-6 py-4">{getStatusBadge(row.status)}</td>
-                  <td className="px-6 py-4">{getOpinionBadge(row.opinion)}</td>
-                  <td className="px-6 py-4">
-                    <div className={`flex items-center gap-2 ${callCount > 0 ? "text-on-surface-variant" : "text-outline-variant"}`}>
-                      {callCount > 0 && <span className="material-symbols-outlined text-secondary text-[20px]">phone_forwarded</span>}
-                      {callCount === 0 && <span className="material-symbols-outlined text-[20px]">phone_disabled</span>}
-                      <span className="font-bold">{callCount}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="text-body-md font-semibold text-on-surface">{toTitleCase(districtMain)}</p>
-                    {districtSub && <p className="text-body-sm text-on-surface-variant">{toTitleCase(districtSub)}</p>}
-                  </td>
-                  <td className="px-6 py-4 text-body-md text-on-surface">{toTitleCase(row.source)}</td>
-                  <td className="px-6 py-4">
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); onRowClick && onRowClick(row); }}
-                      className="flex items-center gap-2 px-4 py-1.5 border border-primary text-primary font-semibold rounded hover:bg-primary hover:text-white transition-all text-sm"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">visibility</span>
-                      View
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <DataTable
+      columns={columns}
+      data={data}
+      rowKey="enquiryNo"
+      selectable={false}
+      onRowClick={onRowClick}
+      loading={isLoading}
+      renderMobileCard={renderMobileCard}
+      renderRowActions={(row) => (
+        <ActionMenu
+          actions={[
+            {
+              label: "View Lead",
+              onClick: () => onRowClick && onRowClick(row),
+            },
+          ]}
+        />
+      )}
+    />
   );
 }
